@@ -1913,10 +1913,14 @@ return function(mod)
   local applyDittoForm
   local liveGame
   local muchEarlier
-  -- The LOG 568 bookend finale lives in finale.lua and is constructed further
-  -- down, once its dialogue/portrait/overworld dependencies exist. It is
-  -- declared here because `startCeladonEnding` closes over it long before the
-  -- module is loaded.
+  -- The authored cutscene modules live in cinema.lua (shared Gen I
+  -- presentation), chapters.lua (the Mansion and Celadon chapter openings)
+  -- and finale.lua (the LOG 568 bookend). All three are constructed further
+  -- down, once their dialogue/portrait/overworld dependencies exist. They are
+  -- declared here because `startCeladonEnding` closes over them long before
+  -- the modules are loaded.
+  local Cinema
+  local Chapters
   local Finale
 
   -- Save compatibility policy: this namespace is permanent. New builds only
@@ -1962,6 +1966,14 @@ return function(mod)
     fin.completed=fin.completed and true or false
     -- A save written mid-cutscene must never come back still "running".
     fin.running=nil
+
+    -- Chapter-opening state. The seen/unseen derivation for saves written
+    -- before chapters.lua existed lives in that module's `reconcile`, which
+    -- runs from the trigger site where the module is guaranteed loaded; this
+    -- only guarantees the table exists and that a save written mid-cutscene
+    -- never comes back still "running".
+    if type(q.chapters)~="table" then q.chapters={} end
+    q.chapters.mansionOpeningRunning=nil
 
     -- Celadon cafe delivery job state. Keep this additive and save-compatible.
     if type(q.cafeJobs)~="table" then q.cafeJobs={} end
@@ -7622,9 +7634,35 @@ return function(mod)
         return
       end
 
-      -- Scene 2 begins directly on the Super Nerd in the Game Corner prize
-      -- room. The former Celadon establishing pan is intentionally skipped.
-      beginGameCornerStory()
+      -- Scene 2 opens on Celadon itself.
+      --
+      -- The three-shot west-to-east sweep below this function has been in the
+      -- project all along -- `views`, `frameCityView`, `panCityView` and the
+      -- `cityPanStage` machine are all live -- but `cut:enter` used to call
+      -- `beginGameCornerStory()` directly, so it was never reached and the
+      -- chapter cut from a black title card into the middle of a stranger
+      -- buying a prize. Arming the first shot here is all it needs.
+      --
+      -- One narration beat sits on each shot. They are pushed as ordinary
+      -- TextBoxes through `box()`, exactly like every other line in this
+      -- cutscene, so the montage inherits the mod's real dialogue
+      -- presentation rather than a second one.
+      self.cityPanStage="hold_first"
+      self.timer=0
+      frameCityView(self.views[1])
+    end
+
+    -- Narration for the establishing sweep. Text lives in chapters.lua next
+    -- to the Mansion cold open so both chapter openings can be read, and
+    -- regression-tested, as one composition.
+    local function montageSay(index,done)
+      local beats=Chapters and Chapters.module and Chapters.module.CELADON_MONTAGE
+      local beat=beats and beats[index]
+      if not beat then
+        if done then done() end
+        return
+      end
+      box(beat.text,done)
     end
 
     ------------------------------------------------------------------------
@@ -9009,27 +9047,43 @@ return function(mod)
 
       self.timer=self.timer+1
 
-      -- Celadon opening montage: a visible west-to-east camera move with
-      -- short rests at each composition.  Do not advance while a tween is
+      -- Celadon opening montage: a visible west-to-east camera move with a
+      -- narration beat on each composition. Do not advance while a tween is
       -- active; every shot must actually be seen before the next transition.
+      --
+      -- `say_*` sets the stage to "waiting" before pushing its TextBox. While
+      -- that box is the top state this update does not run at all, so the
+      -- box's own callback is what advances the montage -- the same
+      -- wait-on-callback pattern the rest of this cutscene uses for its
+      -- `storyStep=-1` sentinel.
       if not self.storyStarted then
         if self.cityPanStage=="hold_first" and self.timer>=36 then
-          self.timer=0
-          self.cityPanStage="pan_second"
-          panCityView(self.views[2],120)
+          self.cityPanStage="waiting"
+          montageSay(1,function()
+            self.timer=0
+            self.cityPanStage="pan_second"
+            panCityView(self.views[2],120)
+          end)
         elseif self.cityPanStage=="pan_second" and not self.cameraPan then
           self.timer=0
           self.cityPanStage="hold_second"
-        elseif self.cityPanStage=="hold_second" and self.timer>=42 then
-          self.timer=0
-          self.cityPanStage="pan_third"
-          panCityView(self.views[3],132)
+        elseif self.cityPanStage=="hold_second" and self.timer>=24 then
+          self.cityPanStage="waiting"
+          montageSay(2,function()
+            self.timer=0
+            self.cityPanStage="pan_third"
+            panCityView(self.views[3],132)
+          end)
         elseif self.cityPanStage=="pan_third" and not self.cameraPan then
           self.timer=0
           self.cityPanStage="hold_third"
-        elseif self.cityPanStage=="hold_third" and self.timer>=54 then
-          self.cityPanStage="transition"
-          switchSceneWithFade(beginGameCornerStory)
+        elseif self.cityPanStage=="hold_third" and self.timer>=24 then
+          self.cityPanStage="waiting"
+          montageSay(3,function()
+            self.cityPanStage="transition"
+            if Chapters then Chapters.markCeladonOpeningSeen(game) end
+            switchSceneWithFade(beginGameCornerStory)
+          end)
         end
         return
       end
@@ -9658,54 +9712,88 @@ return function(mod)
     -- down during the Celadon load.
     while game.stack:top() do game.stack:pop() end
 
+    -- The intertitle used to be a raw `love.graphics.printf`, which renders in
+    -- LOVE's default font rather than the game's and sits on black with
+    -- nothing composed around it. It is now a real chapter card drawn through
+    -- cinema.lua, matching the Mansion's card exactly: where, then when.
+    -- The card pops itself and hands straight to Celadon, so there is still
+    -- no extra blank handoff state and no second stack wipe.
+    local function openCeladon()
+      startCeladonEnding(game, skipToCleanup)
+    end
+
+    if Chapters then
+      Chapters.playCard(game,Chapters.module.CELADON_CARD,{onDone=openCeladon})
+      return
+    end
+
+    -- Defensive fallback: if the chapter module could not be loaded, the
+    -- chronology handoff still has to happen.
     local state={isOpaque=true,timer=0}
     function state:update()
       self.timer=self.timer+1
       if self.timer>=120 and not self.finished then
         self.finished=true
-
-        -- Remove only this title card, then create Celadon immediately.
-        -- There is no extra blank handoff state and no second stack wipe.
         game.stack:pop()
-        startCeladonEnding(game, skipToCleanup)
+        openCeladon()
       end
     end
-    function state:draw()
-      love.graphics.clear(0,0,0,1)
-      love.graphics.setColor(1,1,1,1)
-      love.graphics.printf("Much earlier...",0,66,160,"center")
-    end
+    function state:draw() love.graphics.clear(0,0,0,1) end
     game.stack:push(state)
   end
 
   ------------------------------------------------------------------------
-  -- LOG 568 bookend finale.
+  -- Authored cutscenes: cinema.lua, chapters.lua, finale.lua.
   --
   -- The opening OakSpeech scene (`intro.oak_speech.build`, above) is a
-  -- flash-forward. finale.lua is the payoff: it plays the departure, the
-  -- liftoff, then reproduces the opening's exact presentation and exact
+  -- flash-forward. chapters.lua opens the two chapters that explain how the
+  -- world reached it, and finale.lua is the payoff: it plays the departure,
+  -- the liftoff, then reproduces the opening's exact presentation and exact
   -- lines before continuing the log past the point where the intro stopped.
   --
+  -- All three share one presentation layer so a text frame, a chapter card
+  -- and a trainer cutout look identical wherever they appear.
+  --
   -- Loaded with the same loadfile/love.filesystem pattern used for
-  -- rocket_quests.lua and tcg_battle.lua. Constructed here because it needs
+  -- rocket_quests.lua and tcg_battle.lua. Constructed here because they need
   -- the dialogue portrait helpers, the alarm control and the live overworld
   -- accessor, all of which are defined above this point.
   ------------------------------------------------------------------------
   do
-    local finalePath=tostring(mod.path or "").."/finale.lua"
-    local chunk,err=loadfile(finalePath)
-    if not chunk and love.filesystem and love.filesystem.load then
-      chunk,err=love.filesystem.load(finalePath)
+    local function loadModModule(name)
+      local path=tostring(mod.path or "").."/"..name
+      local chunk,err=loadfile(path)
+      if not chunk and love.filesystem and love.filesystem.load then
+        chunk,err=love.filesystem.load(path)
+      end
+      assert(chunk,err)
+      return chunk()
     end
-    assert(chunk,err)
-    local FinaleModule=chunk()
-    Finale=FinaleModule.new({
-      data=pokopiaData,
+
+    local overworldFor=function(game)
+      return activeOverworld and activeOverworld(game) or nil
+    end
+
+    local CinemaModule=loadModModule("cinema.lua")
+    Cinema=CinemaModule.new({
       modPath=tostring(mod.path or ""),
-      overworld=function(game) return activeOverworld and activeOverworld(game) or nil end,
+      overworld=overworldFor,
       trainerImage=function(game,speaker) return trainerPortraitImage(game,speaker) end,
       trainerMaskShader=getTrainerMaskShader,
       stopAlarm=stopPokopiaAlarm,
+    })
+    Cinema.module=CinemaModule
+
+    local ChaptersModule=loadModModule("chapters.lua")
+    Chapters=ChaptersModule.new({data=pokopiaData,cinema=Cinema})
+    Chapters.module=ChaptersModule
+
+    local FinaleModule=loadModModule("finale.lua")
+    Finale=FinaleModule.new({
+      data=pokopiaData,
+      modPath=tostring(mod.path or ""),
+      cinema=Cinema,
+      overworld=overworldFor,
     })
     Finale.module=FinaleModule
   end
@@ -12208,6 +12296,23 @@ return function(mod)
     local ow=activeOverworld(game)
     local input=game and game.input
     local q=game and pokopiaData(game)
+
+    -- Mansion cold open.
+    --
+    -- The chapter card and its four narration beats play the first time the
+    -- player is in ordinary control on a Mansion floor, which is the frame
+    -- after OakSpeech hands the world over. Gating on live overworld control
+    -- rather than on a map-entry hook means it can never land on top of a
+    -- scripted scene, a menu or a warp.
+    if Chapters and ow and ow.map and ow.player
+        and isMansion(ow.map.id)
+        and not ow.player.inputLocked
+        and not ow.player.frozen
+        and not ow.playerHidden
+        and game.stack:top()==ow
+        and Chapters.shouldPlayMansionOpening(game) then
+      Chapters.playMansionOpening(game)
+    end
 
     -- LOG 568 bookend reconciliation.
     --

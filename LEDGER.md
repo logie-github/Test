@@ -2,99 +2,113 @@
 
 Canonical development state for **Pokopia: Log 568**.
 
-Current phase: **LOG 568 Bookend Finale** (build 1.0.369).
-Previous phase: Rocket Lounge Polish (build 1.0.368).
+Current phase: **Chapter Openings** (build 1.0.370).
+Previous phases: LOG 568 Bookend Finale (1.0.369), Rocket Lounge Polish (1.0.368).
 
 ---
 
 ## Completed
 
-- The opening LOG 568 OakSpeech scene is now a deliberate flash-forward with a
-  paid-off bookend at the end of the story.
-- Added `finale.lua`: a self-contained, save-persistent ending that runs the
-  departure, the liftoff, the LOG 568 recreation and continuation, the
-  preservation-system epilogue, and the closing image of Ditto dormant.
-- Wired four entry points into the ending (Celadon chapter completion, the
-  Mansion PC placement on a completed save, a per-frame reconciliation trigger
-  for legacy and interrupted saves, and a developer scene jump) behind one gate
-  that fires the real ending exactly once per save.
-- Added `tests/finale.lua`, a standalone 292-check regression suite that runs
-  without booting Gen1Recomp.
-- Added a Logan character personality document.
-- Added `LOG568_BOOKEND.md` recording the composition and its constraints.
-- Fixed the Hypno scene-picker menu, whose last row previously painted below
-  its own frame.
+- Gave the Pokémon Mansion an opening. The game previously cut from the black
+  LOG 568 screen straight to a player standing on 3F with an alarm running: no
+  location, no establishing beat, and no acknowledgement of what the player had
+  just been shown. It now dissolves from a composed `CINNABAR ISLAND /
+  POKeMON MANSION` card into the live floor and plays four narration beats over
+  the room.
+- Replaced the `Much earlier...` intertitle's raw `love.graphics.printf` — which
+  rendered in LOVE's default font, not the game's — with a real Gen I chapter
+  card. The line itself is preserved verbatim.
+- Made Celadon open on the city. The three-shot establishing sweep had been in
+  the project all along and was unreachable because `cut:enter` jumped straight
+  to the Game Corner. It is now the chapter's opening, with a narration beat on
+  each shot.
+- Composed the two openings as a question and its answer, mirroring at chapter
+  scale what the LOG 568 bookend does at game scale.
+- Extracted `cinema.lua`, one Gen I presentation layer behind all three
+  authored compositions, and rebuilt `finale.lua` on it.
+- Fixed a real text-layout defect the new tests exposed (see **Known Issues
+  Fixed**).
+- Added character personality documents for the Scientist and Giovanni.
+- Added two regression suites and a runner; 518 standalone checks in total.
 
-**Not changed:** the opening. `intro.oak_speech.build`, `log568_a/b/c` and
-their text are untouched, and `tests/finale.lua` fails if any of them is
-removed or edited.
+**Not changed:** the opening OakSpeech scene, Mansion gameplay (population,
+personality dialogue, Rattata/Persian, the Giovanni briefing, the Pixie rescue,
+the PC placement), or Celadon gameplay (Game Corner refund, café jobs, TCG,
+Rocket Operations, the card-scalper quest).
 
 ## Files Added
 
 | File | Purpose |
 |---|---|
-| `finale.lua` | The whole ending: script data plus the runtime state machine |
-| `tests/finale.lua` | Standalone regression suite for the ending |
-| `characters/logan/personality.md` | Character reference for Logan |
-| `LOG568_BOOKEND.md` | Design record for the bookend composition |
-| `LEDGER.md` | This file |
+| `cinema.lua` | Shared Gen I cinematic presentation for every authored cutscene |
+| `chapters.lua` | The Mansion cold open and the Celadon chapter opening |
+| `tests/support.lua` | Shared harness: LOVE/font stubs, fake stack and input, frame driver, geometry assertions |
+| `tests/cinema.lua` | 98 checks over the presentation layer |
+| `tests/chapters.lua` | 127 checks over both chapter openings |
+| `tests/run.lua` | Runs every standalone suite |
+| `characters/scientist/personality.md` | Character reference for the Scientist |
+| `characters/giovanni/personality.md` | Character reference for Giovanni |
+| `CHAPTER_OPENINGS.md` | Design record for the two chapter openings and `cinema.lua` |
+
+Added in the previous phase and still current: `finale.lua`, `tests/finale.lua`,
+`characters/logan/personality.md`, `LOG568_BOOKEND.md`, `LEDGER.md`.
 
 ## Files Modified
 
 | File | Change |
 |---|---|
-| `main.lua` | Forward-declared `Finale`; loaded and constructed `finale.lua`; bumped the save schema to 5 and added additive `finale` normalization; triggered the ending from `startCardHeroEnding`, `loganTalk` and an `input.step` reconciliation check; added `SCENE 3` / `FINALE LOG` to the Hypno scene picker and resized that menu |
-| `manifest.json` | Version 1.0.368 → 1.0.369; description updated |
-| `mod.card` | Recorded the flash-forward framing and the finale |
-| `CHANGELOG.md` | 1.0.369 entry |
-| `README.md` | Bookend section and test instructions |
+| `main.lua` | Forward-declared `Cinema` and `Chapters`; one loader now constructs all three cutscene modules; `q.chapters` normalization; Mansion cold-open trigger in `input.step`; `muchEarlier` draws a composed card; `cut:enter` arms the Celadon sweep; the sweep's stage machine carries a narration beat per shot |
+| `finale.lua` | Runtime rebuilt on `cinema.lua`; script data unchanged; about a third smaller with no change to the ending itself |
+| `tests/finale.lua` | Loads `cinema.lua` for the pure helpers; geometry pass exempts verbatim opening rows from the worst-case width check |
+| `manifest.json`, `mod.card`, `CHANGELOG.md`, `README.md`, `.modkitignore`, `LOG568_BOOKEND.md` | Version, description and documentation |
 
 ## Core Systems
-
-Systems this build depends on, and what owns them.
 
 | System | Owner | Responsibility |
 |---|---|---|
 | Mod entry / content patching | `main.lua` | `mod.content.field:patch`, sprite and follower registration, map overrides |
-| Ditto-as-player | `main.lua` | `playerSprites` patch, transform menu, form persistence and movement hooks |
-| Dialogue presentation | `main.lua` | `TextBox.new`/`TextBox.draw` wrappers, speaker inference, trainer cutouts, Pokémon portrait cards |
-| Trainer cutout art | `main.lua` | `trainerCutoutBundle`, `trainerPortraitImage`, mask shader; cached per trainer id |
+| Ditto-as-player | `main.lua` | `playerSprites` patch, transform menu, form persistence, movement hooks |
+| Dialogue presentation | `main.lua` | `TextBox` wrappers, speaker inference, trainer cutouts, Pokémon portrait cards |
+| **Cinematic presentation** | **`cinema.lua`** | **Frame geometry, text layout, typewriter frame, nameplates, trainer cutouts, chapter cards, page runner, overworld input lock, guarded audio** |
+| **Chapter openings** | **`chapters.lua`** | **Mansion cold open, Celadon chapter card, montage narration, cold-open gating and save migration** |
+| Ending / bookend | `finale.lua` | Departure, liftoff, LOG 568 recreation and continuation, preservation system, closing image |
 | Mansion emergency scene | `main.lua` | Map-script overrides, authored cast, alarm, panic scripts |
 | Celadon chapter | `main.lua` | `startCeladonEnding` and its cinematic controller, café jobs, Game Corner, scalper line, card quest |
 | TCG | `tcg_battle.lua`, `tcg_engine/` | Packs, binder, deck builder, duels |
 | Rocket operations | `rocket_quests.lua` | Five sequential save-persistent hideout quests |
-| **Ending / bookend** | **`finale.lua`** | **Departure, liftoff, LOG 568 recreation and continuation, preservation system, closing image; its own trigger gate and save record** |
 
-`finale.lua` follows the same dependency-injection contract as
-`rocket_quests.lua` and `tcg_battle.lua`: `main.lua` loads the chunk with
-`loadfile` and constructs it with an explicit API table, so the module never
-reaches into `main.lua`'s locals and can be exercised standalone.
+All four extracted modules follow the same contract: `main.lua` loads the chunk
+with `loadfile` and constructs it with an explicit API table. None of them reach
+into `main.lua`'s locals, and all four can be exercised standalone.
 
 ## Save Schema
 
-Namespace: `save.modData.pokopia_log568`. Schema version **5** (was 4).
+Namespace: `save.modData.pokopia_log568`. Schema version **5**.
 
-New in this phase — `q.finale`:
+New in this phase — `q.chapters`:
 
 | Field | Type | Meaning |
 |---|---|---|
-| `version` | number | Finale schema version |
-| `prequelComplete` | boolean | Celadon chapter finished; arms the ending |
-| `logSeen` | boolean | The LOG 568 scene has been reached |
-| `completed` | boolean | The ending has played; blocks a second automatic play |
-| `playCount` | number | Diagnostics |
-| `lastScene` | string | Diagnostics: last scene entered |
-| `running` | nil | Transient; explicitly cleared on load |
+| `version` | number | Chapter schema version |
+| `mansionOpeningSeen` | boolean | The cold open has played |
+| `mansionOpeningRunning` | nil | Transient; explicitly cleared on load |
+| `celadonOpeningSeen` | boolean | The Celadon montage has played |
+| `migrated` | boolean | One-shot latch: progress-derivation has run for this save |
 
-Migration: `prequelComplete` is seeded from the pre-existing
-`q.cardQuestComplete`, so schema-4 saves that already finished the Celadon
-chapter reach the ending without replaying anything. No existing field is
-renamed, cleared, or reinterpreted. Unknown fields are still preserved and the
-schema number is still never downgraded.
+Still current from the previous phase — `q.finale`: `version`,
+`prequelComplete`, `logSeen`, `completed`, `playCount`, `lastScene`, transient
+`running`.
+
+Migration: `mansionOpeningSeen` is derived once from real story progress
+(`Chapters.PROGRESS_MARKERS`, plus any learned transformation) so a save made
+before this build is never handed a cold open. The `migrated` latch means a
+later pass cannot undo a deliberate replay from a developer scene jump. No
+existing field is renamed, cleared or reinterpreted; unknown fields are still
+preserved and the schema number is still never downgraded.
 
 ## Transformations
 
-Unchanged this phase. Current forms and how they are obtained:
+Unchanged this phase.
 
 | Form | Obtained | Notes |
 |---|---|---|
@@ -104,18 +118,19 @@ Unchanged this phase. Current forms and how they are obtained:
 | PORYGON | Celadon chapter | Used in the Game Corner prize scene |
 | HITMONLEE / HITMONCHAN | Celadon spar, player choice | One of the two, persisted |
 
-The finale does not grant, revoke, or read transformation state. The Mansion
-PC placement continues to clear PERSIAN exactly as before.
+A learned form now also counts as evidence that a save is inside the story, and
+therefore suppresses the cold open.
 
 ## Characters
 
 | Character | State variables | Documented |
 |---|---|---|
-| Logan | `loganAsked`, `pixieFollowing`, `pixieStored` | `characters/logan/personality.md` (new) |
+| The Scientist | — (the LOG 568 voice and the Conservation Project briefing) | `characters/scientist/personality.md` (new) |
+| Giovanni | `giovanniMeetingDone`, `giovanniWrongFormPending` | `characters/giovanni/personality.md` (new) |
+| Logan | `loganAsked`, `pixieFollowing`, `pixieStored` | `characters/logan/personality.md` |
 | Wooper | `characters.WOOPER.streetCred` | `characters/wooper/personality.md` |
-| Giovanni | `giovanniMeetingDone`, `giovanniWrongFormPending` | — |
 | Pixie (Vulpix) | `pixieFollowing`, `pixieStored`; appears in the finale's storage roll under her nickname | — |
-| Hypno | Card Club hub; now also the finale scene jump | — |
+| Hypno | Card Club hub and the developer scene jumps | — |
 | Super Nerd | `refundDemanded`, `policeCalled`, `superNerdArrested` | — |
 
 ## Relationships
@@ -125,105 +140,112 @@ relationship namespace; Wooper's `streetCred` is the only tracked value so far.
 
 ## Quests
 
-Unchanged this phase. Existing quest state machines:
-
-- Mansion: Rattata distraction → Giovanni meeting → Pixie rescue → PC placement.
-- Celadon: café delivery jobs, card-scalper quest (`cardQuestComplete`), Game
-  Corner refund sequence.
-- Rocket Operations: five sequential quests in `rocket_quests.lua`.
-
-New completion consequence: finishing the Celadon card quest now also sets
-`finale.prequelComplete` and rolls the ending.
+Unchanged this phase. Mansion: Rattata distraction → Giovanni meeting → Pixie
+rescue → PC placement. Celadon: café delivery jobs, card-scalper quest, Game
+Corner refund sequence. Rocket Operations: five sequential quests.
 
 ## Minigames
 
 Unchanged this phase: café delivery jobs, Cue Bones, TCG duels, pack opening.
-The finale is a cutscene, not a minigame, and adds no scored systems.
 
 ## World State
 
-Unchanged this phase. The finale is presentational: it does not move NPCs,
-open paths, or alter map geometry, so it cannot desynchronise any existing
-reconciliation pass. It locks the live overworld's player input while running
-and restores the previous value on close.
+Unchanged this phase. Both chapter openings are presentational: they move no
+NPCs, open no paths and alter no map geometry, so neither can desynchronise an
+existing reconciliation pass. Each locks the live overworld's player input and
+restores the previous value on close.
 
 ## Story Progress
 
 Playable, in play order:
 
 1. Title → OakSpeech LOG 568 (flash-forward).
-2. Pokémon Mansion: emergency, Rattata/Persian, Giovanni's Conservation Project
+2. **`CINNABAR ISLAND / POKeMON MANSION` card → the Mansion cold open.**
+3. Pokémon Mansion: emergency, Rattata/Persian, Giovanni's Conservation Project
    briefing, Pixie rescue, PC placement.
-3. `Much earlier...` → Celadon City prequel: Game Corner refund, café jobs,
-   TCG, Rocket Hideout operations, card-scalper quest.
-4. **Ending: departure → liftoff → LOG 568 → preservation system → Ditto
-   dormant.**
+4. **`CELADON CITY / Much earlier...` card → the city sweep with narration.**
+5. Celadon City prequel: Game Corner refund, café jobs, TCG, Rocket Hideout
+   operations, card-scalper quest.
+6. Ending: departure → liftoff → LOG 568 → preservation system → Ditto dormant.
 
-The story now closes its own loop. The opening is no longer unresolved.
+Every transition in the game is now composed. Nothing cuts.
 
 ## Dependencies
 
 Later phases can rely on:
 
-- `Finale.SCRIPT` — the ending's text as pure data, safe to read without the
-  renderer.
-- `Finale.layout(text,maxWidth,maxRows,measure)` — reusable Gen I row breaking
-  with a pluggable width measure.
-- `Finale.pages(beats)` — `\f` page splitting that preserves per-beat speaker
-  metadata.
-- `Finale.state(q)` — the additive save accessor.
-- `finale.markPrequelComplete(game)` / `finale.shouldAutoPlay(game)` — the
-  trigger gate, if a later chapter should arm the ending instead of the Celadon
-  card quest.
+- `Cinema.layout` / `Cinema.pages` / `Cinema.authoredRows` — pure Gen I text
+  helpers with a pluggable width measure.
+- `Cinema.new(api)` — the whole renderer: `drawTextFrame`, `drawCard`,
+  `drawSpeakerArt`, `drawFade`, `drawFrame`, `newPageRunner`, `lockOverworld`,
+  `silenceMusic` / `playMusic` / `restoreMusic`.
+- `Chapters.SCRIPT`-equivalent data tables (`MANSION_CARD`, `CELADON_CARD`,
+  `MANSION_OPENING`, `CELADON_MONTAGE`) and `Chapters.hasProgress` /
+  `reconcile` for any future "has this save started?" question.
+- `Finale.SCRIPT`, `Finale.state`, `markPrequelComplete` / `shouldAutoPlay`.
+- `tests/support.lua` — the harness. A new suite is roughly ten lines of setup.
 
 ## Known Issues
 
-- The finale's storage display, launch and closing card are drawn from
-  primitives and the existing DMG logo. If a later phase adds authored art for
-  the storage system, `drawSystemChrome` and `drawDormantDitto` are the two
-  functions to replace.
-- `SYSTEM_RECORDS` is an authored list, not a read of the player's actual
-  storage. If a later phase gives the PC real contents, that list should be
-  derived from them.
-- The ending returns the player to free roam rather than to the title, so a
-  demo save is never stranded. That is a demo-scoped decision.
-- `tests/finale.lua` runs standalone; `tests/core.lua` still requires the
-  engine harness and was not extended.
+- `SYSTEM_RECORDS` in the finale is an authored list, not a read of the
+  player's actual storage.
+- The chapter cards, the launch and the storage display are drawn from
+  primitives and the existing DMG logo; no authored art exists for them yet.
+- The Celadon montage's shot compositions (`views = {{10,10},{18,12},{28,16}}`)
+  are inherited from the original unreachable code and have never been seen
+  running in-engine. They are the most likely thing to need re-framing after a
+  real playtest.
+- `tests/core.lua` still requires the engine harness and was not folded into
+  `tests/run.lua`.
+
+## Known Issues Fixed
+
+- **A three-row page could lose its last row.** The wrapper re-broke authored
+  rows and then clamped the result to three, which silently deleted the end of
+  the page. The opening's `Life on this planet / as we know it will / come to an
+  end.` has a 19-character first row; under a strict measure the re-wrap
+  produced four rows and clamped away `come to an end.` — the most important
+  line in the ending. Authored breaks now always win, the wrap is only accepted
+  when it still fits three rows, and a page quoted from the opening is never
+  re-broken at any width.
+- **The Hypno scene picker painted its last row below its own frame** (fixed in
+  1.0.369 when the two finale entries were added).
 
 ## Regression Risks
 
-Things a future change could break, and what protects them:
-
 | Risk | Protection |
 |---|---|
-| Someone edits or removes the opening OakSpeech lines | `tests/finale.lua` asserts each line is still present in `main.lua` as source |
-| Someone rewrites the finale's opening quote so the recognition beat stops landing | `tests/finale.lua` compares pages 1-4 and the last two pages byte-for-byte |
-| Someone adds a cause for the disasters or shows humans returning | banned-vocabulary sweep in `tests/finale.lua` |
-| A dialogue edit overruns the text frame | per-page row/width assertions |
-| The ending fires twice, or never | `shouldAutoPlay` gating tests |
-| A save written mid-cutscene resumes stuck | `running` is cleared in `normalizePokopiaSave` |
-| Schema 4 saves lose access to the ending | `prequelComplete` seeded from `cardQuestComplete`, asserted by the migration path in `normalizePokopiaSave` |
+| The opening OakSpeech lines are edited or removed | `tests/finale.lua` asserts each is still present in `main.lua` as source |
+| The bookend's quote drifts from the opening | Pages 1-4 and the last two compared byte-for-byte |
+| A cause is invented for the disasters, or humans are shown returning | Banned-vocabulary sweep |
+| The Mansion question or the Celadon answer is edited away | `tests/chapters.lua` asserts both halves and their DITTO references |
+| `Much earlier...` is reworded | Asserted verbatim |
+| Someone re-skips the Celadon city sweep | `tests/chapters.lua` asserts `cut:enter` arms `hold_first`, frames shot one, and carries three narration beats; and that the old skip comment is gone |
+| The raw `printf` intertitle returns | Asserted absent |
+| A dialogue edit overruns the text frame | Per-page row/width assertions plus a geometry pass over every string the headless runs draw |
+| The cold open fires on an in-progress save | `hasProgress` / `reconcile` tests, including the latch that must not undo a replay |
+| A cutscene leaves the player input-locked | Both openings and the ending assert lock-and-restore in their headless runs |
+| A save written mid-cutscene resumes stuck | `running` flags cleared in `normalizePokopiaSave` |
 
 ## Testing Completed
 
-- `lua5.1 tests/finale.lua` — 292 checks, all passing.
-- Lua 5.1 (LuaJIT-compatible) parse sweep over `main.lua`, `finale.lua`,
-  `rocket_quests.lua`, `tcg_battle.lua`, `tests/core.lua`, `mod.card` and every
-  file in `tcg_engine/`.
-- Bytecode symbol audit confirming `finale.lua` writes no globals and reads
-  only `love`, `require`, `math`, `pcall`, `ipairs`, `type`, `tonumber`,
-  `tostring`.
-- Bytecode symbol audit confirming the new `main.lua` call sites resolve
-  `Finale`, `pokopiaData`, `stopPokopiaAlarm`, `trainerPortraitImage`,
-  `getTrainerMaskShader`, `activeOverworld`, `muchEarlier`,
-  `restorePlayerInput` and `ensureCeladonScalperLine` as locals/upvalues rather
-  than accidental globals.
-- Headless drive of the full ending state machine through every mode
-  (`DEPARTURE`, `LIFTOFF_RISE`, `LIFTOFF_TEXT`, `LIFTOFF_HOLD`, `TO_BLACK`,
-  `LOG568`, `LOG_HOLD`, `SYSTEM`, `SYSTEM_CONTINGENCY`, `DORMANT`, `OUTRO`,
-  `END`) with both update and draw executed each frame, asserting the state
-  pops itself off the stack.
-- `manifest.json` re-parsed as JSON after the version bump.
+- `lua5.1 tests/run.lua` — 518 checks across three suites, all passing
+  (`cinema` 98, `chapters` 127, `finale` 293).
+- Deliberate-regression verification: erasing the Celadon answer beat and
+  re-disabling the city sweep were each confirmed to fail the suite, as was
+  moving a storage-display row under the dialogue frame.
+- Headless drives of all three authored compositions — the Mansion cold open
+  (`CARD`/`REVEAL`/`NARRATE`), the standalone chapter card, and the whole
+  ending — with `update` and `draw` executed every frame, asserting each state
+  pops itself and restores player input.
+- Geometry pass asserting every string those runs draw fits 160×144 and never
+  lands under the dialogue frame border, with one documented exemption for rows
+  quoted verbatim from the opening.
+- Lua 5.1 (LuaJIT-compatible) parse sweep over every packaged file.
+- Bytecode symbol audit confirming `cinema.lua`, `chapters.lua` and
+  `finale.lua` write no globals, and that every new `main.lua` call site
+  resolves as a local or upvalue rather than an accidental global.
+- `manifest.json` re-parsed as JSON; `mod.card` re-parsed as Lua.
 
 **Not performed:** in-engine playtesting. Gen1Recomp is not available in this
 environment, so every engine-facing call was matched against a call site that
@@ -234,15 +256,15 @@ already ships in `main.lua`/`tcg_battle.lua`, and everything optional is
 
 Suggested, in dependency order:
 
-1. **In-engine verification pass.** Run the three finale entry points on a new
-   game, a schema-4 development save, and a save reloaded mid-Celadon. Confirm
-   the Scientist cutout lands in the same screen position as the intro's — that
-   is the one thing that cannot be checked outside the engine.
-2. **Wire the storage roll to real data.** Replace `SYSTEM_RECORDS` with the
-   Pokémon the player actually put into the system.
-3. **Departure scene staging.** The departure currently plays as a text scene
-   over the sealed-system view. If the Mansion PC room is worth staging as an
-   overworld scene (Logan walking out, lights failing bank by bank), it
-   attaches at `enterScene("DEPARTURE")` without touching anything else.
-4. **Character documents for Giovanni and the Scientist**, to match Logan and
-   Wooper.
+1. **In-engine verification pass.** Three things cannot be checked outside the
+   engine: whether the Scientist cutout lands in exactly the intro's screen
+   position, whether the Celadon sweep's three shot compositions frame anything
+   worth looking at, and whether the engine font's real advance widths let the
+   opening's 20-character rows sit inside the frame.
+2. **Re-frame the Celadon sweep** against what the playtest shows, now that it
+   is reachable for the first time.
+3. **Wire the finale's storage roll to real data** instead of the authored
+   `SYSTEM_RECORDS` list.
+4. **Stage the departure scene** as an overworld beat (Logan walking out, lights
+   failing bank by bank) rather than a text scene over the sealed-system view.
+   It attaches at `enterScene("DEPARTURE")` without touching anything else.

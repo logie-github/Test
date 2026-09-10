@@ -113,6 +113,13 @@ log — so a future edit cannot quietly remove one side of the pair.
 
 ## Presentation notes
 
+- **Drawn through `cinema.lua`.** The text frame, the Scientist cutout, the
+  page runner, the fades, the audio guards and the overworld input lock are
+  the shared presentation layer the two chapter openings also use, so a line
+  of the log and a line of the Mansion cold open are drawn by the same code.
+  See `CHAPTER_OPENINGS.md`. `finale.lua` keeps only the ending's own
+  composition: its scene order, its timings, and the two renderers that exist
+  nowhere else — the launch and the storage display.
 - **No new image assets.** The launch is drawn from LÖVE primitives in a
   four-shade-friendly palette (black sky, white stars, white vehicle, outlined
   silhouettes). The closing card reuses the existing
@@ -123,9 +130,13 @@ log — so a future edit cannot quietly remove one side of the pair.
   dialogue box.
 - **Line width.** Newly authored copy is hand-broken to 18 characters, matching
   the project's existing convention. The quoted opening rows run to 20 and are
-  passed through untouched; `Finale.layout` honours authored `\n` breaks and
-  only wraps as a backstop, measuring with the engine's real `Font.width` at
-  runtime.
+  passed through untouched: `Cinema.rowsFor` never re-breaks a page marked
+  `quoted="opening"` at any width, because re-wrapping *"Our last-ditch / Hail
+  Mary project..."* into three rows would still say the right words while no
+  longer looking like the scene it is quoting. For everything else, authored
+  breaks still win and the wrap is a backstop that is only taken when the
+  result still fits three rows — see the line-breaking rule in
+  `CHAPTER_OPENINGS.md` for why clamping a wrap is dangerous here.
 - **The speaker plate is deliberately inconsistent.** The departure uses the
   normal nameplate so it reads like ordinary game dialogue. The log has none,
   because the opening has none. The change in presentation is the cue.
@@ -139,7 +150,7 @@ log — so a future edit cannot quietly remove one side of the pair.
 |---|---|
 | End of the Celadon chapter | `startCardHeroEnding` → `finishCardHero()` marks the prequel complete and auto-plays the ending once |
 | Mansion PC placement | `loganTalk` plays the finale instead of `Much earlier...` when the prequel has already been completed, then hands off to `Much earlier...` so the demo loop still works |
-| Reconciliation | `input.step` fires the ending when the player is in ordinary overworld control, outside the Mansion timeline, and the save is armed but unplayed. This covers a schema-4 save that had already finished the card quest, and a session quit part-way through the ending |
+| Reconciliation | `input.step` fires the ending, immediately after the Mansion cold-open check in the same hook, when the player is in ordinary overworld control, outside the Mansion timeline, and the save is armed but unplayed. This covers a schema-4 save that had already finished the card quest, and a session quit part-way through the ending |
 | Developer | Hypno's Card Club → SCENE JUMPS → `SCENE 3` (whole ending) or `FINALE LOG` (straight to the bookend). Developer runs pass `dev=true` and do not consume the real ending. |
 
 `Finale.shouldAutoPlay` gates on `prequelComplete and not completed`, so the
@@ -166,13 +177,22 @@ flag, so a save made before this change reaches the ending without a replay.
 ## Testing
 
 ```
-lua5.1 tests/finale.lua      # from the mod root; no engine required
+lua5.1 tests/run.lua         # from the mod root; no engine required
 ```
 
-292 checks covering bookend fidelity, the opening's continued presence in
-`main.lua`, preserved ambiguity, text-frame fit, the pure helpers, a headless
-run of the entire state machine through every mode, on-screen geometry for
-every string the run draws, and trigger gating.
+293 checks in `tests/finale.lua` covering bookend fidelity, the opening's
+continued presence in `main.lua`, preserved ambiguity, text-frame fit, a
+headless run of the entire state machine through every mode, on-screen geometry
+for every string the run draws, and trigger gating. `tests/cinema.lua` (98) and
+`tests/chapters.lua` (127) cover the shared presentation this file now depends
+on; 518 checks in total.
+
+One deliberate exemption in the geometry pass: rows quoted verbatim from the
+opening are not held to the strict right edge. The harness measures a worst-case
+fixed 8px glyph, while the real engine font is proportional — which is why
+`Font.width` exists and why the shipped intro renders a 20-character row such as
+"Hail Mary project..." without incident. Everything this project authors itself
+is still held to the strict edge.
 
 ## What is deliberately still open
 

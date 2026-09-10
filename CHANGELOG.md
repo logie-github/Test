@@ -1,3 +1,17 @@
+## 1.0.370 - Chapter Openings
+
+- The Pokemon Mansion now has an opening. It previously cut from the black LOG 568 screen straight to a player standing on 3F with an alarm running: no location, no establishing beat, and no acknowledgement of what the player had just been shown.
+- Added a `CINNABAR ISLAND / POKeMON MANSION` card that dissolves into the live floor rather than cutting to it, followed by four narration beats over the room. The third is the chapter's question: `No one has time to ask what a DITTO is doing here.`
+- `Much earlier...` is a real Gen I chapter card instead of a raw `love.graphics.printf` in LOVE's default font. The line itself is preserved verbatim and is now the second line of a `CELADON CITY / Much earlier...` card that matches the Mansion's exactly: where, then when.
+- Celadon now opens on its three-shot establishing sweep of the city. That camera machinery has been in the project all along -- `views`, `frameCityView`, `panCityView` and the `cityPanStage` machine are all live -- but `cut:enter` called `beginGameCornerStory()` directly, so the chapter cut from a title card into the middle of a stranger buying a prize.
+- One narration beat sits on each shot, pushed through the cutscene's own `box()` helper so the montage inherits the mod's real dialogue presentation. The third answers the Mansion's question one chapter late: `Somewhere in that crowd is a DITTO.`
+- Added `cinema.lua`, one Gen I presentation layer behind all three authored compositions: frame geometry, text layout, the typewriter frame, nameplates, trainer cutouts, chapter cards, the page runner, the overworld input lock and guarded audio. `finale.lua` was rebuilt on it and lost about a third of its size without changing a frame of the ending.
+- Fixed a real defect the new tests exposed: the old wrapper could silently drop the end of a three-row page. The opening's `Life on this planet / as we know it will / come to an end.` has a 19-character first row, and under a strict measure the re-wrap produced four rows and clamped away `come to an end.` Authored line breaks now always win, the wrap is only accepted when it still fits three rows, and a page quoted from the opening is never re-broken at any width.
+- The cold open never fires on a save that is already inside the story. Progress derivation runs once behind a latch so it cannot undo a deliberate developer replay, and a save written mid-cutscene never comes back still "running".
+- Added character personality documents for the Scientist and Giovanni, alongside the existing Logan and Wooper references.
+- Added `tests/cinema.lua` (98 checks), `tests/chapters.lua` (127 checks) and `tests/run.lua`; the three standalone suites now total 518 checks and need no engine.
+- No image-generation code and no generated image assets were added. Both chapter cards are drawn in the game's own font.
+
 ## 1.0.369 - LOG 568 Bookend
 
 - The opening LOG 568 scientist scene is now a deliberate flash-forward with a paid-off bookend. The existing opening is untouched; the ending quotes it.

@@ -6,6 +6,9 @@ return {
     changed={
       "Stock OakSpeech uses Scientist trainer portrait and Log 568",
       "The opening Log 568 scene is now a flash-forward that the ending pays off",
+      "The Mansion opens on a composed CINNABAR ISLAND card instead of cutting to gameplay",
+      "Much earlier... is a real Gen I chapter card instead of a raw printf",
+      "Celadon opens on its three-shot city sweep, which was previously unreachable",
       "OakSpeech plays the Mansion map theme",
       "Ditto is the player sprite",
       "All Mansion floors are battle-free and pickup-free",
@@ -17,6 +20,7 @@ return {
       "Six scientist panic scripts",
       "Grimer and Magnemite helpers",
       "LOG 568 bookend finale: departure, liftoff, the log continued, and the preservation system",
+      "Shared Gen I cinematic layer (cinema.lua) behind every authored cutscene",
     },
     known={
       "Dense authored emergency NPC population is currently concentrated on 3F",

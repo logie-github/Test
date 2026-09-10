@@ -1,4 +1,4 @@
-# Pokopia: Log 568 v1.0.369
+# Pokopia: Log 568 v1.0.370
 
 Built directly from the user-selected v0.4.6 baseline.
 
@@ -14,10 +14,22 @@ The opening itself is not modified. See `LOG568_BOOKEND.md` for the full
 composition, the constraints it holds to, and where to change it, and
 `LEDGER.md` for the current canonical project state.
 
-Run the ending's regression suite from the mod root, with no engine required:
+## Chapter openings
+
+Both playable chapters now open the way the game ends. The Mansion dissolves
+from a `CINNABAR ISLAND / POKeMON MANSION` card into the live floor and asks
+what a DITTO is doing in a building nobody will look down in; Celadon answers
+it one chapter later, over the three-shot city sweep that had been sitting
+unreachable in the cutscene controller. `Much earlier...` is a composed Gen I
+card now rather than a raw `printf`.
+
+See `CHAPTER_OPENINGS.md` for the composition and `cinema.lua` for the shared
+presentation layer behind all three authored cutscenes.
+
+Run every regression suite from the mod root, with no engine required:
 
 ```
-lua5.1 tests/finale.lua
+lua5.1 tests/run.lua
 ```
 
 
