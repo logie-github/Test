@@ -1,0 +1,21 @@
+{
+  "id": "pokopia_log568_demo",
+  "name": "Pokopia: Log 568",
+  "version": "1.0.368",
+  "api": 2,
+  "entry": "main.lua",
+  "profile": "total_conversion",
+  "category": "TOTAL_CONVERSION",
+  "games": [
+    "gen1"
+  ],
+  "game_version": ">=0.0.0-0 <2.0.0",
+  "priority": 999,
+  "dependencies": [],
+  "optional_dependencies": [],
+  "conflicts": [],
+  "permissions": [
+    "engine_internals"
+  ],
+  "description": "Pokopia Log 568 demo with Celadon Cafe one-minute delivery jobs, physical Pokemon TCG booster packs, chained opening, Binder/deck building, source-aligned Pokemon TCG GBC duel setup and battle flow, dialogue-only portraits, native Gen I battlers, TCG card art, compact TCG-safe menus, durable Hitmon transformation learning, and source-timed TCG Duel Theme 1."
+}

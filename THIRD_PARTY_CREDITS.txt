@@ -1,0 +1,35 @@
+Third-party sprite attribution
+
+Pokémon overworld/follower source sprites used by this mod are derived from:
+
+Pokemon Stadium 2 Overworld Models - Gold/Silver (Gen 2)
+Mod ID: STADIUM2_OVERWORLD_MODELS
+Version used: 0.1.85
+Author / repository credit: randyadr
+Repository: randyadr/3D-Pokemon-Sprites-Gen2
+
+Pokopia uses the NORMAL, non-shiny followsprite variants from that package.
+The exact source PNGs used are included under:
+THIRD_PARTY/STADIUM2_OVERWORLD_MODELS/normal_followsprites/
+
+The original package metadata and available license/notice files are included
+alongside them in THIRD_PARTY/STADIUM2_OVERWORLD_MODELS/.
+
+The source package itself notes that some bundled third-party assets may remain
+under their own licenses; its original notices are preserved here rather than
+being replaced by this attribution.
+
+Runtime sprite note for v1.0.210:
+Pokopia now uses the exact files from
+assets/generated/followsprites_runtime/<dex>-normal.png
+in STADIUM2_OVERWORLD_MODELS v0.1.85, copied byte-for-byte into
+assets/enhanced_overworld/runtime_normal/. No sprite conversion is applied.
+
+
+Enhanced Overworld / Stadium2 Overworld Models assets
+Source: Pokemon Stadium 2 Overworld Models - Gold/Silver (Gen 2) v0.1.85
+Source mod ID: STADIUM2_OVERWORLD_MODELS
+Credit: randyadr / Stadium Overworld Models Gen 2 port
+Imported content: selected normal six-frame Pokemon overworld runtime sheets under assets/enhanced_overworld/runtime_normal/
+License notices from the supplied source archive are included under THIRD_PARTY_LICENSES/Enhanced_Overworld_*_MIT.txt.
+The source archive itself states that third-party assets retain their respective licenses.
