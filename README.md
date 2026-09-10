@@ -1,6 +1,25 @@
-# Pokopia: Log 568 v1.0.334
+# Pokopia: Log 568 v1.0.369
 
 Built directly from the user-selected v0.4.6 baseline.
+
+## LOG 568 is a bookend
+
+The opening OakSpeech scene is a flash-forward. The game spends its running
+time explaining how the world reached it, and the ending catches back up to it:
+the departure, the liftoff, then the same black screen, the same Scientist, and
+the same lines the player saw before they meant anything -- continued past the
+point where the intro stopped.
+
+The opening itself is not modified. See `LOG568_BOOKEND.md` for the full
+composition, the constraints it holds to, and where to change it, and
+`LEDGER.md` for the current canonical project state.
+
+Run the ending's regression suite from the mod root, with no engine required:
+
+```
+lua5.1 tests/finale.lua
+```
+
 
 Added after that baseline:
 

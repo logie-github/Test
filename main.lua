@@ -1913,12 +1913,19 @@ return function(mod)
   local applyDittoForm
   local liveGame
   local muchEarlier
+  -- The LOG 568 bookend finale lives in finale.lua and is constructed further
+  -- down, once its dialogue/portrait/overworld dependencies exist. It is
+  -- declared here because `startCeladonEnding` closes over it long before the
+  -- module is loaded.
+  local Finale
 
   -- Save compatibility policy: this namespace is permanent. New builds only
   -- add/normalize fields inside it; they never require a fresh save or rename
   -- the namespace. Unknown fields are deliberately preserved so saves can move
   -- between older/newer demo builds without destructive conversion.
-  local POKOPIA_SAVE_SCHEMA=4
+  -- Schema 5 adds the `finale` sub-table used by the LOG 568 bookend. It is
+  -- purely additive; a schema-4 save loads with the ending simply unplayed.
+  local POKOPIA_SAVE_SCHEMA=5
   local function normalizePokopiaSave(save)
     if type(save)~="table" then return {} end
     if type(save.modData)~="table" then save.modData={} end
@@ -1942,6 +1949,19 @@ return function(mod)
     if type(q.characters.WOOPER)~="table" then q.characters.WOOPER={} end
     local wooper=q.characters.WOOPER
     wooper.streetCred=math.max(0,tonumber(wooper.streetCred) or 0)
+
+    -- LOG 568 bookend state. `prequelComplete` is what arms the ending; it is
+    -- reconstructed from the Celadon chapter's own completion flag so saves
+    -- made before schema 5 still reach the finale without a replay.
+    if type(q.finale)~="table" then q.finale={} end
+    local fin=q.finale
+    fin.version=math.max(1,tonumber(fin.version) or 1)
+    fin.playCount=math.max(0,math.floor(tonumber(fin.playCount) or 0))
+    fin.prequelComplete=(fin.prequelComplete or q.cardQuestComplete) and true or false
+    fin.logSeen=fin.logSeen and true or false
+    fin.completed=fin.completed and true or false
+    -- A save written mid-cutscene must never come back still "running".
+    fin.running=nil
 
     -- Celadon cafe delivery job state. Keep this additive and save-compatible.
     if type(q.cafeJobs)~="table" then q.cafeJobs={} end
@@ -7431,14 +7451,27 @@ return function(mod)
               q.cardQuestComplete=true
               q.cardHeroEndingStarted=nil
 
+              -- Chasing the scalpers out is the last authored beat of the
+              -- Celadon prequel. That makes it the point where the story
+              -- finally catches up with the LOG 568 flash-forward the player
+              -- was shown before they understood any of it, so the ending
+              -- rolls directly out of this scene rather than waiting for a
+              -- Mansion replay. `shouldAutoPlay` keeps it to exactly once.
+              local function finishCardHero()
+                ensureCeladonScalperLine()
+                restorePlayerInput(game,ow)
+                if not Finale then return end
+                Finale.markPrequelComplete(game)
+                if Finale.shouldAutoPlay(game) then Finale.play(game) end
+              end
+
               -- All three kids head toward the Department Store together.
               -- They are temporarily passable so their simultaneous paths do
               -- not serialize behind one another.
               local goals={{8,13},{9,13},{10,13}}
               local remaining=#kids
               if remaining==0 then
-                ensureCeladonScalperLine()
-                restorePlayerInput(game,ow)
+                finishCardHero()
                 return
               end
               for i,kid in ipairs(kids) do
@@ -7448,10 +7481,7 @@ return function(mod)
                 walkActorTo(kid,goal[1],goal[2],function()
                   removeRuntimeActor(kid)
                   remaining=remaining-1
-                  if remaining<=0 then
-                    ensureCeladonScalperLine()
-                    restorePlayerInput(game,ow)
-                  end
+                  if remaining<=0 then finishCardHero() end
                 end)
               end
             end,
@@ -9648,6 +9678,38 @@ return function(mod)
     game.stack:push(state)
   end
 
+  ------------------------------------------------------------------------
+  -- LOG 568 bookend finale.
+  --
+  -- The opening OakSpeech scene (`intro.oak_speech.build`, above) is a
+  -- flash-forward. finale.lua is the payoff: it plays the departure, the
+  -- liftoff, then reproduces the opening's exact presentation and exact
+  -- lines before continuing the log past the point where the intro stopped.
+  --
+  -- Loaded with the same loadfile/love.filesystem pattern used for
+  -- rocket_quests.lua and tcg_battle.lua. Constructed here because it needs
+  -- the dialogue portrait helpers, the alarm control and the live overworld
+  -- accessor, all of which are defined above this point.
+  ------------------------------------------------------------------------
+  do
+    local finalePath=tostring(mod.path or "").."/finale.lua"
+    local chunk,err=loadfile(finalePath)
+    if not chunk and love.filesystem and love.filesystem.load then
+      chunk,err=love.filesystem.load(finalePath)
+    end
+    assert(chunk,err)
+    local FinaleModule=chunk()
+    Finale=FinaleModule.new({
+      data=pokopiaData,
+      modPath=tostring(mod.path or ""),
+      overworld=function(game) return activeOverworld and activeOverworld(game) or nil end,
+      trainerImage=function(game,speaker) return trainerPortraitImage(game,speaker) end,
+      trainerMaskShader=getTrainerMaskShader,
+      stopAlarm=stopPokopiaAlarm,
+    })
+    Finale.module=FinaleModule
+  end
+
   local function pcBoxTalk(game,ow,npc,done)
     local q=pokopiaData(game)
     if q.distractionDone and q.giovanniMeetingDone then
@@ -9769,7 +9831,22 @@ return function(mod)
                       applyDittoForm(game,"DITTO",liveOw)
                     end
                     done()
-                    muchEarlier(game)
+
+                    -- This is the story's chronological hinge. On a first
+                    -- pass the demo still hands off to `Much earlier...` and
+                    -- the Celadon prequel, because the player has not yet
+                    -- been told how the world reached LOG 568. Once that
+                    -- prequel has been played, the same moment continues
+                    -- forward instead: departure, liftoff, and the bookend.
+                    if Finale and Finale.shouldAutoPlay(game) then
+                      Finale.play(game,{onFinish=function(g)
+                        -- The demo loop is preserved. After the ending, the
+                        -- Celadon chapter is still reachable exactly as before.
+                        muchEarlier(g)
+                      end})
+                    else
+                      muchEarlier(game)
+                    end
                   end)
                 end)
               end)
@@ -9915,7 +9992,10 @@ return function(mod)
       -- Keep the original developer scene picker as a submenu.
       local Font=require("src.render.Font")
       local Sound=require("src.core.Sound")
-      local rows={"SCENE 1","SCENE 2","SCENE 2.5","BACK"}
+      -- SCENE 3 is the LOG 568 bookend. FINALE LOG jumps straight to the
+      -- Scientist so the recognition beat can be checked without replaying
+      -- the departure and the launch.
+      local rows={"SCENE 1","SCENE 2","SCENE 2.5","SCENE 3","FINALE LOG","BACK"}
       local menu={isOpaque=false,cursor=1}
 
       local function cancelPicker()
@@ -9933,6 +10013,16 @@ return function(mod)
         prepScene2State()
         if done then done() end
         muchEarlier(game,true)
+      elseif choice=="SCENE 3" then
+        prepScene2State()
+        npc.frozen=false
+        if done then done() end
+        if Finale then Finale.play(game,{dev=true}) end
+      elseif choice=="FINALE LOG" then
+        prepScene2State()
+        npc.frozen=false
+        if done then done() end
+        if Finale then Finale.play(game,{dev=true,from="LOG568"}) end
       else
         cancelPicker()
       end
@@ -9960,15 +10050,17 @@ return function(mod)
     end
 
       function menu:draw()
-      Font.drawBox(3,4,14,10)
+      -- The frame and row pitch are sized to the actual row count so no
+      -- entry paints outside the box (the old 4-row layout already did).
+      Font.drawBox(2,2,16,15)
       love.graphics.setColor(0,0,0,1)
-      Font.draw("HYPNO",56,40)
-      Font.draw("PICK A SCENE",32,56)
+      Font.draw("HYPNO",56,28)
+      Font.draw("PICK A SCENE",32,42)
       for i,row in ipairs(rows) do
-        Font.draw(row,48,72+(i-1)*16)
+        Font.draw(row,40,60+(i-1)*12)
       end
-      local ay=76+(self.cursor-1)*16
-      love.graphics.polygon("fill",36,ay,36,ay+8,42,ay+4)
+      local ay=62+(self.cursor-1)*12
+      love.graphics.polygon("fill",28,ay,28,ay+8,34,ay+4)
       love.graphics.setColor(1,1,1,1)
     end
 
@@ -12116,6 +12208,25 @@ return function(mod)
     local ow=activeOverworld(game)
     local input=game and game.input
     local q=game and pokopiaData(game)
+
+    -- LOG 568 bookend reconciliation.
+    --
+    -- The ending normally rolls straight out of the Celadon chapter's last
+    -- beat. Two cases can still arrive here armed but unplayed: a save made
+    -- before schema 5 that had already finished the card quest, and a session
+    -- quit part-way through the ending itself. Fire it once the player is back
+    -- in ordinary overworld control and away from the Mansion timeline, so it
+    -- can never interrupt a scripted scene or a menu. `shouldAutoPlay` and the
+    -- transient `running` flag together make this idempotent.
+    if Finale and ow and ow.map and ow.player
+        and not isMansion(ow.map.id)
+        and not ow.player.inputLocked
+        and not ow.player.frozen
+        and not ow.playerHidden
+        and game.stack:top()==ow
+        and Finale.shouldAutoPlay(game) then
+      Finale.play(game)
+    end
 
     -- If Ditto changes into the wrong Pokemon beside Giovanni, the room
     -- guard physically comes over and escorts Ditto back through the door.

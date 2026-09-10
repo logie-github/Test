@@ -1,3 +1,19 @@
+## 1.0.369 - LOG 568 Bookend
+
+- The opening LOG 568 scientist scene is now a deliberate flash-forward with a paid-off bookend. The existing opening is untouched; the ending quotes it.
+- Added `finale.lua`: the departure from inside the sealed preservation system, the liftoff, a full recreation of the opening's presentation, the log continued past where the intro stopped, the preservation system still running without anyone to run it, and Ditto dormant inside it.
+- The bookend re-uses the opening's first four lines and its last two lines verbatim, so the recognition beat lands and the closing lines carry different weight the second time.
+- The launch is allowed to read as a success and then simply sits there for 150 frames. Nothing explains the failure until the Scientist does.
+- Preserved every ambiguity the reference material leaves open: no cause is given for the disasters, no mechanism is given for humanity's failure to return, and humans are never shown returning. `tests/finale.lua` enforces all three with a banned-vocabulary sweep.
+- The Conservation Project release contingency described in Giovanni's briefing is shown still armed and still waiting on a habitat check. Nothing resolves it.
+- The ending fires once per save from whichever comes first: finishing the Celadon card quest, or the Mansion PC placement on a save that already finished the prequel.
+- Added `SCENE 3` and `FINALE LOG` to Hypno's scene jumps. Developer runs do not consume the real ending.
+- Added a per-frame reconciliation trigger so a save made before this build, or a session quit part-way through the ending, still reaches it without replaying anything. It only fires in ordinary overworld control, outside the Mansion timeline.
+- Save schema 4 to 5, purely additive. `finale.prequelComplete` is reconstructed from the existing `cardQuestComplete` flag, so older development saves reach the ending without a replay. A save written mid-cutscene never resumes "running".
+- Fixed the Hypno scene picker painting its last row below its own frame.
+- Added `tests/finale.lua`, a standalone 292-check suite that runs without booting the engine, plus `LOG568_BOOKEND.md`, `LEDGER.md` and a Logan character personality document.
+- No image-generation code and no generated image assets were added. The launch and the storage display are drawn from primitives; the closing card reuses the existing DMG logo.
+
 ## 1.0.368 - Rocket Lounge Polish
 
 - Rebuilt the CUE BONES game screen around the native 160x144 viewport. The title, dice, total, point, result, and controls now occupy deliberate rows inside the frame; no prompt is drawn below the screen or into the border.
