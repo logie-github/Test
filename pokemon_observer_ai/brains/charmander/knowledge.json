@@ -1,0 +1,64 @@
+{
+  "species": "Charmander",
+  "source": "https://bulbapedia.bulbagarden.net/wiki/Charmander_(Pok%C3%A9mon)",
+  "core": {
+    "pokedex": "#0004",
+    "classification": "Lizard Pokémon",
+    "type": "Fire",
+    "height": "0.6 m (2 ft 0 in)",
+    "weight": "8.5 kg (18.7 lb)",
+    "abilities": "Blaze; hidden ability Solar Power",
+    "evolution": "Evolves into Charmeleon starting at level 16; Charmeleon evolves into Charizard at level 36."
+  },
+  "categories": {
+    "habitat": [
+      "Found in hot mountainous areas and also recorded in the Blueberry Academy Terarium; many are owned by Trainers."
+    ],
+    "behavior": [
+      "Shows pack behavior, calling other Charmander when food is found and checking companions’ tail flames.",
+      "Sleeps curled up and appears to draw warmth from its tail flame."
+    ],
+    "social_structure": [
+      "Can behave in packs and cooperatively watch the tail flames of other Charmander."
+    ],
+    "activity_cycle": [
+      "Known to sleep curled up; quiet-night observations note the sound of its tail flame while sleeping."
+    ],
+    "likes_preferences": [
+      "Explicitly prefers hot places and hot things."
+    ],
+    "physical_characteristics": [
+      "Small bipedal reptilian Pokémon with an orange body, blue eyes, a cream-colored underside and soles, small fangs, and a slender tail.",
+      "A flame has burned at the tail tip since birth."
+    ],
+    "adaptations": [
+      "Its tail flame reflects vitality and can remain lit when slightly wet if the Pokémon is healthy.",
+      "The tail flame provides warmth while it sleeps."
+    ],
+    "communication": [
+      "Calls other Charmander when it finds food.",
+      "Tail-flame behavior communicates condition and mood: bright when strong, weak when exhausted, wavering when happy, and blazing when enraged."
+    ],
+    "reproduction_mating": [
+      "Game breeding data places it in the Monster and Dragon Egg Groups with a hatch time of 20 cycles."
+    ],
+    "parenting_young": [
+      "Newborn Charmander already have flaming tails; young individuals may accidentally burn themselves while unfamiliar with fire."
+    ],
+    "lifespan_life_cycle": [
+      "The tail flame burns from birth.",
+      "It evolves into Charmeleon at level 16 and later into Charizard at level 36."
+    ]
+  },
+  "missing_categories": [
+    "diet",
+    "geographic_range",
+    "dislikes_avoidances",
+    "territoriality",
+    "predators_threats",
+    "defense_mechanisms",
+    "hunting_foraging_style",
+    "intelligence_learning",
+    "ecological_role"
+  ]
+}

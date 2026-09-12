@@ -1,0 +1,74 @@
+{
+  "species": "Bulbasaur",
+  "source": "https://bulbapedia.bulbagarden.net/wiki/Bulbasaur_(Pok%C3%A9mon)",
+  "core": {
+    "pokedex": "#0001",
+    "classification": "Seed Pokémon",
+    "type": "Grass / Poison",
+    "height": "0.7 m (2 ft 4 in)",
+    "weight": "6.9 kg (15.2 lb)",
+    "abilities": "Overgrow; hidden ability Chlorophyll",
+    "evolution": "Evolves into Ivysaur starting at level 16; Ivysaur evolves into Venusaur at level 32."
+  },
+  "categories": {
+    "diet": [
+      "The back bulb supplies energy through photosynthesis and nutrient-rich seeds.",
+      "It can go for days without eating.",
+      "Its vines can pull it into trees to reach Berries."
+    ],
+    "habitat": [
+      "Found in grasslands and forests; wild individuals are uncommon because many are raised for Trainers.",
+      "Also recorded in the Blueberry Academy Terarium."
+    ],
+    "geographic_range": [
+      "Naturally associated with the Kanto region; also recorded in the Blueberry Academy Terarium."
+    ],
+    "behavior": [
+      "Often naps in bright sunlight.",
+      "Shows strong loyalty and has displayed nurturing behavior toward younger or weaker Pokémon."
+    ],
+    "social_structure": [
+      "Many gather yearly in a hidden Kanto garden for an evolution ceremony led by a Venusaur."
+    ],
+    "activity_cycle": [
+      "Known to sleep or bask in sunny spots; no specific nocturnal or diurnal classification is given."
+    ],
+    "likes_preferences": [
+      "Frequently basks in bright, sunny places."
+    ],
+    "physical_characteristics": [
+      "Small quadrupedal amphibian-like body with blue-green skin, darker patches, red eyes, pointed ear-like structures, a blunt snout, visible upper teeth, and three claws on each foot.",
+      "A green plant bulb grows on its back and contains slender vines."
+    ],
+    "adaptations": [
+      "The bulb provides stored nutrients and photosynthetic energy.",
+      "Long strong vines can grasp branches and help it climb."
+    ],
+    "communication": [
+      "Has used its vines gently to comfort younger Pokémon and has been shown singing while doing so.",
+      "The bulb flashes blue when it is ready to evolve."
+    ],
+    "reproduction_mating": [
+      "Game breeding data places it in the Monster and Grass Egg Groups with a hatch time of 20 cycles."
+    ],
+    "parenting_young": [
+      "Young Bulbasaur draw nourishment from the seed on their back as they grow.",
+      "The species has displayed a nurturing instinct toward smaller or weaker Pokémon."
+    ],
+    "hunting_foraging_style": [
+      "Uses sunlight and stored seed nutrients for energy and can use its vines to reach Berries."
+    ],
+    "lifespan_life_cycle": [
+      "The seed on its back grows with its body.",
+      "It evolves into Ivysaur at level 16 and later into Venusaur at level 32."
+    ]
+  },
+  "missing_categories": [
+    "dislikes_avoidances",
+    "territoriality",
+    "predators_threats",
+    "defense_mechanisms",
+    "intelligence_learning",
+    "ecological_role"
+  ]
+}

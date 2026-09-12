@@ -1,0 +1,65 @@
+{
+  "species": "Squirtle",
+  "source": "https://bulbapedia.bulbagarden.net/wiki/Squirtle_(Pok%C3%A9mon)",
+  "core": {
+    "pokedex": "#0007",
+    "classification": "Tiny Turtle Pokémon",
+    "type": "Water",
+    "height": "0.5 m (1 ft 8 in)",
+    "weight": "9.0 kg (19.8 lb)",
+    "abilities": "Torrent; hidden ability Rain Dish",
+    "evolution": "Evolves into Wartortle starting at level 16; Wartortle evolves into Blastoise at level 36."
+  },
+  "categories": {
+    "habitat": [
+      "Scarce in the wild; found around small ponds and lakes, rivers in mountainous regions, and on secluded islands with members of its evolutionary line."
+    ],
+    "behavior": [
+      "Withdraws into its shell when threatened and also sleeps inside the shell for protection."
+    ],
+    "social_structure": [
+      "Has been shown living on secluded islands with other members of its evolutionary line."
+    ],
+    "activity_cycle": [
+      "Sleeps with its head and limbs withdrawn into its shell."
+    ],
+    "physical_characteristics": [
+      "Small light-blue turtle-like reptilian Pokémon with large colored eyes, three pointed digits on each hand and foot, a curled tail, and a hard shell.",
+      "The shell is brown above, pale yellow below, with a thick white ridge."
+    ],
+    "adaptations": [
+      "Its shell hardens after birth and protects the body.",
+      "The rounded grooved shell reduces drag for fast swimming.",
+      "It can spray foamy water from its mouth with high accuracy."
+    ],
+    "reproduction_mating": [
+      "Game breeding data places it in the Monster and Water 1 Egg Groups with a hatch time of 20 cycles."
+    ],
+    "parenting_young": [
+      "The shell is soft at birth and then hardens into a resilient protective structure."
+    ],
+    "predators_threats": [
+      "Sharpedo is identified as a natural predator."
+    ],
+    "defense_mechanisms": [
+      "Retracts into its shell when threatened and can counterattack with water from its mouth."
+    ],
+    "hunting_foraging_style": [
+      "Can shoot water at prey while in the water; no specific prey species are identified."
+    ],
+    "lifespan_life_cycle": [
+      "Its shell forms and hardens after birth.",
+      "It evolves into Wartortle at level 16 and later into Blastoise at level 36."
+    ]
+  },
+  "missing_categories": [
+    "diet",
+    "geographic_range",
+    "likes_preferences",
+    "dislikes_avoidances",
+    "communication",
+    "territoriality",
+    "intelligence_learning",
+    "ecological_role"
+  ]
+}

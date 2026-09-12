@@ -1,0 +1,16 @@
+{
+  "species": "squirtle",
+  "training_examples": 12951,
+  "steps": 400,
+  "vocab_size": 516,
+  "final_loss": 0.5774811506271362,
+  "loss_samples": [
+    10.646007537841797,
+    1.2722216844558716,
+    0.7796544432640076,
+    1.0007296800613403,
+    0.5774811506271362
+  ],
+  "base_checkpoint": "agent_model_v1.2",
+  "format": "agent_v4_memory_masked_sentinels"
+}

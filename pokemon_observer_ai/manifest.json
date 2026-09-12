@@ -1,0 +1,19 @@
+{
+  "id": "pokemon_observer_ai",
+  "name": "Pokemon Observer AI Arena",
+  "version": "1.7.0",
+  "api": 2,
+  "entry": "main.lua",
+  "profile": "total_conversion",
+  "category": "TOTAL_CONVERSION",
+  "game_version": ">=0.0.0-0 <2.0.0",
+  "games": [
+    "gen1"
+  ],
+  "priority": 950,
+  "permissions": [],
+  "dependencies": [],
+  "optional_dependencies": [],
+  "conflicts": [],
+  "description": "Fixed-camera Day Care spectator sim with embedded per-species microLMs, permanent event ledgers with retrieval, beliefs, plans, sprite-scale battle animation, ten-second unconsciousness and real Gen I party progression."
+}

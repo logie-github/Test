@@ -1,0 +1,16 @@
+{
+  "species": "bulbasaur",
+  "training_examples": 13229,
+  "steps": 400,
+  "vocab_size": 553,
+  "final_loss": 0.6770269274711609,
+  "loss_samples": [
+    9.139896392822266,
+    1.4389995336532593,
+    0.8658064603805542,
+    0.7431718111038208,
+    0.6770269274711609
+  ],
+  "base_checkpoint": "agent_model_v1.2",
+  "format": "agent_v4_memory_masked_sentinels"
+}

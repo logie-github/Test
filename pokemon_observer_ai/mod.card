@@ -1,0 +1,29 @@
+return {
+  summary = "Three embedded microLM Pokemon live autonomously in the real Gen I Day Care room.",
+  author = "Custom user mod",
+  tags = { "ai", "simulation", "total-conversion", "observer", "lua" },
+  differences = {
+    changed = {
+      "New Game boots the regular overworld into the sealed cartridge DAYCARE room.",
+      "The player avatar is hidden and input-locked; the camera stays centered on the room.",
+      "Bulbasaur, Charmander and Squirtle are real level-5 party records with normal Gen I stats and moves.",
+      "Their room actors use bundled six-frame PokePCFollowers overworld sprites.",
+      "The START menu is replaced by party inspection, targeted observer interventions, dispositions and activity history.",
+      "Pokemon are explicitly aware that the room is a Pokemon Day Care.",
+      "The three microLMs run inside Lua; no localhost server or Python process exists."
+    },
+    added = {
+      "embedded q8 Transformer inference", "directional learned disposition", "paged private focus thoughts",
+      "episodic memories", "generated speech and thoughts", "social consequences", "targeted interventions",
+      "engine-grid pathing", "reaction valence markers", "disposition viewer", "activity log", "compatible newcomers",
+      "stock Party/Summary inspection", "bundled PokePCFollowers starter sprite sheets"
+    },
+    known = {
+      "Inference is deliberately spread across frames; very slow hardware may make a Pokemon think for several seconds."
+    },
+  },
+  credits = {
+    "PokePCFollowers / ShockSlayer / Pokemon Crystal Clear contributors - requested overworld follower sprites"
+  },
+  compat = { engine = ">=0.0.0-0 <2.0.0", modApi = 2 },
+}

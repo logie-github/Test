@@ -1,0 +1,17 @@
+{
+  "runtime": "embedded_lua_q8",
+  "architecture": {
+    "d_model": 96,
+    "heads": 4,
+    "layers": 3,
+    "ff": 256,
+    "max_context": 128
+  },
+  "models": {
+    "bulbasaur": {"vocab": 553, "training_examples": 13229, "continued_steps": 400},
+    "charmander": {"vocab": 519, "training_examples": 13251, "continued_steps": 400},
+    "squirtle": {"vocab": 516, "training_examples": 12951, "continued_steps": 400}
+  },
+  "quantization": "symmetric int8 per output row with float32 row scales",
+  "external_runtime_required": false
+}
