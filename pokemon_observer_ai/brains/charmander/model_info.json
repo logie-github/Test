@@ -1,16 +1,37 @@
 {
-  "species": "Charmander",
-  "parameter_count": 302016,
-  "vocab_size": 293,
-  "training_examples": 167,
-  "training_steps": 260,
-  "final_loss": 0.22931599617004395,
-  "loss_samples": [
-    56.78303527832031,
-    1.6385748386383057,
-    0.4481236934661865,
-    0.38563159108161926,
-    0.27513882517814636,
-    0.23017990589141846
+  "species": "charmander",
+  "parameter_count": 1748160,
+  "vocab_size": 3000,
+  "d_model": 160,
+  "heads": 4,
+  "layers": 4,
+  "ff": 640,
+  "max_context": 192,
+  "training_tokens_seen": 6451200,
+  "corpus_tokens": 15150461,
+  "steps": 1400,
+  "final_loss": 0.6532428622245788,
+  "loss_curve": [
+    4.597559510469437,
+    1.3262485378980637,
+    0.8702375227212906,
+    0.7747014284133911,
+    0.7333382892608643,
+    0.7214881527423859,
+    0.6980000168085099,
+    0.6897520971298218,
+    0.6780454313755035,
+    0.6702873140573502,
+    0.6697328299283981,
+    0.6581749790906906,
+    0.6579002547264099,
+    0.6544893085956573
+  ],
+  "unk_rate": 1.557708376002552e-05,
+  "quantization": "symmetric int8 per output row, float32 row scales",
+  "blob_bytes": 1810045,
+  "sources": [
+    "Bulbapedia article text for this species and its evolutions",
+    "generated Day Care social corpus in the runtime's own prompt format"
   ]
 }

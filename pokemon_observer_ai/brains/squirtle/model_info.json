@@ -1,16 +1,37 @@
 {
-  "species": "Squirtle",
-  "parameter_count": 300864,
-  "vocab_size": 281,
-  "training_examples": 167,
-  "training_steps": 260,
-  "final_loss": 0.24009941518306732,
-  "loss_samples": [
-    58.44051742553711,
-    1.3602508306503296,
-    0.566909909248352,
-    0.2757444679737091,
-    0.26711365580558777,
-    0.2534741163253784
+  "species": "squirtle",
+  "parameter_count": 1748160,
+  "vocab_size": 3000,
+  "d_model": 160,
+  "heads": 4,
+  "layers": 4,
+  "ff": 640,
+  "max_context": 192,
+  "training_tokens_seen": 6451200,
+  "corpus_tokens": 15119410,
+  "steps": 1400,
+  "final_loss": 0.6529814052581787,
+  "loss_curve": [
+    4.617744259834289,
+    1.2880446410179138,
+    0.860971314907074,
+    0.7689927226305008,
+    0.7332652974128723,
+    0.7173335355520248,
+    0.6984862953424453,
+    0.687839435338974,
+    0.677931250333786,
+    0.6685565310716629,
+    0.6642476087808609,
+    0.6587671720981598,
+    0.653330939412117,
+    0.653701999783516
+  ],
+  "unk_rate": 1.1442245431534696e-05,
+  "quantization": "symmetric int8 per output row, float32 row scales",
+  "blob_bytes": 1810045,
+  "sources": [
+    "Bulbapedia article text for this species and its evolutions",
+    "generated Day Care social corpus in the runtime's own prompt format"
   ]
 }

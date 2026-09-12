@@ -3,9 +3,18 @@
 local MAIN="/home/user/Test/pokemon_observer_ai/main.lua"
 local species=arg[1] or "bulbasaur"
 local MODELDIR=arg[2] or ("out/"..species)
-local src={} ; local n=0
+local src={}
+local n=0
 for line in io.lines(MAIN) do n=n+1; src[n]=line end
-local body=table.concat(src,"\n",144,470)
+local first,last
+for i,l in ipairs(src) do
+  if not first and l:find("Embedded q8 micro-transformer",1,true) then first=i end
+  if first and not last and l:find("local function branchPrompt",1,true) then
+    for j=i,#src do if src[j]=="  end" then last=j break end end
+  end
+end
+assert(first and last,"could not locate the runtime block in main.lua")
+local body=table.concat(src,"\n",first,last)
 local mod={}
 function mod:read(path)
   local p=path:gsub("^brains/"..species.."/",MODELDIR.."/")
@@ -14,6 +23,8 @@ function mod:read(path)
 end
 local R=assert(loadstring([[
 local mod=...
+local function clamp(v,a,b) if v<a then return a elseif v>b then return b else return v end end
+local function rnd(st) st.rng=(1103515245*st.rng+12345)%2147483648 return st.rng/2147483648 end
 ]]..body..[[
 
 return {loadModel=loadModel,promptState=promptState,branchPrompt=branchPrompt,

@@ -1,2 +1,50 @@
 === bulbasaur start 03:55:11 ===
 [bulbasaur] 237703 lines
+[bulbasaur] vocab 3000  tokens 15.18M  unk 0.00%
+[bulbasaur] params 1.748M
+/home/user/Test/training/train.py:177: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  losses.append(float(loss))
+[bulbasaur] step 1/1400 loss 8.026 lr 2.00e-05 0.43s/step eta 10min
+[bulbasaur] step 50/1400 loss 6.312 lr 1.00e-03 0.33s/step eta 8min
+[bulbasaur] step 100/1400 loss 2.898 lr 2.00e-03 0.33s/step eta 7min
+[bulbasaur] step 150/1400 loss 1.569 lr 3.00e-03 0.33s/step eta 7min
+[bulbasaur] step 200/1400 loss 1.114 lr 2.99e-03 0.33s/step eta 7min
+[bulbasaur] step 250/1400 loss 0.927 lr 2.96e-03 0.33s/step eta 6min
+[bulbasaur] step 300/1400 loss 0.844 lr 2.90e-03 0.33s/step eta 6min
+[bulbasaur] step 350/1400 loss 0.786 lr 2.82e-03 0.33s/step eta 6min
+[bulbasaur] step 400/1400 loss 0.758 lr 2.73e-03 0.33s/step eta 6min
+[bulbasaur] step 450/1400 loss 0.743 lr 2.61e-03 0.33s/step eta 5min
+[bulbasaur] step 500/1400 loss 0.733 lr 2.48e-03 0.33s/step eta 5min
+[bulbasaur] sample: i am tired enough that nothing here seems worth the trouble, and the next time charmander tries that i am not going to stand still
+[bulbasaur] step 550/1400 loss 0.714 lr 2.34e-03 0.33s/step eta 5min
+[bulbasaur] step 600/1400 loss 0.717 lr 2.18e-03 0.33s/step eta 4min
+[bulbasaur] step 650/1400 loss 0.698 lr 2.02e-03 0.33s/step eta 4min
+[bulbasaur] step 700/1400 loss 0.688 lr 1.84e-03 0.33s/step eta 4min
+[bulbasaur] step 750/1400 loss 0.683 lr 1.66e-03 0.33s/step eta 4min
+[bulbasaur] step 800/1400 loss 0.679 lr 1.49e-03 0.33s/step eta 3min
+[bulbasaur] step 850/1400 loss 0.678 lr 1.31e-03 0.33s/step eta 3min
+[bulbasaur] step 900/1400 loss 0.676 lr 1.13e-03 0.33s/step eta 3min
+[bulbasaur] step 950/1400 loss 0.676 lr 9.68e-04 0.33s/step eta 2min
+[bulbasaur] step 1000/1400 loss 0.669 lr 8.11e-04 0.33s/step eta 2min
+[bulbasaur] sample: the bulb on my back is sun reaches this corner. if i put something down it does not stop being mine because i am not
+[bulbasaur] step 1050/1400 loss 0.664 lr 6.67e-04 0.33s/step eta 2min
+[bulbasaur] step 1100/1400 loss 0.658 lr 5.36e-04 0.33s/step eta 2min
+[bulbasaur] step 1150/1400 loss 0.661 lr 4.22e-04 0.33s/step eta 1min
+[bulbasaur] step 1200/1400 loss 0.657 lr 3.26e-04 0.33s/step eta 1min
+[bulbasaur] step 1250/1400 loss 0.652 lr 2.50e-04 0.33s/step eta 1min
+[bulbasaur] step 1300/1400 loss 0.655 lr 1.95e-04 0.33s/step eta 1min
+[bulbasaur] step 1350/1400 loss 0.656 lr 1.61e-04 0.33s/step eta 0min
+[bulbasaur] step 1400/1400 loss 0.649 lr 1.50e-04 0.33s/step eta 0min
+[bulbasaur] exported 1.81MB  final loss 0.649
+lua5.1: verify_export.lua:19: [string "runtime"]:286: 'end' expected (to close 'if' at line 284) near '<eof>'
+stack traceback:
+	[C]: in function 'assert'
+	verify_export.lua:19: in main chunk
+	[C]: ?
+Traceback (most recent call last):
+  File "/home/user/Test/training/verify_export.py", line 32, in <module>
+    subprocess.run(["lua5.1", "verify_export.lua", species, outdir], check=True)
+  File "/usr/lib/python3.11/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['lua5.1', 'verify_export.lua', 'bulbasaur', '/home/user/Test/training/out/bulbasaur']' returned non-zero exit status 1.

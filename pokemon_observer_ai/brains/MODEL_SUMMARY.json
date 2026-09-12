@@ -1,17 +1,39 @@
 {
   "runtime": "embedded_lua_q8",
-  "architecture": {
-    "d_model": 96,
-    "heads": 4,
-    "layers": 3,
-    "ff": 256,
-    "max_context": 128
-  },
+  "external_runtime_required": false,
+  "independent_models": true,
   "models": {
-    "bulbasaur": {"vocab": 553, "training_examples": 13229, "continued_steps": 400},
-    "charmander": {"vocab": 519, "training_examples": 13251, "continued_steps": 400},
-    "squirtle": {"vocab": 516, "training_examples": 12951, "continued_steps": 400}
+    "bulbasaur": {
+      "parameter_count": 1748160,
+      "vocab_size": 3000,
+      "corpus_tokens": 15179070,
+      "training_tokens_seen": 6451200,
+      "steps": 1400,
+      "final_loss": 0.6490262830257416
+    },
+    "charmander": {
+      "parameter_count": 1748160,
+      "vocab_size": 3000,
+      "corpus_tokens": 15150461,
+      "training_tokens_seen": 6451200,
+      "steps": 1400,
+      "final_loss": 0.6532428622245788
+    },
+    "squirtle": {
+      "parameter_count": 1748160,
+      "vocab_size": 3000,
+      "corpus_tokens": 15119410,
+      "training_tokens_seen": 6451200,
+      "steps": 1400,
+      "final_loss": 0.6529814052581787
+    }
   },
-  "quantization": "symmetric int8 per output row with float32 row scales",
-  "external_runtime_required": false
+  "architecture": {
+    "d_model": 160,
+    "heads": 4,
+    "layers": 4,
+    "ff": 640,
+    "max_context": 192
+  },
+  "quantization": "symmetric int8 per output row, float32 row scales"
 }

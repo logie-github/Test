@@ -1,0 +1,89 @@
+=== charmander start 04:06:21 ===
+[charmander] 237645 lines
+[charmander] vocab 3000  tokens 15.15M  unk 0.00%
+[charmander] params 1.748M
+/home/user/Test/training/train.py:177: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  losses.append(float(loss))
+[charmander] step 1/1400 loss 8.030 lr 2.00e-05 0.45s/step eta 10min
+[charmander] step 50/1400 loss 6.280 lr 1.00e-03 0.33s/step eta 7min
+[charmander] step 100/1400 loss 2.915 lr 2.00e-03 0.33s/step eta 7min
+[charmander] step 150/1400 loss 1.546 lr 3.00e-03 0.33s/step eta 7min
+[charmander] step 200/1400 loss 1.107 lr 2.99e-03 0.33s/step eta 7min
+[charmander] step 250/1400 loss 0.911 lr 2.96e-03 0.33s/step eta 6min
+[charmander] step 300/1400 loss 0.830 lr 2.90e-03 0.33s/step eta 6min
+[charmander] step 350/1400 loss 0.784 lr 2.82e-03 0.33s/step eta 6min
+[charmander] step 400/1400 loss 0.766 lr 2.73e-03 0.33s/step eta 6min
+[charmander] step 450/1400 loss 0.740 lr 2.61e-03 0.33s/step eta 5min
+[charmander] step 500/1400 loss 0.727 lr 2.48e-03 0.33s/step eta 5min
+[charmander] sample: i need this room to be quiet for a while. i want to know what is behind that.
+[charmander] step 550/1400 loss 0.731 lr 2.34e-03 0.33s/step eta 5min
+[charmander] step 600/1400 loss 0.712 lr 2.18e-03 0.33s/step eta 4min
+[charmander] step 650/1400 loss 0.699 lr 2.02e-03 0.33s/step eta 4min
+[charmander] step 700/1400 loss 0.697 lr 1.84e-03 0.33s/step eta 4min
+[charmander] step 750/1400 loss 0.691 lr 1.66e-03 0.33s/step eta 4min
+[charmander] step 800/1400 loss 0.688 lr 1.49e-03 0.33s/step eta 3min
+[charmander] step 850/1400 loss 0.683 lr 1.31e-03 0.33s/step eta 3min
+[charmander] step 900/1400 loss 0.673 lr 1.13e-03 0.33s/step eta 3min
+[charmander] step 950/1400 loss 0.674 lr 9.68e-04 0.33s/step eta 2min
+[charmander] step 1000/1400 loss 0.667 lr 8.11e-04 0.33s/step eta 2min
+[charmander] sample: i could make something happen if nobody else will so i will wait and do it when the room is quiet, and i could leave
+[charmander] step 1050/1400 loss 0.677 lr 6.67e-04 0.33s/step eta 2min
+[charmander] step 1100/1400 loss 0.663 lr 5.36e-04 0.33s/step eta 2min
+[charmander] step 1150/1400 loss 0.661 lr 4.22e-04 0.33s/step eta 1min
+[charmander] step 1200/1400 loss 0.655 lr 3.26e-04 0.33s/step eta 1min
+[charmander] step 1250/1400 loss 0.658 lr 2.50e-04 0.33s/step eta 1min
+[charmander] step 1300/1400 loss 0.658 lr 1.95e-04 0.33s/step eta 1min
+[charmander] step 1350/1400 loss 0.656 lr 1.61e-04 0.33s/step eta 0min
+[charmander] step 1400/1400 loss 0.653 lr 1.50e-04 0.33s/step eta 0min
+[charmander] exported 1.81MB  final loss 0.653
+V=3000 D=160 H=4 L=4 F=640 M=192
+wrote 3000 logits, pos=31
+tokens=31 corr=0.99993 mean_abs_diff=0.0348 top1_torch='mine' top1_lua='mine'
+top10 overlap: 10 /10
+=== charmander done 04:14:57 ===
+=== squirtle start 04:14:57 ===
+[squirtle] 237388 lines
+[squirtle] vocab 3000  tokens 15.12M  unk 0.00%
+[squirtle] params 1.748M
+/home/user/Test/training/train.py:177: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  losses.append(float(loss))
+[squirtle] step 1/1400 loss 8.053 lr 2.00e-05 0.36s/step eta 8min
+[squirtle] step 50/1400 loss 6.334 lr 1.00e-03 0.32s/step eta 7min
+[squirtle] step 100/1400 loss 2.902 lr 2.00e-03 0.32s/step eta 7min
+[squirtle] step 150/1400 loss 1.495 lr 3.00e-03 0.33s/step eta 7min
+[squirtle] step 200/1400 loss 1.081 lr 2.99e-03 0.33s/step eta 7min
+[squirtle] step 250/1400 loss 0.900 lr 2.96e-03 0.33s/step eta 6min
+[squirtle] step 300/1400 loss 0.822 lr 2.90e-03 0.33s/step eta 6min
+[squirtle] step 350/1400 loss 0.780 lr 2.82e-03 0.33s/step eta 6min
+[squirtle] step 400/1400 loss 0.758 lr 2.73e-03 0.33s/step eta 6min
+[squirtle] step 450/1400 loss 0.739 lr 2.61e-03 0.33s/step eta 5min
+[squirtle] step 500/1400 loss 0.727 lr 2.48e-03 0.33s/step eta 5min
+[squirtle] sample: i want to see what happens if i try it.
+[squirtle] step 550/1400 loss 0.723 lr 2.34e-03 0.33s/step eta 5min
+[squirtle] step 600/1400 loss 0.712 lr 2.18e-03 0.33s/step eta 4min
+[squirtle] step 650/1400 loss 0.703 lr 2.02e-03 0.33s/step eta 4min
+[squirtle] step 700/1400 loss 0.694 lr 1.84e-03 0.33s/step eta 4min
+[squirtle] step 750/1400 loss 0.692 lr 1.66e-03 0.33s/step eta 4min
+[squirtle] step 800/1400 loss 0.684 lr 1.49e-03 0.33s/step eta 3min
+[squirtle] step 850/1400 loss 0.684 lr 1.31e-03 0.33s/step eta 3min
+[squirtle] step 900/1400 loss 0.671 lr 1.13e-03 0.33s/step eta 3min
+[squirtle] step 950/1400 loss 0.669 lr 9.68e-04 0.33s/step eta 2min
+[squirtle] step 1000/1400 loss 0.668 lr 8.11e-04 0.33s/step eta 2min
+[squirtle] sample: i have got used to charmander being here.
+[squirtle] step 1050/1400 loss 0.664 lr 6.67e-04 0.33s/step eta 2min
+[squirtle] step 1100/1400 loss 0.664 lr 5.36e-04 0.33s/step eta 2min
+[squirtle] step 1150/1400 loss 0.660 lr 4.22e-04 0.33s/step eta 1min
+[squirtle] step 1200/1400 loss 0.657 lr 3.26e-04 0.33s/step eta 1min
+[squirtle] step 1250/1400 loss 0.654 lr 2.50e-04 0.33s/step eta 1min
+[squirtle] step 1300/1400 loss 0.652 lr 1.95e-04 0.33s/step eta 1min
+[squirtle] step 1350/1400 loss 0.654 lr 1.61e-04 0.33s/step eta 0min
+[squirtle] step 1400/1400 loss 0.653 lr 1.50e-04 0.33s/step eta 0min
+[squirtle] exported 1.81MB  final loss 0.653
+V=3000 D=160 H=4 L=4 F=640 M=192
+wrote 3000 logits, pos=31
+tokens=31 corr=0.99997 mean_abs_diff=0.0328 top1_torch='mine' top1_lua='mine'
+top10 overlap: 10 /10
+=== squirtle done 04:23:38 ===
+ALL DONE

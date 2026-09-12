@@ -797,8 +797,8 @@ return function(mod)
 
   function Mind.thoughtBudget(a)
     local s=a.stage or 1
-    if s<=1 then return 12,.62 elseif s==2 then return 18,.66 elseif s==3 then return 24,.70 end
-    return 30,.72
+    if s<=1 then return 12,.56 elseif s==2 then return 18,.60 elseif s==3 then return 24,.63 end
+    return 30,.66
   end
 
   -- ==================================================================

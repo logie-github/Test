@@ -7,7 +7,15 @@ local MODELDIR=arg[2]
 local src={}
 local n=0
 for line in io.lines(MAIN) do n=n+1; src[n]=line end
-local body=table.concat(src,"\n",144,426)   -- runtime block only
+local first,last
+for i,l in ipairs(src) do
+  if not first and l:find("Embedded q8 micro-transformer",1,true) then first=i end
+  if first and not last and l:find("local function branchPrompt",1,true) then
+    for j=i,#src do if src[j]=="  end" then last=j break end end
+  end
+end
+assert(first and last,"could not locate the runtime block in main.lua")
+local body=table.concat(src,"\n",first,last)
 
 local mod={}
 function mod:read(path)
