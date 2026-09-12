@@ -1,0 +1,194 @@
+This article is about the property of Pokémon. For the Trainer level in Pokémon GO, see Trainer level. For the level of Gyms in Pokémon GO, see Gym (GO). For the level of the Trainer Card, see Trainer Card level.
+
+The level (Japanese: レベル level), abbreviated as Lv. (Japanese: Lv.), is a measurement of how strong a Pokémon currently is. It is portrayed differently in the animation, games, manga, and Pokémon Trading Card Game.
+
+
+== In the core series games ==
+
+In the Pokémon games, a Pokémon's level is determined by how much experience it has. A Pokémon's level will range from 1 to 100. When a Pokémon gains a level, its stats increase by a small amount. Depending on the exact level, it may also learn a new move or evolve. A Pokémon's level is usually used to determine damage when the Pokémon uses an attacking move. Opponent's levels may be viewed in-battle, and players may see their own Pokémon's levels in-battle, in the PC or by using the menu.
+Using a Rare Candy will increase a Pokémon's level by 1 (and increase its experience to be equal to the minimum experience for that level).
+When a Pokémon levels up, it becomes more friendly; this way, Pokémon that evolve by friendship may eventually evolve by training.
+In Generation IV, during battle, if a Pokémon almost has enough experience to level up, its Poké Ball on the touch screen interface will shake.
+In Generation I, if a Pokémon gains enough experience to gain more than one level, it will grow directly to the new level and will be unable to learn any moves learned at a skipped level. In Generation II, the active Pokémon grows level by level, whereas switched out Pokémon grow directly to the new level (but are able to learn any moves, regardless). From Generation III onwards, all Pokémon grow level by level.
+In Generation V onward, if a Pokémon levels up before its in-battle turn, such as during a Double Battle, and replaces the move currently awaiting execution with a new move, the old move will be used instead of the new one. Multiple turn moves, such as Petal Dance, will cause more complex behavior.
+
+
+=== Level cap ===
+In the Pokémon games, the level cap is level 100. When a Pokémon has reached level 100, it cannot gain any more experience or level up. Due to this, previous to Generation VIII, level 100 Pokémon cannot evolve in any way which requires leveling up. From Generation VIII onwards, using a Rare Candy on a level 100 Pokémon is able to trigger these types of Evolutions. In Hyperspace Lumiose, Pokémon can be temporarily over level 100, up to level 200.
+In Generations III and IV only, when a Pokémon has reached level 100, even if it has not gained maximum EVs, it cannot continue gaining EVs through battle (except Deoxys). Vitamins can still be used to raise EVs. In Generations I and II as well as from Generation V onwards, EVs can be gained even by level 100 Pokémon (although the Box trick is required in Generations I and II for the stats to update).
+By exploiting the old man glitch in Generation I, a Pokémon can be acquired at a level higher than 100. Also in Generation I, any Pokémon can also be raised to a level above 100 via the Pokémon merge glitch; however, Pokémon in the Slow experience group need to be merged with a glitch Pokémon who requires even more experience at level 100. These Pokémon can continue to be leveled up with Rare Candies until level 255. Whenever a Pokémon over level 100 gains any experience, its level will revert to 100. If a Rare Candy is used on a level 255 Pokémon, it will revert to level 0 due to an overflow.
+In Generations I and II, Pokémon were not legitimately available at a level below 2. This could be related to the fact that in Generations I and II, Pokémon in the Medium Slow experience group had a negative experience value at level 1, causing them to level up instantly to level 100 if they were to gain less than 54 experience points in battle (a high possibility on the games' early routes). Instead, Pokémon on the games' earliest routes were found level 2 or level 3, and first partner Pokémon are given out at level 5. Likewise, Pokémon hatch from Pokémon Eggs at level 5.
+From Generation III onwards, experience required to level up is taken from a lookup table, rather than by using a programmed equation as in Generations I and II; in Generation III, however, Pokémon still hatch from Eggs at level 5, and no wild Pokémon can be found at a level below 2. From Generation IV onwards, Pokémon hatch from Eggs at level 1 and some Pokémon are available in the wild at level 1 (however, first partner Pokémon are still received at level 5).
+
+
+=== Underleveled Pokémon ===
+Main article: Underleveled Pokémon
+Through some unique circumstances, it is possible to have Pokémon at a lower level than they are usually available via Evolution. Underleveled Pokémon appeared as early as Red and Green, with level 4-6 Kakuna and Metapod available in Viridian Forest. Kakuna and Metapod cannot be obtained by Evolution until level 7.
+Prior to Generation V, Pokémon obtained in in-game trades are always the same level as the one being traded away, so many underleveled Pokémon can be obtained through in-game trades. For example, in Red and Blue and FireRed and LeafGreen, it is possible to obtain an Electrode as low as level 3, even though the species evolves from Voltorb only at level 30 or above. This Electrode can be obtained by catching a Pikachu in Viridian Forest at level 3, evolving it with the Thunderstone, and trading it on Cinnabar Island.
+In Pokémon Brilliant Diamond and Shining Pearl, Pokémon found in the Hideaways of the Grand Underground have their levels based on the amount of Badges the player has acquired. As having only 1 places the range at levels 16-20, and 2 leaving the range at 25-29, it is possible to find underleveled Houndoom, Gastrodon, Skuntank (only in Brilliant Diamond) and Purugly (only in Shining Pearl).
+Some non-player character Trainers use underleveled Pokémon in battle. For example, Lance has three underleveled Dragonite in Generations II and IV, with one being at level 50 and two at level 49 in HeartGold and SoulSilver (Dragonite does not evolve naturally from Dragonair until level 55). Many other in-game Trainers, such as Mars and Jupiter, also possess underleveled Pokémon.
+An application of the Pomeg glitch in Emerald makes it possible to evolve a Pokémon while it is still inside an Egg, allowing any such evolved forms to be obtained at level 5. In Generation IV, this particular exploit of the Pomeg glitch was fixed; the Pomeg glitch was removed entirely in Generation V.
+
+
+=== Disobedience ===
+Main article: Obedience
+Outsider Pokémon (Pokémon obtained via trade or event distribution) occasionally disobey the player's commands if they are above a certain level. The Badges the player owns determine the maximum level outsider Pokémon can be before there is a possibility for them to disobey. Not owning the region's second Badge means that no traded Pokémon whose level is above 10 (level 20 since Generation V) will obey the player; if the player has the region's eighth Badge (or the Island Challenge Completion stamp in Alola), all Pokémon will always obey.
+
+
+=== List of moves and Abilities affected by level ===
+
+
+==== Moves ====
+Apart from being part of the general damage formula, level also directly affects the following moves.
+
+
+==== Abilities ====
+Level affects the following Abilities.
+
+
+== In the spin-off games ==
+
+
+=== Pokémon GO ===
+Main article: Power up
+Pokémon levels in Pokémon GO are hidden values that may be increased by Powering Up with Stardust and Candy. Each power up increases the level by one half, capped based on the Trainer's level. Each time a Pokémon is Powered Up, its CP (determined by HP, Attack, and Defense) is increased.
+
+
+=== Pokémon Masters EX ===
+ 
+In Pokémon Masters EX, sync pairs have a level cap that can be increased by using certain items depending on the sync pair's role, type, and current level cap, up to a maximum of 150.
+As of version 2.14.0.77663100, the first two level cap unlocks raise a sync pair's maximum level by 10, (to 110 and 120 respectively) while the next four unlocks add an additional 5 levels each to a sync pair's level cap (to 125, 130, 135, and 140 respectively).
+
+Up until level 140, each increase requires the use of drinks - Buff Blends, Tech Tonics, Aid Aides, Sprint Sodas, or Field Fizzes - depending on the sync pair's role (excluding Multi sync pairs, which use items based on their EX role). Each successive level cap increase requires higher-grade drinks.
+For the first two level cap increases, Gym Leader Notes are used in addition to drinks. For the second increase (from 110 to 120), Elite Four Notes are needed as well.
+Once a sync pair reaches level 120, in order to raise their level cap further, type-specific tomes or codices are required. 50 tomes matching the sync pair's type are required to raise the level cap to 125, while an additional 150 tomes are needed to raise it again to 130; 50 codices of the same type are used to raise the cap to 135, and an additional 150 are needed to raise the level cap to 140.
+Starting with version 2.24, level caps can be upgraded by one at a time from 140 up to 150, each individual level requiring a Certificate of Excellence.
+Most of these items can be obtained via the Cap-Unlock Training Areas or as rewards in events, with the exception of Certificates of Excellence, which are primarily obtained via the Trainer Lodge.
+This level cap used to vary based on a sync pair's potential, with only 5-star sync pairs being able to achieve level 100. However, after the EX update  the base level cap for all sync pairs was raised to 100.
+Pokémon hatched from Eggs are an exception to the level cap rule. Sync pairs formed in this fashion start with their level cap already raised to 150.
+
+
+=== Pokémon Mystery Dungeon series ===
+In the Pokémon Mystery Dungeon series, level functions similarly to the core series. Like in the core series, each Pokémon's level, ranging from 1 to 100, depends on how much experience it has. When a Pokémon gains a level, its stats increase slightly and it may try to learn a new move. The moves that can be learned by each Pokémon, and the exact levels they will try to learn them, are the same as contemporaneous core series games. In order for some Pokémon to evolve, a minimum level is also required. However, Evolution does not occur automatically, requiring access to specific places instead.
+The amount of points that each stat increases upon leveling up is fixed for each species and differs for each level up. At very low levels, stats may in fact not increase during a level up.
+In the Mystery Dungeon games preceding Pokémon Super Mystery Dungeon, Pokémon require significantly more experience to level up than in the core series games, while in Super Mystery Dungeon, experience is gained the same way as in the core series games.
+A number of dungeons across the series temporarily set the team's levels to 1 or 5 when entered. Their levels are restored to normal once the dungeon is exited.
+A Joy Seed or Golden Banana can be used to increase a Pokémon's level. A Doom Seed can be used to decrease a Pokémon's level. A Pokémon holding a Joy Ribbon or Joy Looplet will gain experience points whenever it takes damage (the amount of experience gained this way varies between games).
+
+
+=== Pokémon Shuffle ===
+For the attack power at each level, see List of Pokémon by Pokémon Shuffle list number → Attack power table
+For the amount of experience required per level, see: Experience → Pokémon Shuffle.
+Each Pokémon in Pokémon Shuffle has a level, which increases when it gains enough experience. As a Pokémon's level increases, its Attack power increases as well, with how much it increases per level determined by the Pokémon's Attack power at level 1.
+All Pokémon begin at level 1, with a maximum level of 10. However,  Raise Max Level Enhancements can be used on a Pokémon to increase this cap. Each Pokémon has a limit on how many Raise Max Levels it can use, varying from 5 (for a max level of 15) to 20 (for a max level of 30).
+
+
+=== Pokémon Team Turbo ===
+In Pokémon Team Turbo, each stage is equivalent to a level in any of the minigames (Crossword Challenge, Domino Dash, Word Finder, Block Out, and Door Dilemma). When the player completes a stage, the text "Level Up!" appears.
+
+
+=== Pokémon UNITE ===
+In Pokémon UNITE, Pokémon can level up during Unite Battles. Their Level is reduced to Level 1 before every Unite Battle.. Some types of battle have Pokémon start at higher levels. Levels are earned by obtaining Exp. Points. Pokémon can level up 14 times in a battle to reach the maximum of level 15. Leveling up increases the Pokémon's stats, as well as the amount of Aeos energy their Trainer's Unite Ball can hold. Unite Balls can hold a maximum of 30 Aeos energy until level 8. At level 9, the capacity is upgraded to 40. At level 12, a Unite Ball stores up to 50 Aeos energy.
+A Pokémon's current level can be seen in a wheel to the right of their HP bar, and the Exp. Points are represented by a blue bar going around that wheel. The Exp. Point display is reset upon reaching a new level. Levels are visible to both allies and opponents. Some Pokémon have a graphic displayed around their level that communicates additional information. Both of Urshifu's forms have one. The Pokémon Umbreon, Espeon, Glaceon, Leafeon, and Sylveon all use these graphics while they are Eevee. This helps differentiate them while they are Eevee, as each still has different properties while in their shared unevolved form. 
+At certain levels, Pokémon can learn new moves, upgrade their existing moves to become more powerful, and evolve. If a Pokémon evolves at a specific level, it is unable to gain that particular level unless it evolves. The Exp. Points that would be obtained are instead deferred, in that they do not contribute to the level of the Pokémon. These Exp. Points are displayed in a green bar going around the wheel. Once the Pokémon evolves, all of the deferred Exp. Points are granted.
+
+
+== In animation ==
+
+
+=== Pokémon the Series ===
+The concept of levels of Pokémon is not as detailed, nor as frequently mentioned, in Pokémon the Series. Unlike the games, the term appears to be applied more loosely, with higher levels correlating with the increased strength of the Pokémon and its moves. 
+There are a couple of instances in Pokémon the Series where the concept of levels more closely resembles that of the games:
+
+In the Pokémon the Series: The Beginning episode The School of Hard Knocks, Joe, one of the students at Pokémon Tech, is able to quote the levels at which Pidgey and the rest of its family evolve and learn certain moves. Additionally, Giselle, another student, states that Ash's Pikachu should be at least level 25.
+In the Pokémon the Series: Gold and Silver episode Will the Real Oak Please Stand Up?, Nurse Joy asks Professor Oak and James (disguised as Professor Oak) what move Slowbro learns at level 46, for which Amnesia was the correct answer.
+
+
+==== Pokémon the Series: The Beginning ====
+In Pokémon Emergency!, Meowth says that Ash's Pikachu is "powerful beyond its evolutionary level."
+In Bulbasaur's Mysterious Garden, Misty deduces that the Rhyhorn that Ash's Bulbasaur is battling must be at a high level after seeing how much its Take Down attack hurt Bulbasaur.
+Levels are mentioned in the Japanese version of several episodes:
+
+In Showdown at the Po-ké Corral, Gary mentions taking the opponent's level into account before beginning a battle.
+In Make Room for Gloom, Florinda mentions that her Gloom is not on a proper level to take on the Pokémon League.
+In Friend and Foe Alike, the announcer points out the big level difference between Ash's Charizard and Ritchie's Charmander, Zippo.
+In Hello, Pummelo!, Tracey notes that Ash's Pikachu was able to defeat Drake's Ditto because his level had increased from repeated battling, allowing him to outlast his transformed opponent.
+In Enter The Dragonite, when Ash chooses Bulbasaur to battle Drake's Electabuzz, Tracey reminds Ash that level had to be taken into account as well as type despite Grass Pokémon being resistant to Electric-type moves. After Bulbasaur is defeated, Drake comments that Ash's Charizard is at a higher level than he thought, as he was able to withstand a series of super effective Electric attacks from Electabuzz.
+In The Rivalry Revival, Misty deduced that Gary's Eevee was at an exceptionally high level when it barely took any damage from Pikachu's Quick Attack after using Reflect.
+
+
+==== Pokémon the Series: Gold and Silver ====
+In Roll On, Pokémon!, Ash's Pokédex mentions that the length of a Donphan's tusks indicates its level, allowing Brock to deduce that the short-tusked Donphan they had just encountered is a young and low-level one.
+In Tricks of the Trade, Team Rocket claims that their fake trade machine increases the level of the traded Pokémon, although this is just a ruse to get people to use the machine. In actuality, Meowth hides inside the machine and swaps the inserted Poké Balls with empty ones.
+In The Totodile Duel, Misty comments that her Staryu is on a much higher level than Ash's Chikorita.
+In The Grass Route, Brock attributes Ephraim's Skiploom, Skippy, learning Solar Beam in the middle of his battle with Ash to its level having gone up during the match. He also mentions how gaining experience can help a Pokémon grow to a higher level and learn more powerful attacks.
+In Doin' What Comes Natu-rally!, Brock mentions that moves become more powerful as a Pokémon's level is raised, and Ash adds that the best way to raise levels is by battling.
+
+
+==== Celebi: The Voice of the Forest ====
+The Iron-Masked Marauder says that his Dark Balls raises any Pokémon caught with them to the highest level.
+
+
+==== Pokémon the Series: Ruby and Sapphire ====
+In Queen of the Serpentine!, Brock comments that Lucy's Milotic is at a high level after it defeated Ash's Donphan with one hit.
+In Ka Boom With a View!, Brock makes a comment about Spenser's Claydol being a high-level Pokémon after seeing how fast it defeated Ash's Swellow.
+
+
+==== Pokémon the Series: Diamond and Pearl ====
+In A Pyramiding Rage!, Reggie states that Brandon's Regirock is a high level Pokémon and Paul knows it, making it important for Paul to use moves that are an effective match against it.
+In Fighting Ire with Fire!, Brock mentions Barry's Empoleon has leveled up a ton since last seeing it, referring to how its battle against a Mothim went.
+In Dealing with a Fierce Double Ditto Drama!, when teaching Narissa, Brock says "Now let's level you up. And the only way to do that is to get experience from battling."
+
+
+=== Pokémon Mystery Dungeon episodes ===
+Levels are mentioned in the Pokémon Mystery Dungeon special episodes Pokémon Mystery Dungeon: Team Go-Getters Out of the Gate! and Pokémon Mystery Dungeon: Explorers of Time & Darkness, but are not explained.
+
+
+== In the manga ==
+
+
+=== The Electric Tale of Pikachu ===
+In Pikachu's Excellent Adventure, Samurai mentions that level 99 Slowpoke and Magikarp are said to be found in the Hidden Village.
+
+
+=== Pokémon Adventures ===
+At the end of every volume, or starting from Volume 15, at the end of certain arcs, the current levels of at least one of the main characters' Pokémon are given in a Pokédex or Adventure Map section.
+The level mechanic appears in the plot twice. In the FireRed & LeafGreen arc, Orm's black Pokédex was able to deduce the power of Yellow's Pokémon in terms of level; Yellow then used her own mysterious power to sharply raise her team members' levels. In the Emerald arc, Emerald found out that the Sceptile he used during his Battle Factory challenge, and later smuggled out, was able to survive an opposing Glalie's Sheer Cold due to his higher level; Sceptile was at level 51, even though Emerald's challenge was in the Level 50, Single Battle mode, meaning that the rest of the rental Pokémon were at level 50.
+
+
+=== Pokémon: Yeah! I Got Pokémon! ===
+In Catch Bellsprout!, Shu comments that the Bellsprout he is battling against is at a higher level than his Ponyta.
+
+
+== In the TCG ==
+
+Levels have appeared in the TCG as a form of flavor text, but do not have an impact on gameplay.
+From the TCG's debut set Base Set until Legendary Collection, Pokémon cards include a level in their flavor text. This level has no effect on gameplay. Certain Pokémon cards in Jungle, Fossil, Team Rocket, Gym Challenge and Neo Destiny feature Pokémon with levels lower than they could be obtained in the games. In the Pokémon Trading Card Game video game, the level is sometimes used to differentiate two cards depicting the same Pokémon, for example, Pikachu Lv. 12 and Pikachu Lv. 14.
+From Diamond & Pearl until Arceus, Pokémon cards include a level next to their name. This level is not considered part of their name, and has no effect on gameplay.
+Some Pokémon SP have a level that refers back to the individual Pokémon from the core series games that the card is based on.
+
+
+=== Pokémon Lv.X ===
+Main article: Pokémon LV.X (TCG)
+Pokémon LV.X are special Pokémon cards first introduced in Diamond & Pearl and last appearing in Arceus. While the levels seen on normal cards is not gameplay relevant information, Pokémon LV.X are a group of Pokémon that do have an effect on gameplay.
+Pokémon LV.X function similarly to an Evolution. Just like Evolution, a player cannot place a LV.X on a Pokémon evolved or played in the same turn and when leveling up a Pokémon with a LV.X card, also their Special Conditions are removed from a Pokémon LV.X when it is played.
+Gengar LV.X has the Poké-Power Level Down, which removes a Pokémon LV.X card from a Pokémon and shuffles it into its owners deck. The name and effect imply that Pokémon can lose levels that they have already gained.
+
+
+=== Boss Pokémon ===
+The Boss Pokémon cards battled against in Pokémon Trading Card Game Raid Battle have Levels. However, this number is more of a reference to Max Raid Battles having different levels.
+
+
+== Trivia ==
+Before Generation IV, it was impossible to get a Pokémon at level 1 without the aid of a glitch or cheating device. The lowest level Pokémon would be at level 2 in the wild, and Eggs would hatch at level 5. In Generation IV, however, Eggs are hatched at level 1, Regigigas and Magikarp can be caught at level 1 in Pokémon Platinum, and Dialga, Palkia, or Giratina can be obtained at level 1 in Pokémon HeartGold and SoulSilver.
+In Generation I, it is possible to encounter and catch Pokémon at levels over 100 through the old man glitch, and encounter them in glitch Trainers' parties through the Mew glitch.
+
+
+== In other languages ==
+
+
+== References ==
+
+
+== Related articles ==
+Level-based Evolution

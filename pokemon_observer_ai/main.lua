@@ -155,12 +155,36 @@ return function(mod)
     else v=(1+m/8388608)*2^(e-127) end
     return sign*v,p+4
   end
+  -- Weights are dequantized once at load into a flat float array rather than
+  -- decoded per element on every multiply.  With LuaJIT's FFI that array is a
+  -- real C float buffer; without it, a plain Lua array is still far cheaper
+  -- than a string.byte plus sign fix inside the inner loop.
+  local FFI_OK,ffi=pcall(require,"ffi")
+  local function newFloats(n)
+    if FFI_OK then return ffi.new("float[?]",n),true end
+    local t={}
+    for i=0,n-1 do t[i]=0 end
+    return t,false
+  end
   local function readMatrix(blob,p)
     local rows,cols; rows,p=u16(blob,p); cols,p=u16(blob,p)
     local scales={}
     for i=1,rows do scales[i],p=f32(blob,p) end
-    local m={rows=rows,cols=cols,scales=scales,data=p}
-    return m,p+rows*cols
+    local n=rows*cols
+    local w=newFloats(n)
+    local base=p
+    for i=1,rows do
+      local scale=scales[i]
+      local rowBase=base+(i-1)*cols
+      local outBase=(i-1)*cols
+      for j=1,cols do
+        local q=blob:byte(rowBase+j-1)
+        if q>=128 then q=q-256 end
+        w[outBase+j-1]=q*scale
+      end
+    end
+    local m={rows=rows,cols=cols,scales=scales,w=w}
+    return m,p+n
   end
   local function readVector(blob,p)
     local n; n,p=u16(blob,p); local v={}
@@ -201,22 +225,35 @@ return function(mod)
       stoi=stoi,itos=itos,bos=stoi["<bos>"],eos=stoi["<eos>"],unk=stoi["<unk>"],pad=stoi["<pad>"]}
   end
 
+  -- Inference is spread across frames against a wall-clock slice rather than a
+  -- fixed operation count, so a fast host uses its speed and a slow one still
+  -- keeps its frame time.  The op counter is only there to keep the clock
+  -- lookup off the innermost loop.
   local inferOps=0
+  local inferDeadline=0
+  local INFER_SLICE=0.007
+  local function nowSeconds()
+    if love and love.timer and love.timer.getTime then return love.timer.getTime() end
+    return os.clock()
+  end
   local function inferBudget(n)
     inferOps=inferOps+(n or 1)
-    if inferOps>=24000 then inferOps=0; coroutine.yield("compute") end
+    if inferOps>=6000 then
+      inferOps=0
+      if nowSeconds()>=inferDeadline then coroutine.yield("compute") end
+    end
   end
-  local function qrow(model,m,row)
-    local out={}; local base=m.data+row*m.cols; local scale=m.scales[row+1]; local b=model.blob
-    for j=1,m.cols do local q=b:byte(base+j-1); if q>=128 then q=q-256 end; out[j]=q*scale end
+  local function qrow(m,row)
+    local out={}; local w=m.w; local base=row*m.cols
+    for j=1,m.cols do out[j]=w[base+j-1] end
     inferBudget(m.cols); return out
   end
-  local function qmatvec(model,m,x,bias)
-    local out={}; local blob=model.blob; local cols=m.cols
+  local function qmatvec(m,x,bias)
+    local out={}; local w=m.w; local cols=m.cols
     for i=1,m.rows do
-      local sum=0; local base=m.data+(i-1)*cols
-      for j=1,cols do local q=blob:byte(base+j-1); if q>=128 then q=q-256 end; sum=sum+q*x[j] end
-      out[i]=sum*m.scales[i]+(bias and bias[i] or 0)
+      local sum=0; local base=(i-1)*cols
+      for j=1,cols do sum=sum+w[base+j-1]*x[j] end
+      out[i]=sum+(bias and bias[i] or 0)
       inferBudget(cols)
     end
     return out
@@ -255,13 +292,16 @@ return function(mod)
     end
     return c
   end
-  local function stepToken(model,s,tid)
+  -- `skipLogits` drops the vocabulary projection for tokens whose logits are
+  -- never read.  That projection is V*D multiplies, about a quarter of the cost
+  -- of a token, and while encoding a prompt only the final token's logits matter.
+  local function stepToken(model,s,tid,skipLogits)
     if s.pos>=model.maxLen then return nil end
-    local er=qrow(model,model.tok,tid); local pr=qrow(model,model.pos,s.pos); local h={}
+    local er=qrow(model.tok,tid); local pr=qrow(model.pos,s.pos); local h={}
     for i=1,model.D do h[i]=er[i]+pr[i] end
     local hd=model.D/model.H; local root=math.sqrt(hd); local T=s.pos+1
     for li=1,model.L do
-      local L=model.layers[li]; local n1=layernorm(h,L.n1w,L.n1b); local qkv=qmatvec(model,L.qkv,n1,L.qkvb)
+      local L=model.layers[li]; local n1=layernorm(h,L.n1w,L.n1b); local qkv=qmatvec(L.qkv,n1,L.qkvb)
       local q,k,v={},{},{}
       for i=1,model.D do q[i]=qkv[i];k[i]=qkv[model.D+i];v[i]=qkv[model.D*2+i] end
       s.K[li][T]=k;s.V[li][T]=v
@@ -282,14 +322,15 @@ return function(mod)
         end
         inferBudget(T*hd*2)
       end
-      local o=qmatvec(model,L.out,att,L.outb); for i=1,model.D do h[i]=h[i]+o[i] end
-      local n2=layernorm(h,L.n2w,L.n2b); local ff=qmatvec(model,L.l1,n2,L.l1b)
+      local o=qmatvec(L.out,att,L.outb); for i=1,model.D do h[i]=h[i]+o[i] end
+      local n2=layernorm(h,L.n2w,L.n2b); local ff=qmatvec(L.l1,n2,L.l1b)
       for i=1,#ff do ff[i]=gelu(ff[i]) end; inferBudget(#ff)
-      ff=qmatvec(model,L.l2,ff,L.l2b); for i=1,model.D do h[i]=h[i]+ff[i] end
+      ff=qmatvec(L.l2,ff,L.l2b); for i=1,model.D do h[i]=h[i]+ff[i] end
     end
     s.pos=T
+    if skipLogits then return nil end
     local z=layernorm(h,model.lnw,model.lnb)
-    return qmatvec(model,model.tok,z,nil)
+    return qmatvec(model.tok,z,nil)
   end
 
   local function isWordByte(c)
@@ -354,8 +395,9 @@ return function(mod)
       for i=#ids-(keep-head)+1,#ids do t[#t+1]=ids[i] end
       ids=t
     end
-    local s=newCache(model); local logits=stepToken(model,s,model.bos)
-    for _,id in ipairs(ids) do logits=stepToken(model,s,id) end
+    local s=newCache(model)
+    local logits=stepToken(model,s,model.bos,#ids>0)
+    for i,id in ipairs(ids) do logits=stepToken(model,s,id,i<#ids) end
     return s,logits
   end
   local function logprob(logits,tid)
@@ -421,7 +463,8 @@ return function(mod)
   end
   local function branchPrompt(model,baseState,baseLogits,suffix)
     local state=cloneCache(model,baseState);local logits=baseLogits
-    for _,id in ipairs(idsFor(model,suffix)) do logits=stepToken(model,state,id) end
+    local ids=idsFor(model,suffix)
+    for i,id in ipairs(ids) do logits=stepToken(model,state,id,i<#ids) end
     return state,logits
   end
 
@@ -754,8 +797,8 @@ return function(mod)
 
   function Mind.thoughtBudget(a)
     local s=a.stage or 1
-    if s<=1 then return 10,.62 elseif s==2 then return 14,.65 elseif s==3 then return 18,.68 end
-    return 22,.70
+    if s<=1 then return 12,.62 elseif s==2 then return 18,.66 elseif s==3 then return 24,.70 end
+    return 30,.72
   end
 
   -- ==================================================================
@@ -948,7 +991,7 @@ return function(mod)
       add(5,9,"event none")
     end
 
-    local retrieved=Mind.retrieve(st,a,other and other.id or nil,event and event.type or nil,stage>=3 and 2 or 1)
+    local retrieved=Mind.retrieve(st,a,other and other.id or nil,event and event.type or nil,stage>=3 and 3 or stage)
     for i,e in ipairs(retrieved) do
       if e.cue and e.cue~="" then add(6+i*.1,6+i,"remember "..e.cue) end
     end
@@ -967,7 +1010,7 @@ return function(mod)
       add(12,13,Prompt.counterfactual(st,a,other))
     end
 
-    local budget=model.maxLen-(reserve or 34)-2
+    local budget=model.maxLen-(reserve or 44)-2
     table.sort(rows,function(x,y) if x.prio==y.prio then return x.order<y.order end return x.prio<y.prio end)
     local used,kept=0,{}
     for _,r in ipairs(rows) do
@@ -999,9 +1042,7 @@ return function(mod)
   local DISP_SPEC={bulbasaur=1,charmander=2,squirtle=3}
   local DISP_EVENTS={"greeted","shared food","took food","attacked","comforted","ignored","followed","threatened","gave toy","stayed near","used move near","asked for help"}
   local DISP_EVENT_INDEX={};for i,e in ipairs(DISP_EVENTS) do DISP_EVENT_INDEX[e]=i end
-  local function dispMatvec(net,m,x,bias)
-    local fake={blob=net.blob};return qmatvec(fake,m,x,bias)
-  end
+  local function dispMatvec(_,m,x,bias) return qmatvec(m,x,bias) end
   local function dispositionReaction(net,a,event)
     if not event or not event.source then return nil end
     local r=a.rel[event.source];local ei=DISP_EVENT_INDEX[event.type];if not r or not ei then return nil end
@@ -1083,9 +1124,9 @@ return function(mod)
     local model=runtime.models[a.brain]
     local other=buildContext(st,a,nil,event)
     a.trace="ENCODE CONTEXT"
-    local ctx=Prompt.build(st,a,model,other,event,34)
+    local ctx=Prompt.build(st,a,model,other,event,44)
     a.lastPrompt=ctx
-    local baseState,baseLogits=promptState(model,ctx,34)
+    local baseState,baseLogits=promptState(model,ctx,44)
 
     planDecision(runtime,st,a,model,baseState,baseLogits)
 
@@ -1124,9 +1165,9 @@ return function(mod)
     -- Thought and speech are generated against the same context, now aimed at
     -- whoever the chosen action is actually about.
     local genOther=target or other
-    local genCtx=(genOther==other) and ctx or Prompt.build(st,a,model,genOther,event,34)
+    local genCtx=(genOther==other) and ctx or Prompt.build(st,a,model,genOther,event,44)
     local genBase,genBaseLogits
-    if genCtx==ctx then genBase,genBaseLogits=baseState,baseLogits else genBase,genBaseLogits=promptState(model,genCtx,34) end
+    if genCtx==ctx then genBase,genBaseLogits=baseState,baseLogits else genBase,genBaseLogits=promptState(model,genCtx,44) end
     local maxTok,temp=Mind.thoughtBudget(a)
     local thState,thLogits=branchPrompt(model,genBase,genBaseLogits," chosen "..phrase.." <thought> ")
     local thought=generateFromState(model,st,thState,thLogits,a,maxTok,temp,function(part,n,maxn)
@@ -1150,8 +1191,10 @@ return function(mod)
     self.queue[#self.queue+1]={co=co,agent=a,onDone=onDone}
   end
   function BrainRuntime:update()
-    local slices=7
-    for _=1,slices do
+    inferDeadline=nowSeconds()+INFER_SLICE
+    local guard=0
+    while guard<4096 do
+      guard=guard+1
       if not self.active then self.active=table.remove(self.queue,1);if not self.active then return end end
       local job=self.active;local ok,res=coroutine.resume(job.co)
       if not ok then
@@ -1159,6 +1202,7 @@ return function(mod)
       elseif coroutine.status(job.co)=="dead" then
         job.agent.brainWaiting=false;job.onDone(job.agent,res);self.active=nil
       end
+      if nowSeconds()>=inferDeadline then return end
     end
   end
 
@@ -1319,6 +1363,7 @@ return function(mod)
     mon.hp=math.max(1,math.floor(Body.maxHp(a)*ratio+.5))
     Body.syncPercentFromMon(a)
     a.species=mon.name or into
+    a.noFollower=true    -- the bundled sheets only cover the three base forms
     if not a.isMate then a.name=upper(into):sub(1,1)..tostring(into):sub(2):lower() end
     logAction(st,before.." evolved into "..into..".")
     Mind.record(st,a,{kind="evolved",salience=Mind.SALIENCE.evolved,
@@ -1335,13 +1380,18 @@ return function(mod)
   function Body.beginEvolution(st,a,into)
     local game=st.game
     st.paused=true
+    st.pauseTimer=0
     local finished=false
     local function finish()
       if finished then return end
       finished=true
+      st.pauseFinish=nil
       Body.applyEvolution(st,a,into)
       st.paused=false
     end
+    -- Watchdog.  Hosts name their evolution-sequence callback differently, and
+    -- one that never calls back must not leave the room frozen forever.
+    st.pauseFinish=finish
     local pushed=false
     for _,screen in ipairs({"Evolution","EvolutionScreen","EvolutionScene","EvolutionSequence"}) do
       if not pushed then
@@ -2045,7 +2095,7 @@ return function(mod)
       if dist(a,b)<55 then pushEvent(st,b,a.id,"ignored",a.name.." deliberately moved away from me.",{kind="ignored",cue=a.brain.." moved away from me",salience=Mind.SALIENCE.ignored}) end
       a.drives.autonomy=clamp((a.drives.autonomy or 0)-12,0,100)
     end
-    a.pendingSpeech=nil; a.actionTarget=nil; a.goalX,a.goalY,a.goalAgent=nil,nil,nil; a.action="idle"; a.nextDecision=st.time+1.3+rnd(st)*3.2
+    a.pendingSpeech=nil; a.actionTarget=nil; a.goalX,a.goalY,a.goalAgent=nil,nil,nil; a.action="idle"; a.nextDecision=st.time+1.8+rnd(st)*3.6
   end
 
   function performDecision(st,a,d)
@@ -2375,7 +2425,15 @@ return function(mod)
     if not (st and st.ow and st.ow.map and st.ow.map.id==MAP_ID) then return end
     dt=dt or 1/60
     FX.update(st,dt)
-    if st.paused then return end
+    if st.paused then
+      st.pauseTimer=(st.pauseTimer or 0)+dt
+      if st.pauseTimer>14 and st.pauseFinish then
+        local finish=st.pauseFinish; st.pauseFinish=nil
+        logAction(st,"DAY CARE: evolution sequence did not report back; resuming.")
+        finish()
+      end
+      return
+    end
     st.time=st.time+dt
     BrainRuntime:update()
     if not st.autoMateDone and st.time>=st.mateAt then introduceAutomaticMate(st) end
@@ -2490,7 +2548,7 @@ return function(mod)
   end
 
   local function drawFollowerAgent(game,a,sx,sy)
-    local img=followerImage(a.brain)
+    local img=(not a.noFollower) and followerImage(a.brain) or nil
     if not img then
       -- Fail visibly but safely if an asset cannot be decoded on a host:
       -- the real party record still has the engine's normal party icon.

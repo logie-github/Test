@@ -1,0 +1,137 @@
+The Grass type (Japanese: くさタイプ Grass type) is one of the eighteen types. Grass-type moves are super effective against Ground-, Rock-, and Water-type Pokémon, while Grass-type Pokémon are weak to Bug-, Fire-, Flying-, Ice-, and Poison-type moves.
+
+
+== Battle properties ==
+Note: Type effectiveness multipliers may vary in other games outside the core series.
+
+The Steel type was introduced in Generation II.
+
+
+=== Additional effects ===
+Grass-type Pokémon are immune to Leech Seed. Starting in Generation VI, they are also immune to powder and spore moves and Effect Spore.
+Grass-type Pokémon are the only Pokémon affected by the stat-raising moves Rototiller and Flower Shield, introduced in Generation VI.
+Forest's Curse, introduced in Generation VI, adds the Grass type to the target's types.
+When Grassy Terrain is in effect, the power of Grass-type moves is increased by 30% (50% prior to Generation VIII) if the user is grounded.
+
+
+== Pokémon ==
+As of Generation X, 133 Pokémon are Grass-type (counting those that are Grass-type in at least one of their forms), which makes up 12.94% of all Pokémon, making it the third most common type among Pokémon after Normal and before Flying. As of Generation IX and the introduction of Scovillain, all other types have been paired up with Grass at least once, making it the sixth type to have this trait after Flying, Water, Psychic, Dark, and Electric.
+The Pokémon below are listed by their current types. Some Pokémon have had their types changed, usually when a new type was introduced.
+
+
+=== Pure Grass-type Pokémon ===
+
+
+=== Half Grass-type Pokémon ===
+
+
+==== Primary Grass-type Pokémon ====
+
+
+==== Secondary Grass-type Pokémon ====
+
+
+=== Unique Terastallized states ===
+
+
+=== Changed types ===
+These Grass-type Pokémon have had their types changed.
+
+
+== Non-Pokémon opponents ==
+Some opponents featured in Pokéstar Studios in Pokémon Black 2 and White 2 can be battled like Pokémon and they have designated Pokémon types.
+
+
+== Moves ==
+As of Generation IX, there are 62 Grass-type moves, which makes up 6.64% of all moves (excluding those that are Grass-type only under certain circumstances), making it the third most common type among moves after Psychic and before Fighting.
+Prior to changes in Generation IV, all damaging Grass-type moves were special, but they may now also be physical depending on the attack.
+
+
+=== Changed types ===
+The following Grass-type moves have had their type changed into another.
+
+The following moves have had their types changed into Grass.
+
+
+== Abilities ==
+
+
+=== Interacting with the Grass type ===
+A Pokémon with the Ability Protean or Libero will become Grass-type if it uses a Grass-type move. A Pokémon with Color Change, Imposter, Mimicry, RKS System, or Multitype will become Grass-type if (respectively) it is hit by a Grass-type move, is sent out against a Grass-type opponent, if the terrain is grassy, if it is holding a Grass Memory, or if it is holding a Meadow Plate/Grassium Z.
+Since Generation VI, Grass-type Pokémon are also immune to Effect Spore.
+
+
+=== Exclusive Abilities ===
+Only Grass-type Pokémon have these Abilities. This does not include signature Abilities.
+
+
+== Items ==
+
+
+=== Natural Gift's Berries ===
+
+
+=== Cram-o-matic ===
+
+
+== Notable Grass-type Trainers ==
+Main article: Category:Grass-type Trainers
+
+
+== Icons ==
+
+
+=== Core series ===
+
+
+=== Side series ===
+
+
+=== Spin-off games ===
+
+
+== Statistical averages ==
+
+
+=== Overall ===
+
+
+=== Fully evolved ===
+
+
+== In spin-off games ==
+
+
+=== Pokémon Sleep ===
+Unlike in the core series games, in Pokémon Sleep, each Pokémon can only have one type, which determines the kind of Berry that the Pokémon will gather for Snorlax to feed on. Grass-type Pokémon will gather Durin Berries, and typically have the Dozing sleep type.
+The following is a list of Grass-type Pokémon in Pokémon Sleep.
+
+
+== In the TCG ==
+Main article: Grass (TCG)
+Due to the decreased amount of types in the TCG, Grass generally adopts all Bug-type Pokémon under its typing. It also adopted Poison-type Pokémon prior to the Diamond & Pearl set, after which they were moved to Psychic and later Darkness.
+Similar to the games, Grass-type Pokémon in the TCG are generally weak to Fire and resist Water. Grass-type Pokémon are strong against Fighting, Water, and Darkness Pokémon. Metal Pokémon resisted it until the EX Power Keepers expansion set, and then from Sword & Shield onward.
+
+
+== Trivia ==
+Generation V introduced the most Grass-type Pokémon of any generation, with 21 (including Rotom's Mow form), and Generation VI introduced the fewest Grass-type Pokémon, with nine.
+Generation I introduced the most Grass-type moves of any generation, with 10, and Generation II introduced the fewest Grass-type moves, with three.
+The Grass type is tied with Rock in having the most weaknesses out of all types, with five.
+The Grass type is tied with Bug as the most resisted type, being resisted by seven types.
+Grass-type moves are the most common double resistance, with 109 Pokémon species doubly resisting Grass-type moves in at least one of their forms.
+The Grass type and/or Pokémon of the type have been referred to using the term "plant" instead on some occasions:
+The naming of this type as the Grass type rather than the Plant type in Japanese may be due to the fact that the Japanese word for "plant" (Japanese: しょくぶつ) is five characters long, while the Pokédex screen in Pokémon Red and Green only has room for a maximum of four characters for each of a Pokémon's types.
+In the English Generation I games, the Gym guide in Cerulean Gym refers to Pokémon of the Grass type as "plant Pokémon". In the English versions of Pokémon FireRed and LeafGreen, he instead mentions "Grass-type Pokémon". In the Japanese versions of the Generation I games and FireRed and LeafGreen, he mentions the Grass type itself, calling it the "Plant type" (Japanese: しょくぶつタイプ).
+Another reference to "plant Pokémon" (Japanese: しょくぶつポケモン) is made by Professor Oak in the Japanese Pokémon Red, Green, and Blue, and international Pokémon Red and Blue, classifying Bulbasaur as such when the player is about to choose it as their first partner Pokémon. This is also the case in the Japanese versions of Pokémon FireRed and LeafGreen; in contrast, he calls it the "grass Pokémon" in the English versions.
+This same reference is also used in the first episode of Pokémon Origins.
+In multiple languages, such as French and German, the Grass type is translated as the Plant type.
+The Turkish dub of Pokémon the Series occasionally refers to the Grass type ("Çimen türü") as the "Plant type" ("Bitki türü").
+The Grass type has been paired with every other type at least once.
+The Grass type has the most Pokémon that evolve by Evolution stones, with a total of 12. It is also the type that can utilize the most stones, having at least one Pokémon that can evolve via the Leaf Stone, Sun Stone, Water Stone, Shiny Stone, and Fire Stone.
+However, if Pokémon that lose the type after Evolution by stone are included, the Normal-type can utilize the most stones, having at least one Pokémon that can evolve via the Moon Stone, Water Stone, Thunder Stone, Fire Stone, Leaf Stone, Ice Stone, Shiny Stone, and Sun Stone.
+The Grass type is the only type to have more than one HP-draining move, having five of them.
+Grass-type attacks are super effective against the three types that the Fire type is weak to.
+In Tree's a Crowd, Brock states that Grass-type Pokémon resist Electric-type moves due to being able to diffuse the electricity into trees and the ground. He also explains that if Grass types are in the air, they cannot diffuse the electricity from Electric attacks, thereby dealing normally effective damage.
+
+
+== In other languages ==

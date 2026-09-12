@@ -1,0 +1,134 @@
+The Fire type (Japanese: ほのおタイプ Flame type) is one of the eighteen types. Fire-type moves are super effective against Bug-, Grass-, Ice-, and Steel-type Pokémon, while Fire-type Pokémon are weak to Ground-, Rock-, and Water-type moves.
+
+
+== Battle properties ==
+Note: Type effectiveness multipliers may vary in other games outside the core series.
+
+In Generation I only, Fire-type Pokémon received neutral damage from Ice-type moves.
+The Steel type was introduced in Generation II.
+The Fairy type was introduced in Generation VI.
+
+
+=== Additional effects ===
+In Generation I, Fire-type Pokémon cannot get burned by damage-dealing Fire-type moves. However, in Generation II, they can get burned by the Normal-type move Tri Attack. Starting in Generation III, Fire-type Pokémon cannot get burned at all. They are also immune to the sea of fire caused by Grass Pledge and Fire Pledge, both of which were introduced in Generation V.
+During the harsh sunlight (introduced in Generation II) or extremely harsh sunlight (introduced in Pokémon Omega Ruby and Alpha Sapphire) weather conditions, the power of Fire-type moves is increased by 50%. During rain (introduced in Generation II), the power of Fire-type moves is decreased by 50%. During heavy rain (introduced in Pokémon Omega Ruby and Alpha Sapphire), all Fire-type moves will fail. When the move Water Sport (introduced in Generation III) is in effect, the power of Fire-type moves is decreased by 67%.
+If a Pokémon affected by the move Powder (introduced in Generation VI) attempts to use a Fire-type move, it takes damage equal to 25% of its maximum HP and cannot execute the move (PP is still consumed).
+Only Fire-type Pokémon can use the move Burn Up (introduced in Generation VII), which will cause the user to no longer be Fire-type unless Terastalized.
+
+
+== Pokémon ==
+As of Generation X, 90 Pokémon are Fire-type (counting those that are Fire-type in at least one of their forms, including Primal Reversion and regional forms), which makes up 8.75% of all Pokémon, causing it to tie with Poison as the 7th most common type among Pokémon after Bug and before Fighting.
+The Pokémon below are listed by their current types. Some Pokémon have had their types changed.
+
+
+=== Pure Fire-type Pokémon ===
+
+
+=== Half Fire-type Pokémon ===
+
+
+==== Primary Fire-type Pokémon ====
+
+
+==== Secondary Fire-type Pokémon ====
+
+
+=== Unique Terastallized states ===
+
+
+=== Changed types ===
+These Fire-type Pokémon have had their types changed.
+
+
+== Non-Pokémon opponents ==
+Some opponents featured in Pokéstar Studios in Pokémon Black 2 and White 2 can be battled like a Pokémon and they have designated types. The Starmobiles featured in Pokémon Scarlet and Violet also share this trait.
+
+The stats shown for Starmobile are the exact stats, not base stats. The values are custom set rather than derived from base stats, level, Nature, IVs, and EVs.
+
+
+== Moves ==
+As of Generation IX, there are 49 Fire-type moves, which makes up 5.24% of all moves (excluding those that are Fire-type only under certain circumstances), making it the 7th most common type among moves after Electric and before Steel.
+Prior to changes in Generation IV, all damaging Fire-type moves were special, but they may now also be physical depending on the attack.
+
+
+== Abilities ==
+
+
+=== Interacting with the Fire type ===
+A Pokémon with Protean/Libero, Color Change, Imposter, Forecast, RKS System, or Multitype will become a Fire-type Pokémon if (respectively) it uses a Fire-type move, is hit by a Fire-type move, is sent out against a Fire-type opponent, if the weather is sunny, if it is holding a Fire Memory, or if it is holding a Flame Plate/Firium Z.
+Fire-type Pokémon are also immune to becoming burned from the Abilities Flame Body or Synchronize.
+
+
+=== Exclusive Abilities ===
+Only Fire-type Pokémon have these Abilities. This does not include signature Abilities.
+
+
+== Items ==
+
+
+=== Natural Gift's Berries ===
+
+
+=== Cram-o-matic ===
+
+
+== Notable Fire-type Trainers ==
+Main article: Category:Fire-type Trainers
+
+
+== Icons ==
+
+
+=== Core series ===
+
+
+=== Side series ===
+
+
+=== Spin-off games ===
+
+
+== Statistical averages ==
+
+
+=== Overall ===
+
+
+=== Fully evolved ===
+
+
+== In spin-off games ==
+
+
+=== Pokémon Sleep ===
+Unlike in the core series games, in Pokémon Sleep, each Pokémon can only have one type, which determines the kind of Berry that the Pokémon will gather for Snorlax to feed on. Fire-type Pokémon will gather Leppa Berries, and typically have the Snoozing sleep type.
+The following is a list of Fire-type Pokémon in Pokémon Sleep.
+
+
+== In the TCG ==
+Main article: Fire (TCG)
+Similar to the games, Fire-type Pokémon in the TCG are generally weak to Water with no resistances. Fire-type Pokémon are strong against Grass and Metal Pokémon, whilst some Colorless Pokémon can resist this type.
+
+
+== Trivia ==
+Generation V introduced the most Fire-type Pokémon of any generation, with 17 (including Heat Rotom and Zen Mode Darmanitan), and Generation IV introduced the fewest, with six (counting Arceus using the Flame Plate).
+Generation V introduced the most Fire-type moves of any generation, with 11, and Generation VI introduced the fewest, with only one, Mystical Fire.
+The Fire type, tied with the Dragon type, also has the fewest number of non-damaging moves out of all of the types, with only three.
+Fire was the last type to receive a Pokémon with Water as the other type, only receiving one with Volcanion in Generation VI.
+In Pokémon Diamond and Pearl, there are only two evolutionary lines of Fire-type Pokémon in the Sinnoh Pokédex (the Chimchar and Ponyta evolutionary lines). In Pokémon Platinum, this was changed with the expansion of the Sinnoh Pokédex to include the Houndour and Magmar families, as well as Flareon.
+In most core series Pokémon games since Generation III, the Fire type has been represented by the color orange. However, in other Pokémon media, including the Pokémon Trading Card Game, the Pokémon Stadium series, and the Pokémon Mystery Dungeon series, the Fire type has been associated with the color red. The Fire type is also associated with the color red in Pokémon Brilliant Diamond and Shining Pearl and Pokémon Scarlet and Violet.
+Also, the Cool condition uses the same shade of orange in its status screen icon as the Fire type's icon does, despite being described as red in-text.
+According to the Pokédex, the hottest Pokémon are Magcargo and Camerupt, both of which can reach internal temperatures of 18,000 °F (10,000 °C). Incidentally, both Pokémon can also have the Ability Magma Armor.
+If Mega Evolutions are included, Mega Heatran is the hottest Pokémon, with an internal temperature exceeding 1,800,000 °F (1,000,000 °C).
+Similar to Ice-type moves, all Fire-type moves were Beautiful moves in Generation III.
+Generation II is the only generation to have not introduced a Fire-type specialist.
+The Fire type is able to deal the highest type-based multiplier. This is possible in harsh sunlight against a dual-type, non-Grass-type Pokémon with Fluffy whose types are both weak to Fire-type attacks, and that has been affected by Forest's Curse and Tar Shot. This would result in a 48× multiplier.
+The effects of Flash Fire, Blaze and Fire Mane can further boost this to a 72× power multiplier.
+It can also achieve the lowest non-zero type-based multiplier. This is possible in an inverse battle, during rain against a dual-type, non-Grass-type Pokémon whose types  are both normally weak to Fire-type attacks, with Thick Fat, Heatproof, or Water Bubble, that has been affected by Forest's Curse, while Water Sport is in effect. This would result in a ~0.0103× (~1/96) multiplier.
+The Fire-type has been paired with every type except Fairy.
+This makes it the only first partner Pokémon type not to have been paired with every other type at least once.
+The Fire type is the only type without a Pokémon in the Water 1 Egg Group.
+Prior to the introduction of Crispin in The Indigo Disk, if the player chooses Fuecoco, no NPC Trainer in Pokémon Scarlet and Violet Terastallizes their Pokémon into the Fire type.
+
+
+== In other languages ==

@@ -1,0 +1,201 @@
+A move (Japanese: わざ move), also known as an attack (Japanese: こうげきわざ attack technique) or technique (Japanese: とくしゅわざ special technique), is the skill Pokémon primarily use in battle.
+
+
+== In the core series games ==
+In the core series games, currently, there are 934 different moves that Pokémon can use. In battle, a Pokémon uses one move each turn. Prior to Generation VII and in Brilliant Diamond and Shining Pearl, some moves (including those learned by HM) can be used outside of battle as well, usually to remove obstacles or explore new areas.
+
+
+=== Characteristics of moves ===
+A Pokémon can only know between one and four moves at a time. No single Pokémon can learn every move; each and every Pokémon has a predetermined set of moves (known as a movelist, movepool, or learnset) that they can learn that relates to the type and concept of the species. Movelist sizes vary greatly among different Pokémon; some Pokémon, such as Ditto and Unown, can only learn one move, while Mew can learn 250 moves in Generation VII, and Smeargle can possess almost any move due to Sketch. Evolved Pokémon generally have larger movelists than their pre-evolved forms but learn moves naturally at a slower rate or even stop learning moves via level-up entirely. This may provide incentive to delay a Pokémon's Evolution. Many Legendary and Mythical Pokémon have similar movesets to other Pokémon that are part of the same group (i.e. that are part of the same Legendary duo, trio, etc.).
+Moves that do not directly inflict damage are known as status moves. The damaging moves are divided into physical and special moves depending on the individual move's characteristics; the category of the move determines whether the move's damage depends on the user's Attack or Special Attack stat and the target's Defense or Special Defense. Each move has a type that determines how effective it is against various types of targets and whether it receives same-type attack bonus. It is important to note that prior to Generation IV, the move's category was dependent on the move's type, rather than a distinct variable.
+When multiple Pokémon attempt to use a move in the same turn, priority and Speed determine the order in which the moves are used. Accuracy affects whether the move misses. The damage dealt by a damaging move is determined by its power, as well as many other variables. Some damaging moves have additional effects. The number of times they can use each move is restricted by the move's PP. The only move that is not affected by Power Points is Struggle. Most moves can target only one adjacent Pokémon, but some moves instead can target the user, more than one Pokémon, or non-adjacent Pokémon.
+
+
+=== Learning and unlearning ===
+Since Pokémon Red and Green, there have been three main methods of acquiring moves on a Pokémon: by leveling up, by use of Technical Machines and by use of Hidden Machines. Generation II added two further methods: Egg Moves learned through breeding, and moves taught by a Move Tutor. Starting in Generation VII, some Pokémon learn new moves when they evolve regardless of their level. In Pokémon Sword and Shield, TRs provide a single use alternative to infinite use TMs.
+Pokémon obtained via specific methods, such as events or purification, may know "special moves" that they otherwise could not learn.
+A Pokémon can only know four moves at a time. In order to learn new moves once four have been learned, it must forget one old move for every new move. Some moves cannot be forgotten naturally, such as moves learned by HM. To remove these, a Trainer must incorporate the help of a Move Deleter. Moves that the Pokémon does not currently know and was able to learn at an earlier level (Generations II-VI) or at any level (Generation VII onwards) can be learned with the help of a Move Reminder.
+In Pokémon Legends: Arceus the first time a Pokémon learns a move, regardless of how the move was learned, the Pokémon has access to that move forever and can re-learn it if forgotten without needing to access a Move Reminder.
+In Pokémon Scarlet and Violet if a Pokémon learns a move by leveling up or TM, it has access to that move forever and can relearn it if forgotten without needing to access a Move Reminder. Moves learned as Egg Moves cannot be re-learned unless it was caught knowing the move, or learned it at a Picnic. If a Pokémon is caught knowing a move normally learnable via TM and forgets it, it won't be able to easily remember it, but if is taught the move via TM, it will be able to easily remember it. Moves only learnable by a previous Evolution can never be relearned if forgotten.
+In Generation I only, moves learned via level-up won't be learned if a Pokémon gains enough EXP Points to "skip" the level on which they are learned, while in Generation II they were learned after leveling up. Since Generation III, where the level up procedure was changed to show the Pokémon going through the intermediate levels, moves are learned while the Pokémon levels up.
+
+
+=== Changing move order ===
+The move order can be changed in all generations.
+In Generations I to III, to change move order, the player must press SELECT when viewing the Pokémon's moves in battle. The player then chooses the move to swap it with by using the D-pad, and then presses SELECT to commit the change. The move order cannot be changed during a link battle. Starting in Generation IV, the move order cannot be changed in any battle at all.
+In Generation I only, the player can change the order of moves of a transformed Pokémon, which can potentially cause the Pokémon to know -- after the battle due to a glitch. In Generations II and III, the player cannot change the move order of a transformed Pokémon, and in Pokémon Colosseum and Pokémon XD, of a Shadow Pokémon as well.
+In Generation II, the player can also change the move order on the "Move" screen accessed from the party screen. Starting in Generation III, the player can do so on the summary screen, due to the summary screen and move screen being merged into a single feature.
+
+
+=== Unique moves ===
+Some Pokémon have moves specific to themselves or their evolutionary line. These unique moves are known as signature moves. Some of these moves are powerful moves that only certain Legendary and Mythical Pokémon can learn, such as Dialga's Roar of Time or Volcanion's Steam Eruption. Other moves serve to highlight game mechanics or create unusual effects. One example is Smeargle's Sketch, which allows it to possess almost every conceivable move.
+
+
+=== Evolutions ===
+Main article: Move-based Evolution
+Several Pokémon evolve while knowing a certain move.
+
+
+=== Unusable moves ===
+Main article: List of moves by availability in Generation VII
+Main article: List of moves by availability in Generation VIII
+Main article: List of moves by availability in Generation IX
+Starting with Pokémon: Let's Go, Pikachu! and Let's Go, Eevee!, each game removes moves that aren't intended for any Pokémon to learn within the game, making them unusable. Only in Pokémon Sword and Shield can Pokémon legitimately know unusable moves, as Pokémon HOME does not reset the moves of Pokémon transferred to those games from previous generations. If a Pokémon knows an unusable move, it will not be able to use it. If the Pokémon's only moves are unusable, it will instead use Struggle. If the move is forgotten, a Move Reminder will not be able to teach it again, even if it is a special move that the Pokémon normally would be able to relearn.
+
+
+=== Properties ===
+
+
+==== Standard categories ====
+Every move has one of the 18 standard types, sometimes they can have one of the other types and every move is one of every category. In Pokemon Contests each move is also assigned one of 5 contest conditions, however moves introduced after Generation VI won't belong to any contest conditions as there is no more conditions in the games.
+
+
+==== Standard values ====
+These are the properties that every move has:
+
+Power – determines the direct damage dealt by the move, which can be either physical or special. Status moves don't deal direct damage therefore they have their power value indicated by "—".
+PP – short for "Power Points". This value tells the player how many times a Pokémon can use a move before it must be restored.
+Accuracy – determines the chance for the move to hit its target. Some moves have their accuracy value set to "—"; these cannot miss, even if accuracy is lowered, unlike moves with 100% accuracy. Such moves often target the user or the entire field.
+Range – determines which Pokémon can be targeted, or must be targeted, by a move, especially when there is more than one opponent, such as in Double Battles or Triple Battles.
+Appeal – the number of points a Pokémon gains in Contest Battles after using a move.
+Jam – the number of points deducted from other Pokémon in Contest Battles.
+
+
+==== Additional properties ====
+
+
+==== Common effects ====
+
+
+==== Subcategories of moves ====
+
+
+==== Reaction moves ====
+
+
+==== Uncallable moves ====
+
+
+==== Moves that work outside of battle ====
+
+
+== In the spin-off games ==
+
+
+=== Pokémon Mystery Dungeon series ===
+Main article: Pokémon battle (Mystery Dungeon) → Moves
+In the Pokémon Mystery Dungeon series, Pokémon can learn and use up to four moves much like in the core series games. When Pokémon level up, they learn the same moves as they would in a contemporaneous core series game. However, all Pokémon also have a regular attack that they can use that does not require PP.
+The player can only use one of their character's learned moves at a time, depending on which move they've "set". Other Pokémon in the player's party will use their learned moves at their own discretion, but the player is able to set or unset any number of their moves to partially control what they do as well.
+Two to four moves can also be linked so that they can be executed all at once, in a single turn. Defeating an enemy with a linked move will boost the resulting experience by 50%.
+While moves have PP like in the core games, the default amount of PP for a move may be different than in the core games. Pokémon can also relearn moves at different places in the games much like the Move Reminder in the core games:
+
+MDRB: Gulpin Link Shop
+MDTDS: Electivire Link Shop
+BSL: Slaking Move Relearner
+MDGtI: Scraggy's Savvy Moves
+SMD: Hawlucha's Slam School
+Unlike the Move Reminder, however, these facilities remember if a Pokémon has learned (or tried to) a level-up move it can no longer learn after evolving.
+
+
+=== Pokémon Ranger series ===
+Main article: Field Move (Ranger)
+Main article: Poké Assist
+In the Pokémon Ranger games, Field Moves and Poké Assists may be considered analogues to moves. Field Moves are used against environmental obstacles in the world, while Poké Assists are used to help Rangers capture Pokémon with the Capture Styler.
+
+
+=== Pokémon Shuffle ===
+In Pokémon Shuffle, Pokémon do not have moves, but they still attack and damage each other so that the player can capture wild Pokémon. Effectively, every Pokémon's attack has the same basic strength.
+
+
+=== Pokémon Conquest ===
+In Pokémon Conquest, a Pokémon only has one move. As a Pokémon's link with its Warrior increases, so does its move rank. If a Pokémon is able to achieve a Perfect Link with its Warrior and maximize its move rank, some moves will gain new effects, such as Leaf Storm and Outrage.
+In contrast to the core series, the Speed stat does not affect when a Pokémon goes, but instead affects the accuracy of attacks, with faster Pokémon being harder to hit and better able to land attacks than slower Pokémon. Moves are also not split into physical and special categories; all moves use the attacking Pokémon's Attack and the defending Pokémon's Defense stats, and there is no Special Attack or Special Defense.
+
+
+=== Pokémon GO ===
+Main article: Move (GO)
+In Pokémon GO, moves are divided into two kinds: Fast Attacks (Japanese: ノーマルアタック Normal Attack) and Charged Attacks (Japanese: スペシャルアタック Special Attack). At the start, every Pokémon knows one of each kind of move, randomly chosen from their species' possible move pool. A Pokémon's Fast Attack or Charged Attack can be reselected using a TM. When a Pokémon evolves, its moves are randomly reselected. The player can also spend Stardust and Candy to teach a Pokémon a second Charged Attack.
+
+For a full list of moves in Pokémon GO, see List of moves in Pokémon GO
+
+
+=== Pokémon Masters EX ===
+See also: List of moves in Pokémon Masters EX
+
+
+=== Pokémon UNITE ===
+Main article: Move (UNITE)
+In Pokémon UNITE, moves are skills that Pokémon use in battle. Moves can have many effects, ranging from directly attacking opponents, healing allies, quickly moving around, to improving one's own stats. Many moves can inflict status conditions on opponents. After a move is used, it goes through a cooldown period where it cannot be used.
+Each Pokémon also has a basic attack separate from its moves that can be used to damage opponents in between moves. Basic attacks can be used freely and do not have cooldowns, but are not as strong as moves. Generally, every third basic attack a Pokémon performs instead becomes a boosted attack, which is stronger and can have move-like additional effects.
+Unite Moves are powerful moves unique to Pokémon UNITE. Each Pokémon has one Unite Move. Instead of having a cooldown, using these moves requires having a full Unite Move gauge, and doing so empties the gauge. The Unite Move gauge refills over time.
+Wild Pokémon are able to use moves and basic attacks in ways similar to player-controlled Pokémon.
+
+
+=== Pokémon Zany Cards ===
+In Pokémon Zany Cards, some moves are mentioned in the card games: Pikachu's Thunderbolt, Ditto's Transform, and Gengar's Dream Eater.
+
+
+== In animation ==
+
+
+=== Pokémon the Series ===
+Moves in Pokémon the Series often appear different to how they are depicted in the games. Ash's Pikachu often used Agility as a physical attacking move, rather than a move that merely raises Speed. The almost limitless nature of the show lends itself to many more differences between the Pokémon games and animated series in relation to Pokémon's moves. Pokémon are able to use many more moves outside of battle, such as Bulbasaur's Vine Whip.
+In Pokémon battles, moves may be used in unorthodox manners, especially to overcome type disadvantages. Invented, animated series-exclusive moves have existed since the third episode, and custom-made moves, such as the Counter Shield have been prevalent in Pokémon the Series: Diamond and Pearl. Additionally, during Contest Battles, moves are often fused together to create brand-new attacks.
+The process in which moves are learned is also markedly different. Even though it is mentioned in The School of Hard Knocks and Will the Real Oak Please Stand Up? that moves can be learned at certain levels, Pokémon seem to learn them more at random, including moves that are not learned by leveling up in the games (such as Pikachu's Volt Tackle). 
+Similar to Move Tutors in the game, Pokémon can also learn moves by special training from certain people. For instance, Chaz helped Ash's Pikachu learn Iron Tail, and Clayton helped Buizel learn Ice Punch. During these and other similar instances, it is seen that Pokémon are capable of learning moves through observation and repetition, showing that each move has a certain procedure to unlock. May's Skitty was capable of learning Blizzard after observing Dr. Abby's Delcatty, Johnny, doing so in Delcatty Got Your Tongue. 
+To a similar extent, some moves seem to share similar traits and a move might be learned unintentionally when practicing another, as Ash's Greninja (a Froakie at the time) learned Double Team when training to learn Quick Attack. Ash's Gengar learned to use Will-O-Wisp after practicing with Ash's many Fire-type Pokémon.
+
+
+=== Secrets of the Jungle ===
+In Secrets of the Jungle, Koko is seen using Jungle Healing, the only known time a human has used a Pokémon move.
+
+
+=== Pokémon Horizons: The Series ===
+
+
+== In the manga ==
+
+Moves have been used in nearly every Pokémon manga.
+
+
+=== Pokémon Adventures ===
+Water Gun was the first move used in Pokémon Adventures . Since then, most moves introduced in the core series games have been used in the manga, with every move introduced in the first four generations having been used at least once.
+The move-teaching methods in Pokémon Adventures are similar to games, with levels, TMs, and Move Tutors all being present.
+
+
+== In the TCG ==
+Main article: Attack (TCG)
+
+In the Pokémon Trading Card Game, Pokémon cards have attacks, which are similar to moves. A card generally has only one or two attacks, but different cards of the same species may have different attacks. The TCG also often introduces attacks with names that do not have equivalent moves in the core series, and it does not limit the attacks a Pokémon can have to the moves it can learn in the core series games. 
+Only a player's Active Pokémon can use an attack. Pokémon use attacks that create a wide variety of effects, but the main reason to attack is to inflict damage on the opponent's Pokémon. Most attacks deal damage to the opponent's Active Pokémon (the Defending Pokémon) and the base damage of an attack is written to the right of the attack name as a large black or white number. Many effects can increase or decrease the damage an attack deals compared to that base damage. If a Pokémon uses an attack that deals damage, put a damage counter on any Pokémon that took damage for every 10 damage the attack deals. (Attacks only deal damage in multiples of 10, with only a few older cards attempting to compute a number which is not a multiple of 10. And all such cards round their result to a multiple of 10.)
+Most attacks have an attack cost, which is printed as Energy symbols of one or more Energy types to the left of the attack name. A Pokémon card can only use an attack if it has Energy attached to it that matches the attack's cost. This is often colloquially referred to as "paying the cost", though Energy only needs to be attached to the Pokémon; unless explicitly stated otherwise, all Energy cards remain attached to a Pokémon after it attacks.
+Using an attack ends the player's turn, giving their opponent the chance to fight back.
+
+
+== In the TFG ==
+In the Pokémon Trading Figure Game, Pokémon figures have a ring around their base which is divided into colored sections, some of which are moves. Depending on the figure, Pokémon may have as few as one or as many as four moves. Battles are fought by spinning the Pokémon and its ring inside the base, and the section that stops under an arrow on the base determines its action in the battle (which may also be affected by the outcome of the opposing Pokémon's spin).
+
+
+== Trivia ==
+In the older Pokémon Mystery Dungeon series games, if a Pokémon learns multiple moves at the same level, it will only be given the opportunity to learn one of them. The other moves it could have learned must be taught from the Link Shop.
+After a move is issued, if that Pokémon levels up before its in-battle turn and replaces the move currently awaiting execution with a new move, the new move will be used instead of the old one, except for in Generation VI, where the old move can still be used.
+Multiple turn moves such as Petal Dance will cause more complex behavior.
+In some instances in the animated series, certain Pokémon have been shown to know more than just four moves at the same time, with as many as 10 being used by one Pokémon in a single battle. The closest the series has got to acknowledging the existence of move slots is the fact that the Meowth of Team Rocket can't learn Pay Day because of the effort exerted in learning to speak human language.
+Generation I introduced 165 moves; Generation II introduced 86 moves; Generation III introduced 103 moves; Generation IV introduced 113 moves; Generation V introduced 92 moves; Generation VI introduced 62 moves; Generation VII introduced 107 moves, including 35 Z-Moves; Generation VIII introduced 80 moves, including 18 Max Moves and 26 G-Max Moves; and Generation IX introduced 69 moves.
+When a move is forgotten, the text from Generation I to IV is "1... 2... and poof!" From Generation V onwards, it was changed to "1... 2... and ta-da!"
+The term "move" is typically uncapitalized in core series dialogue and in game manuals. However, it has exceptionally been capitalized as "Move" in the manuals of Ruby, Sapphire, and Emerald and Diamond, Pearl, and Platinum. For instance, the Platinum manual says this about confusion: "If a confused Pokémon uses a Move during battle, there is a chance it could attack itself."
+
+
+== In other languages ==
+
+
+== Notes ==
+
+
+== Related articles ==
+List of moves
+List of modified moves
+Move variations
+List of moves in Pokémon GO
+List of moves in other languages
+List of moves by animated series debut

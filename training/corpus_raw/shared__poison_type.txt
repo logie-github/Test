@@ -1,0 +1,124 @@
+The Poison type (Japanese: どくタイプ Poison type) is one of the eighteen types. Poison-type moves are super effective against Fairy- and Grass-type Pokémon, while Poison-type Pokémon are weak to Ground- and Psychic-type moves.
+
+
+== Battle properties ==
+Note: Type effectiveness multipliers may vary in other games outside the core series.
+
+In Generation I only, Poison-type Pokémon were weak to Bug-type moves and Poison-type moves were super effective against Bug-type Pokémon.
+The Steel type was introduced in Generation II.
+The Fairy type was introduced in Generation VI.
+
+
+=== Additional effects ===
+Poison-type Pokémon cannot become poisoned, except by a Pokémon with the Ability Corrosion, introduced in Generation VII.
+Grounded Poison-type Pokémon will remove Toxic Spikes from their side when switched in.
+From Generation VI onward, when a Poison-type Pokémon uses the move Toxic, it cannot miss, bypassing accuracy checks and semi-invulnerable turns from moves such as Fly and Dig.
+
+
+== Pokémon ==
+As of Generation IX, 89 Pokémon are Poison-type (counting those that are Poison-type in at least one of their forms, including regional forms), which makes up 8.66% of all Pokémon, causing it to tie with Fire as the 7th most common type among Pokémon after Bug and before Fighting.
+
+
+=== Pure Poison-type Pokémon ===
+
+
+=== Half Poison-type Pokémon ===
+
+
+==== Primary Poison-type Pokémon ====
+
+
+==== Secondary Poison-type Pokémon ====
+
+
+== Non-Pokémon opponents ==
+The Starmobiles featured in Pokémon Scarlet and Violet can be battled like a Pokémon and have a designated type.
+
+The stats shown for Starmobile are the exact stats, not base stats. The values are custom set rather than derived from base stats, level, Nature, IVs, and EVs.
+
+
+== Moves ==
+As of Generation IX, there are 36 Poison-type moves, which makes up 3.85% of all moves (excluding those that are Poison-type only under certain circumstances), making it the 5th rarest type among moves after Bug, Ghost, and Fairy and before Steel.
+Prior to changes in Generation IV, all damaging Poison-type moves were physical, but they may now also be special depending on the attack.
+
+
+== Abilities ==
+
+
+=== Interacting with the Poison type ===
+A Pokémon with the Ability Protean or Libero will become Poison-type if it uses a Poison-type move. A Pokémon with Color Change, Imposter, RKS System, or Multitype will become a Poison-type Pokémon if (respectively) it is hit with a Poison-type move, is sent out against a Poison-type opponent, is holding a Poison Memory, or is holding a Toxic Plate/Poisonium Z.
+Poison-type Pokémon are also immune to becoming poisoned from the Abilities Poison Point, Poison Touch, Synchronize, or Effect Spore.
+
+
+=== Exclusive Abilities ===
+Only Poison-type Pokémon can have these Abilities. This does not include signature Abilities.
+
+
+== Items ==
+
+
+=== Natural Gift's Berries ===
+
+
+=== Cram-o-matic ===
+
+
+== Notable Poison-type Trainers ==
+Main article: Category:Poison-type Trainers
+
+
+== Icons ==
+
+
+=== Core series ===
+
+
+=== Side series ===
+
+
+=== Spin-off games ===
+
+
+== Statistical averages ==
+
+
+=== Overall ===
+
+
+=== Fully evolved ===
+
+
+== In spin-off games ==
+
+
+=== Pokémon Sleep ===
+Unlike in the core series games, in Pokémon Sleep, each Pokémon can only have one type, which determines the kind of Berry that the Pokémon will gather for Snorlax to feed on. Poison-type Pokémon will gather Chesto Berries, and typically have the Dozing sleep type.
+The following is a list of Poison-type Pokémon in Pokémon Sleep.
+
+
+== In the TCG ==
+See also: Grass (TCG), Psychic (TCG) or Darkness (TCG)
+Due to the decreased amount of types in the TCG, Poison-type Pokémon have been listed as three different types. They were listed as Grass-type Pokémon prior to the Diamond & Pearl set and as Psychic-type Pokémon from Diamond & Pearl to Cosmic Eclipse. Starting with Sword & Shield, they are now listed as Darkness-type.
+Poison-type Pokémon in the TCG were generally weak to Psychic prior to Sword & Shield, as Grass or Psychic types, and are now weak to Fighting. They have no resistances. As Grass types, they were strong against some Fighting  Pokémon prior to Diamond & Pearl; from Diamond and Pearl to Cosmic Eclipse, they were changed to the Psychic type, and were strong against most Fighting and Psychic types; and from Sword and Shield onward they are Darkness type, and are strong against most Psychic types. They can be resisted by Darkness from Diamond and Pearl to Cosmic Eclipse, as well as Metal until Sword and Shield.
+
+
+== Trivia ==
+Generation I introduced the most Poison-type Pokémon of any generation, with 33, and Generation VI introduced the fewest Poison-type Pokémon, with two.
+Generation I had more Poison-type Pokémon (33) than Water-type Pokémon (32), and it was the only generation where Poison was the most common type.
+Generation I introduced the most Poison-type moves of any generation, with eight, and Generation II introduced the fewest Poison-type moves, with only one.
+In Generation I, Poison-type moves are super effective against Bug-type Pokémon, while Bug-type moves are super effective against Poison-type Pokémon. This is the only case in which a pair of distinct types is super effective against each other.
+Poison is the only type that didn't have a Pokémon added to the Sinnoh Pokédex in Pokémon Platinum. Although the Fairy type wasn't introduced at that point, the expansion added Ralts, Kirlia, Gardevoir, Togepi, Togetic and Togekiss which would later on be retyped Fairy.
+The Poison type is the only one of the original 15 types not mentioned in the song 2.B.A. Master. Instead, the "Flame type" (which does not exist) is mentioned.
+All types that are super effective against the Dark type are resisted by the Poison type.
+In turn, Dark is immune to Psychic-typed attacks whereas Poison is weak to, thus a dual type Poison/Dark Pokémon, under normal circumstances, only has one weakness in Ground.
+The Poison type is the type that has been represented by the most types in the TCG, with three.
+Excluding Arceus using the Toxic Plate, only odd-numbered generations introduced pure Poison-type Pokémon.
+Generation IX is the first one to break this chain, not adding any pure Poison-type Pokémon.
+The Poison type is one of the only two types, the other being Fairy, to not have any moves that cause flinching.
+However, the King's Rock and Razor Fang, as well as the Ability Stench from Generation V onwards, may make any of them able to cause flinching.
+The Poison type is tied with the Steel type for being the most common type among Ultra Beasts, with three Ultra Beasts being Poison- or Steel-type each.
+Poison and Flying are the only types to have at least one Pokémon in every Egg Group (not counting the Ditto Egg Group).
+The Poison type has been paired up with every other type except for Ice.
+
+
+== In other languages ==

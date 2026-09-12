@@ -1,5 +1,5 @@
 return {
-  summary = "Three embedded microLM Pokemon live autonomously in the real Gen I Day Care room.",
+  summary = "Three independent per-species language models live autonomously in the real Gen I Day Care room, each with a permanent memory of everything that has happened to it.",
   author = "Custom user mod",
   tags = { "ai", "simulation", "total-conversion", "observer", "lua" },
   differences = {
@@ -7,23 +7,35 @@ return {
       "New Game boots the regular overworld into the sealed cartridge DAYCARE room.",
       "The player avatar is hidden and input-locked; the camera stays centered on the room.",
       "Bulbasaur, Charmander and Squirtle are real level-5 party records with normal Gen I stats and moves.",
+      "Damage, experience, levels and evolution run through those real records.",
       "Their room actors use bundled six-frame PokePCFollowers overworld sprites.",
-      "The START menu is replaced by party inspection, targeted observer interventions, dispositions and activity history.",
+      "The START menu is replaced by party inspection, targeted observer interventions, a mind viewer, the permanent memory ledger and activity history.",
       "Pokemon are explicitly aware that the room is a Pokemon Day Care.",
-      "The three microLMs run inside Lua; no localhost server or Python process exists."
+      "Each Pokemon runs its own ~1.75M parameter model with its own 3000 word vocabulary inside Lua; no localhost server, Python process or shared checkpoint exists.",
+      "Fainting is ten real seconds of unconsciousness rather than an instant recovery.",
     },
     added = {
-      "embedded q8 Transformer inference", "directional learned disposition", "paged private focus thoughts",
-      "episodic memories", "generated speech and thoughts", "social consequences", "targeted interventions",
-      "engine-grid pathing", "reaction valence markers", "disposition viewer", "activity log", "compatible newcomers",
+      "permanent per-Pokemon event ledger", "relevance retrieval over that ledger", "beliefs formed from recurring patterns",
+      "self-concept accumulated from own behavior", "theory of mind from observed actions only",
+      "general drives and experience-driven values", "model-chosen plans and longer projects",
+      "counterfactual prompting", "experience-gated cognitive stages", "token-budgeted prompt assembly",
+      "ten second unconsciousness with full recovery", "hostility-gated lethal follow-up the model still has to choose",
+      "sprite-scale battle animation", "one second health bars over the head",
+      "ambient dotted thought boxes with a toggle", "mind viewer", "permanent memory viewer",
+      "real experience, level ups and engine evolution", "embedded q8 Transformer inference",
+      "directional learned disposition", "targeted interventions", "engine-grid pathing",
+      "reaction valence markers", "activity log", "compatible newcomers",
       "stock Party/Summary inspection", "bundled PokePCFollowers starter sprite sheets"
     },
     known = {
-      "Inference is deliberately spread across frames; very slow hardware may make a Pokemon think for several seconds."
+      "Inference is spread across frames against a wall-clock slice; on slow hardware a Pokemon takes longer to finish thinking, and the room keeps running while it does.",
+      "The models are small. They produce short, varied, species-flavored sentences and react to their situation; they do not carry out multi-step reasoning and they do not hold a conversation.",
+      "The bundled follower sheets only cover the three base forms, so an evolved resident falls back to the engine's own party icon.",
     },
   },
   credits = {
-    "PokePCFollowers / ShockSlayer / Pokemon Crystal Clear contributors - requested overworld follower sprites"
+    "PokePCFollowers / ShockSlayer / Pokemon Crystal Clear contributors - requested overworld follower sprites",
+    "Bulbapedia (bulbapedia.bulbagarden.net) - article text each resident's model is trained on"
   },
   compat = { engine = ">=0.0.0-0 <2.0.0", modApi = 2 },
 }

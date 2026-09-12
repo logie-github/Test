@@ -1,0 +1,194 @@
+Status redirects here. For the move category, see status move.
+
+ 
+Status conditions (Japanese: 状態異常 abnormal condition), also referred to as status problems or status ailments, affect a Pokémon's ability to battle. There are two kinds of status conditions, non-volatile which last until healed, and volatile which last while a Pokémon is in battle. Having Pokérus and being fainted are displayed identically to non-volatile status conditions but are not officially considered such.
+
+
+== In the core series and side series ==
+
+
+=== Non-volatile status ===
+ 
+A non-volatile status condition is a status condition that remains after being switched out. They can be cured by healing at a Pokémon Center, specific curative items, or other ways. Wild Pokémon that are affected by a status condition are easier to catch.
+A Pokémon cannot gain non-volatile status conditions when it is affected by Safeguard, Leaf Guard, Flower Veil, Shields Down, Comatose, or Misty Terrain, nor can a Pokémon behind a substitute gain status conditions, except due to Synchronize, Rest, or a held item like Flame Orb or Toxic Orb. A Pokémon will cure its status condition when affected by Haze (Generation I only), Rest, Refresh, Heal Bell, Aromatherapy, Psycho Shift, Jungle Healing, G-Max Sweetness, Natural Cure, Purify, Take Heart, Lunar Blessing, Shed Skin, Healer, Hydration, or Lum Berry. Player can cure any status condition of their Pokémon by using on it any of the following items: Full Heal, Full Restore, Heal Powder, Pewter Crunchies, Rage Candy Bar, Lava Cookie, Old Gateau, Jubilife Muffin, Casteliacone, Lumiose Galette, Shalour Sable, Big Malasada, Sacred Ash, or Lum Berry (MiracleBerry in Generation II).
+Pokémon with Guts, Marvel Scale, or Quick Feet will have their Attack, Defense, or Speed increased, respectively, when affected by a status condition. Pokémon with Magic Guard can be afflicted by status conditions and receive their additional effects but do not take damage. In addition, the base power of Facade is doubled (from 70 to 140) when inflicted with paralysis, a burn, or poison.
+In the Generation II core series games, when an in-game opponent outside of the Battle Tower uses a status move that would inflict a non-volatile status condition upon the target, that move has a 25% chance to fail in addition to its normal chance to miss.
+In all games except Pokémon Legends: Arceus, a Pokémon cannot gain a non-volatile status condition if it's already afflicted by another one, and a non-volatile status condition does not wear off automatically when the battle ends. If a Pokémon under a status condition (such as a poisoned Cascoon) evolves, the condition will be kept, even if the Pokémon gains a new type or Ability that would normally prevent it.
+In Pokémon Legends: Arceus, all non-volatile status conditions have a set turn count and wear off after battle. If a Pokémon already has a non-volatile status condition, inflicting it with another one can override it.
+
+
+==== Burn ====
+
+Main article: Burn (status condition)
+The burn condition inflicts damage every turn and halves damage dealt by a Pokémon's physical moves (except Pokémon with the Guts Ability and Facade from Generation VI onward).
+In Generation I and from Generation VII onward, burn inflicts damage equal to 1/16 of its maximum HP every turn; from Generation II to VI, burn inflicts damage equal to 1/8 of its maximum HP every turn. Burn damage is halved if the Pokémon has the Ability Heatproof. In Generation V, Pokémon glow red while afflicted with burn.
+Most moves which cause burn are Fire-type and burning is the prime effect of Will-O-Wisp; however, it also can be caused by the abilities Flame Body and Spicy Spray or by holding a Flame Orb. In Generations I and II, Fire-type Pokémon cannot be burned by Fire-type moves (but they can be burned by Tri Attack in Generation II). From Generation III onward, Fire-type Pokémon and Pokémon with the Water Veil or Water Bubble Ability cannot normally be burned. Pokémon with the Ability Heatproof will only lose half the HP each turn, while Pokémon with Magic Guard are immune to the HP loss (but still suffer from the attack drop). Pokémon with Flare Boost will have their Special Attack increased when burned. A burn can be cured with the use of a Burn Heal, Yago Berry (Generation III only), or a Rawst Berry (Ice Berry in Generation II).
+In Generations I and II, burn damage is applied after the Pokémon takes its turn, but is skipped if the opponent faints during that turn. From Generation III onward, burn damage is applied after all Pokémon on the field have taken their turns (and there is no skipping).
+
+
+==== Freeze ====
+
+Main article: Freeze (status condition)
+The freeze condition causes a Pokémon to be unable to use moves. From Generation II onward, the frozen Pokémon has a chance to be thawed each turn (10% in Generation II or 20% in Generation III onwards), possibly even thawing right after being frozen; however, in Generation I, a frozen Pokémon never thaws without external aid. Pokémon cannot be frozen in harsh sunlight.
+All moves which cause freezing are Ice-type, except Tri Attack (Generation II onward), Secret Power (when used in snow or ice; Generation IV onward) and Freezing Glare. In Generations I and II, Ice-type Pokémon cannot be frozen by Ice-type moves (but they can be frozen by Tri Attack in Generation II). From Generation III onward, Ice-type Pokémon and Pokémon with the Magma Armor Ability cannot normally be frozen. Being frozen can be cured with the use of an Ice Heal, an Aspear Berry (Burnt Berry in Generation II) or Pumkin Berry (Generation III only).
+A frozen Pokémon can still use the moves Fusion Flare, Flame Wheel, Sacred Fire, Flare Blitz, Scald, and Steam Eruption while frozen; these moves will thaw the user and be executed normally. In Generation V, Pokémon glow blue and stop moving while afflicted with freeze. If a frozen Pokémon is hit by a damaging Fire-type move (except Fire Spin in Generations I and II or Hidden Power in Generations II and III), Scald (Generation VI onward) or Steam Eruption, it will be thawed.
+
+
+===== Frostbite =====
+
+Frostbite is a status condition exclusive to Pokémon Legends: Arceus, replacing the freeze condition. Similar to a burn, frostbite inflicts damage equal to 1/12 of the target's maximum HP every turn, and it halves damage dealt by its special moves during this time. When it is snowing, moves that may inflict frostbite are more likely to do so. Similar to freeze, frostbite will also revert a Sky Forme Shaymin to its Land Forme. Ice-type Pokémon cannot get frostbite.
+Using Flame Wheel or Flare Blitz will cure the user of frostbite.
+
+
+==== Paralysis ====
+
+Main article: Paralysis (status condition)
+The paralysis condition reduces the Pokémon's Speed stat and causes it to have a 25% chance of being unable to use a move ("fully paralyzed") when trying to use one. From Generation I to VI, its Speed is reduced to 25% of its normal value. From Generation VII onward, its Speed is reduced to 50% of its normal value. Pokémon with the Quick Feet Ability instead have their Speed increased by 50% while paralyzed. In Generation V, Pokémon glow yellow while afflicted with paralysis and their animation will be slowed significantly.
+Many moves that cause paralysis are Electric-type moves and paralysis is the main effect of the move Thunder Wave. It can also be caused by Static, Effect Spore, or Gulp Missile. In Generation I, Pokémon cannot be paralyzed by damaging moves of the same type as themselves. From Generation VI onward, Electric-type Pokémon cannot be paralyzed. Pokémon with the Limber Ability cannot normally be paralyzed. Furthermore, if its target is paralyzed, Smelling Salts will cure the paralysis in addition to becoming more powerful. Paralysis can be cured with the use of a Paralyze Heal or a Cheri Berry (PRZCureBerry in Generation II). In Generation IV only, the Ability Magic Guard will prevent Pokémon from being fully paralyzed; however, it does not prevent the Speed reduction.
+
+
+==== Poison ====
+
+Main article: Poison (status condition)
+The poison condition inflicts damage every turn. In Generation I, poison inflicts damage equal to 1/16 of its maximum HP every turn; from Generation II onward, it inflicts damage equal to 1/8 of its maximum HP. A Pokémon with the Poison Heal Ability will restore an equivalent amount of HP instead of taking damage. In Generation V, Pokémon glow purple while afflicted with poison.
+All moves which cause poison are Poison-type, except Twineedle, Secret Power (when used in tall grass; Generation III only), Psycho Shift (while poisoned), and Fling (if Poison Barb or Toxic Orb is held). Poison-type Pokémon cannot be normally poisoned. The other causes of poisoning are one layer of Toxic Spikes, Poison Point, Effect Spore, or Poison Touch. In Generation II, Steel-type Pokémon cannot be poisoned by Poison-type moves (but they can be poisoned by Twineedle); from Generation III onward, Steel-type Pokémon and Pokémon with the Immunity Ability cannot normally be poisoned. Pokémon with Magic Guard can be poisoned but do not lose HP, though the badly poisoned counter will still increase.  Poison- and Steel-type Pokémon can be poisoned by a Pokémon with the Corrosion Ability. Poison (including bad poison) can be cured with the use of an Antidote, Drash Berry (Generation III only) and Pecha Berry (PSNCureBerry in Generation II).
+In Generations I and II, poison damage is applied after the Pokémon takes its turn, but is skipped if the opponent faints during that turn. From Generation III onward, poison damage is applied after all Pokémon on the field have taken their turns (and there is no skipping).
+Prior to Generation V, a poisoned Pokémon loses 1 HP for every four steps taken outside of battle. In Generation IV, a Pokémon whose HP is reduced to 1 via poison outside of battle will have the poison status removed; in Generations I, II, and III, its HP will be reduced to 0 (causing it to faint).
+
+
+===== Badly poisoned =====
+
+The badly poisoned condition inflicts damage every turn, with the amount of damage increasing each turn. It initially inflicts damage equal to 1/16 of the Pokémon's maximum HP, with the damage inflicted increasing by 1/16 each turn (2/16 on the second turn, 3/16 on the third turn, etc.). In Generation V, Pokémon glow purple while afflicted with bad poison. Starting from Generation V bad poison is also marked by darker status flag in the battle and Pokémon summary.
+In Generations I and II, if a badly poisoned Pokémon is switched out, the condition reverts to regular poison. From Generation III onward, the poison remains bad poison while switched out, but the damage counter will be reset when switched back in (i.e. it always will take 1/16 of its maximum HP as damage after switching in). In Generations I, II, and from Generation V onwards, after a battle is over, the badly poisoned status will become a regular poison. Bad poison can be cured by the same ways the regular poison is.
+All moves which badly poison are Poison-type, except Psycho Shift (while badly poisoned) and Fling (if Toxic Orb is held). Badly poison is the main effect of the move Toxic and two layers of Toxic Spikes.
+
+
+==== Sleep ====
+
+Main article: Sleep (status condition)
+The sleep condition causes a Pokémon to be unable to use moves, except Snore and Sleep Talk. From Generation V onward, Pokémon close their eyes while sleeping and move more slowly.
+Sleep lasts for a randomly chosen duration of 1-7 turns in the handheld Generation I games, 1-3 turns in Pokémon Stadium, 2-8 turns in the handheld Generation II games, 2-4 turns in Pokémon Stadium 2, 2-5 turns in Generations III and IV, and 2-4 turns in Generation V onwards. If a Pokémon puts itself to sleep using Rest, it will sleep for exactly 3 turns (not counting the turn in which Rest is used).
+Plenty of moves are able to put a Pokémon to sleep, most of them are either Normal-type, Psychic-type, or Grass-type. In addition to moves that cause sleep, after contact with Effect Spore or a disobedient Pokémon may also nap during battle. Pokémon with the Vital Spirit or Insomnia Ability cannot normally be put to sleep. Worry Seed changes the target's Ability to Insomnia causing it to be unable to sleep too. A sleeping Pokémon can be awoken by an Awakening or a Chesto Berry (Mint Berry in Generation II). If its target is sleeping, Wake-Up Slap will wake it up in addition to becoming more powerful. In Generation I core series games and Pokémon FireRed and LeafGreen, the Poké Flute can be used in battle to wake up a sleeping Pokémon (without being consumed). In the Generation III and IV core series games and Pokémon Omega Ruby and Alpha Sapphire, the Blue Flute can be used to wake up a sleeping Pokémon (without being consumed).
+In Generation I, a Pokémon that wakes up is not able to attack during that same turn; from Generation II onward, a Pokémon can wake up and use a move during the same turn. In Generation V only, a Pokémon's sleep counter is reset to its original amount when switched out; this also applies for self-induced sleep.
+
+
+===== Drowsy =====
+Drowsy redirects here. For the Pokémon, see Drowzee.
+
+Drowsy is a status condition exclusive to Pokémon Legends: Arceus and Pokémon Legends: Z-A, replacing the sleep condition. In Legends: Arceus, it works similarly to paralysis, and may cause the afflicted Pokémon to be unable to move. Drowsy Pokémon also take increased damage from direct attacks, specifically 1.33 times the damage. When it is snowing, drowsy Pokémon are more likely to fail to act. In Legends: Z-A, it instead doubles the length of the Pokémon's attack cooldowns.
+Using Spark, Volt Tackle, or Wild Charge will cure the user of drowsiness. Rest inflicts drowsiness on the user lasting four turns.
+
+
+=== Volatile status ===
+A volatile status condition is a status condition that will wear off after a given amount of turns, by switching out the affected Pokémon, or once the battle is over. A Pokémon can be affected by multiple volatile status conditions at a time, potentially in addition to a non-volatile status condition.
+
+
+==== List of volatile statuses ====
+ 
+The names and descriptions listed below are from their most recent video game appearances. For more information regarding the specifics of each status, please refer to the associated move or Ability page.
+
+
+===== Statuses that affect the user =====
+
+
+===== Statuses that affect the user's side =====
+
+
+===== Statuses that affect the opponent =====
+
+
+===== Statuses that affect the opposing side =====
+
+
+===== Statuses that affect all Pokémon =====
+
+
+==== Pokémon Legends: Arceus ====
+There are some volatile status conditions exclusive to Pokémon Legends: Arceus.
+
+
+===== Splinters =====
+A Pokémon with the Splinters status will take damage equivalent to a 25-base power move from the user, factoring in type effectiveness, but not the random damage factor. Splinters damage the target at the end of its turn and last three turns for regular moves, two turns for agile style moves, and four turns for strong style moves.
+
+
+===== Might =====
+
+Additionally, Pokémon Legends: Arceus feature two unique conditions, named wild might (Japanese: 野性の力 wild strength) and terrible might (Japanese: すさまじい力 tremendous strength). Unlike other statuses, however, they cannot be inflicted by any means.
+Wild might is a status condition that is permanent on wild alpha Pokémon. All the Pokémon's stats are boosted and take reduced damage from other status conditions, including poison and splinters. These boosted stats are independent from those raised by moves and getting enraged, being able to be stacked with them. The terrible might status is exclusive to the Giratina fight with Volo atop the Temple of Sinnoh, and behaves identical to wild might. Neither condition can be used by Trainers (with exception of a single fight with Ingo that treats the fights as if they were wild), and there is no way to inflict the conditions with the use of a move, item or ability.
+There are also two other similar, but unused conditions, terrific might (Japanese: 偉大な力) and frenzied might (Japanese: 荒ぶる力).
+Both are completely unused in terms of battle, but behave like the two used conditions without the Pokémon stats' being boosted. Frenzied might, however, is mentioned by both Palina and Lian that their noble have learned to control their "frenzied might" upon rematching them in battle, implying the condition may have been used at one point for noble Pokémon as well as the Origin Forme Dialga or Palkia atop the Temple of Sinnoh.
+
+
+=== Display ===
+A Pokémon's status is shown in several places, including in battle, on the party screen, and on the summary screen. If a Pokémon is affected by a non-volatile status condition or has fainted, an icon will display the type of status condition (replacing the Pokémon's level in battle in Generations I and II). Prior to Generation VIII, if a Pokémon is infected with the Pokérus and has no other status condition, its summary will display Pokérus in the same location. Volatile status conditions are not indicated by an icon, but can be viewed on the battle status screen starting in Generation VII.
+When a Pokémon has no other status condition, its status is displayed as OK (Japanese: ふつう normal) on the summary screen in Generation I and II. In the Pokémon Stadium series, a healthy Pokémon's status is also displayed in battle, and is abbreviated as Nm in Pokémon Stadium 2. Starting in Generation III, no status is displayed on the summary screen for healthy Pokémon. However, unused icons for OK are present in the internal data of Pokémon Colosseum and XD, though they were not properly localized into English.
+In Generations I and II, a Pokémon's status is almost always displayed as regular text, either as a three-letter abbreviation in the core series games or as the full name of the status in the Pokémon Stadium series games; the only icons are used in battle in Pokémon Stadium 2. Starting in Generation III, a Pokémon's status is displayed as an icon consisting of white or black text on a colored background.
+
+Starting in Generation V, differently colored icons are used for Pokémon that are poisoned and badly poisoned. Starting in Generation VIII, the icons now include a pictorial representation of the status condition, with the icons for paralysis, frozen, burned, and poisoned matching the type icons for the Electric, Ice, Fire, and Poison types, respectively.
+
+
+== In the spin-off games ==
+
+
+=== Pokémon Mystery Dungeon series ===
+Main article: Status condition (Mystery Dungeon)
+Certain status conditions work differently in Pokémon Mystery Dungeon spin-offs. This can range from simple tweak in function to account for difference in battle environment (such as confusion causing Pokémon's movement and actions to be performed in a random direction, rather than interrupting execution of a move by having the user damage itself, or flinching being always possible due to player and opposing Pokémon acting interchangeably), to more noticeable ones (such as paralysis always preventing most actions from being taken but wearing off naturally after few turns, or frozen Pokémon being unable to take any action at all, but being immune to most forms of damage). 
+Some status conditions might not be present in a given game due to difference in how moves function (such as Disable inflicting paralysis in earlier games instead of sealing away a move). Conversely, certain moves in specific games self-inflict a status condition that they do not in core series (such as Counter or Magic Coat, now lasting multiple turns and being able to counter multiple moves in a single use).
+Additionally, the series features completely new and unique status conditions, such as Petrified or Blinker. 
+All status conditions are automatically cured when the player uses the stairs and enters a new floor, both positive and negative ones.
+
+
+=== Pokémon Conquest ===
+In Pokémon Conquest, all status conditions disappear after battle.
+In this game, confusion is a non-volatile status. A confused Pokémon may randomly move and attack other Pokémon, including allies. If a Pokémon moves in its confusion, the Warrior is prevented from using an item or activating a Warrior Skill that turn. Confusion may wear off in the first turn.
+In this game, a Pokémon that has flinched is unable to perform any actions (i.e. move around, use moves), along with its partner Warrior (i.e. use Warrior Skills, use items, link). Since battles in this game are turn-based, flinching does not require a first strike via an advantage in Speed or priority, unlike in the main series. The turn-based gameplay and the duration of flinching also makes consecutive flinching impairment impossible, unlike in the main series.
+
+
+=== Pokémon Shuffle ===
+
+In Pokémon Shuffle, status conditions can be inflicted onto the opponent by skills when matching Pokémon icons at the start of a combo. A foe can only have one status condition at a time.
+All status conditions will wear off as moves are made. More specifically, a status condition's duration will tick down after a move is made, but before the second hit onwards of the move's resulting combo. This can result in the status effect being active for the first match of the combo, but being inactive for the subsequent matches in the same combo.
+If a skill successfully inflicts a status condition, and that condition increases damage dealt (such as Burned), then the skill-activating hit will not receive the damage benefit. However, the second hit onwards of the resulting combo will benefit.
+
+A pseudo-exception to this is Poison, whose activation hit receives a ×1.2 damage multiplier (instead of the Poison status effect's ×1.5).
+The skill Relentless will increase the damage of the entire combo against a foe that has a status condition.
+The skills Mind Zap, Prank, Possession, and Calm Down cannot activate against a foe that has a status condition.
+The effects of Shuffle's status conditions are as follows:
+
+Asleep - The Pokémon cannot use disruptions, their disruption countdown is paused, and the Pokémon will take 20% more damage. Caused by the skills Nap Time or Sleep Charm.
+Burned - The Pokémon takes 50% more damage from  Fire -type Pokémon. Caused by the skills Burn or Burn+.
+Disruption Delay - The Pokémon cannot use disruptions, and their disruption countdown is paused. This is inflicted by the  Disruption Delay item, as well as the skills Astonish, Chill, Constrict, Crushing Step, Daunt, Fascinate, Flap, Power Hug, Sand Sport, Shadow Shock, or Whirlpool.
+Frozen - The Pokémon cannot use disruptions, their disruption countdown is paused, and the Pokémon will take 20% more damage from  Ice -type Pokémon. Caused by the skills Freeze or Freeze+.
+Paralyzed -  The Pokémon cannot use disruptions, and their disruption countdown is paused. Caused by the skills Dragon Shriek, Lightning, Paralyze, Paralyze+, Quake, or Shock Attack.
+Poisoned - The Pokémon takes 50% more damage from  Poison -type Pokémon. Caused by the skill Poison.
+Spooked - The Pokémon takes 50% more damage from  Ghost -type Pokémon. Caused by the skills Spookify or Spookify+.
+In this game, most types have immunities to certain status conditions. These are listed in the chart below, where an "X" indicates an immunity.
+
+
+=== Pokémon Trading Card Game Live ===
+Pokémon Trading Card Game Live calls effects that occur to players Global Status Conditions, though this term has only appeared in the menus.
+Effects that occur to Pokémon are called status effects They are divided into positive effects and negative effects based on if they benefit or hinder the Pokémon. Effects that occur to non-Pokémon entities, such as an attached Pokémon Tool card or a Special Condition a Pokémon is suffering from, are displayed as part of the status effects on the Pokémon.
+
+
+== In the TCG ==
+Main article: Effect (TCG)
+Main article: Special Condition (TCG)
+In the TCG, many cards are capable of creating effects, namely changes to the game state applied to specific entities. Some effects happen instantaneously, like drawing cards or moving a Benched Pokémon to the Active Spot. Many effects instead persist on a entity for a longer period of time, ending when the turn ends, when the next turn of that player begins, or until the card creating the effect leaves play. Effects can be placed on Pokémon, Pokémon Tool cards, and players. Some cards have effects that can remove the effects affecting a Pokémon or player, or prevent those effects from being applied.
+When attacks create effects, those effects can be universally cleared off by having the Pokémon afflicted evolve, devolve, have a Pokémon Level-Up card put on it, or move to the Bench.
+One group of effects is the placement of Special Conditions on Pokémon. Those are analogous to Status conditions, impairing a Pokémon's ability to battle. They consist of Burned, Poisoned, Asleep, Paralyzed, and Confused. However, Special Conditions themselves are not effects.  Special Conditions can be affected by effects, making them more potent. Special Conditions are unable to affect Benched Pokémon. As with the effects of attacks, they are also cleared whenever a Pokémon evolves, devolves, have a Pokémon Level-Up card put on it, or moves to the Bench. Some cards have effects that remove Special Conditions, or prevent them from being applied.
+Some effects place counters or markers. These effects are unique because they are not removed when a Pokémon goes to the Bench, but still get removed when Pokémon evolve, devolve, or have a Pokémon Level-Up card put on them. There are effects that remove counters and markers, but those are rare.
+
+
+== In other languages ==
+
+
+== Trivia ==
+In Pokémon Crystal, a Pokémon's cry will not be heard if the Pokémon is asleep, frozen, or fainted.
+In the core series games for the Nintendo Switch, Bind, Clamp, Sand Tomb, Fire Spin, Infestation, Magma Storm, Snap Trap, Thunder Cage, Whirlpool, and Wrap are all coded as the same status condition, all running for between 5 and 6 turns. However, they vary in animation, PP, type, and power.
+
+
+== References ==
+
+
+== Related articles ==
+Special Condition (TFG)

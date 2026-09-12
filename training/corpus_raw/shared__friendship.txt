@@ -1,0 +1,368 @@
+If you were looking for the Friendship features in Pokémon GO, see Friends (GO).
+Happiness redirects here. For the Pokémon with the category of "Happiness Pokémon", see Blissey (Pokémon).
+
+ 
+
+Friendship (Japanese: なつき emotional attachment), historically referred to by fans as happiness, is a measurement of how much a Pokémon is attached to its Trainer and enjoys being in their care.
+In the core series games, friendship was introduced in Pokémon Yellow, though only for the Pikachu received at the beginning of the game. It was expanded to apply to all Pokémon starting in Generation II.
+Friendship affects the Evolution of certain Pokémon, the power of certain moves, and the availability of a few in-game items and ribbons. Certain activities/events can increase a Pokémon's friendship (such as gaining a level and walking a certain amount of steps), while others decrease their friendship (such as fainting and using herbal medicine).
+Friendship is distinct from affection, a separate mechanic used in Generation VI and some Generation VII games. However, beginning with Pokémon: Let's Go, Pikachu! and Let's Go, Eevee!, friendship effectively replaced affection, taking on its effects.
+
+
+== Terminology ==
+ 
+In Pokémon Stadium 2, the List feature (a table containing Pokémon data which is accessible from the PC) includes a "Tame" column which contains short text descriptions about the friendship of each Pokémon.
+According to the in-game descriptions of Return and Frustration, friendship is known as "loyalty" in Pokémon Gold, Silver, and Crystal, but in other games it is usually described in terms of how much a Pokémon "likes" or "dislikes" the Trainer.
+In Pokémon XD: Gale of Darkness, the Sailor in Gateon Port refers to this concept using the terms "friendly" and "friendliness" when explaining Eevee's Evolutions.
+In Pokémon Gold & Silver: Prima's Official Strategy Guide, it is called "happiness". In Pokémon Gold and Silver: Complete Pokédex (page 19), it is called "friendliness". In the Element Pokédex series, it is called "taming".
+
+
+=== Friendship rating descriptions ===
+From Pokémon Yellow onwards, the friendship raters use a wide variety of informal descriptions related to the Pokémon's friendship. For instance, if a Pokémon has a high friendship value, some raters may describe it as "happy", "trusts you", "attached to you", "friendly toward you", "likes you very much", or "adores you", among other examples.
+In particular, the only friendship rater who describes friendship as "taming" is the one in Pokémon Yellow, as seen in the possible quotes "Your Pikachu seems tamed." or "It seems like it hasn't been tamed at all." (in addition to the "Tame" data in Pokémon Stadium 2)
+If a Pokémon's friendship value is neither high or low, some possible comments include "looks neutral", "warming up", or "not quite familiar with you". If a Pokémon's friendship is low, this has been described including negative statements such as "looks mean", "looks evil", "very wary", or "has a vicious look to it".
+
+
+== General mechanics ==
+
+A Pokémon's friendship value ranges from 0 to 255 (stored as a single unsigned byte), and since Generation III, each Pokémon has a base friendship value. This base value applies when a wild Pokémon is caught with most kinds of Poké Balls and in most cases when a Pokémon is traded. As of Generation IX, there are two exceptions for caught or traded Pokémon:
+
+A wild Pokémon caught in a Friend Ball starts with 200 friendship, regardless of its base friendship; and
+A Pokémon traded back to its original Trainer regains the friendship it had before being traded away (Generation VI or later).
+Additionally, a Pokémon hatched from an Egg starts with 100 friendshipBDSP/120 friendship.
+
+
+=== Friendship rating ===
+Main article: Friendship rating
+Certain NPCs in the core games evaluate the friendship of the player's Pokémon.
+
+
+=== Raising and lowering friendship ===
+ 
+
+Friendship is generally increased by taking good care of a Pokémon. Keeping a Pokémon in the player's party, raising it, using items on it, and getting it groomed will typically increase a Pokémon's friendship. Letting a Pokémon faint and using bitter herbal medicines on it will decrease a Pokémon's friendship.
+Certain items and conditions (described below) apply additional bonuses to friendship increases. These bonuses do not apply to when friendship is not increased (e.g., using an X Attack on a Pokémon with high friendship).
+
+
+==== Luxury Ball ====
+From Generation III onward, if a Pokémon was caught in a Luxury Ball, any increase to its friendship is boosted by 1.
+
+
+==== Met location ====
+Activities and events that increase a Pokémon's friendship are more effective in the location where that Pokémon was first encountered (i.e., where it was caught). This effect exists in Pokémon Crystal and all games onward from Generation III.
+In Pokémon Crystal, a Pokémon leveled up at its met location gains twice as much friendship. However, only Pokémon caught in Crystal record a met location, and Pokémon traded to a Generation I game have their met location permanently erased.
+In Generation III onward, if a Pokémon is currently at its met location, any increase to its friendship is boosted by 1. This does not apply in Pokémon XD: Gale of Darkness.
+In Generation IV, due to an oversight in the game's code, feeding a Pokémon a Poffin at its met location does not gain an additional 1 point boost to its friendship boost.
+
+
+==== Soothe Bell ====
+If a Pokémon is holding a Soothe Bell, increases to its friendship are boosted by 50% of the change. In Generation III, the increase is applied to the original change in friendship; in subsequent generations, it applies to the friendship change after including Luxury Ball and met location bonuses.
+
+
+=== Effects of friendship ===
+Starting in Generation II, there are Pokémon that evolve by friendship. Additionally, certain moves vary in power depending on the user's friendship.
+In Generation IV and since Generation VIII, certain ribbons are awarded to Pokémon with the maximum (255) friendship value.
+Some NPCs also only give gifts or teach moves when the player's Pokémon has a certain amount of friendship. Specifically, a Pokémon must have maximized friendship to learn Draco Meteor, Frenzy Plant, Blast Burn, Hydro Cannon, Grass Pledge, Fire Pledge, or Water Pledge prior to Generation IX introducing them as TMs.
+
+
+==== Affected moves ====
+ 
+Friendship affects the base power of the following moves.
+
+
+==== In-battle bonuses ====
+ 
+Beginning in Generation VII, friendship can have in-battle effects that used to depend on affection. These effects, which vary by game, include surviving a hit that would normally knock it out, boosted experience, and recovering from status conditions.
+
+
+==== Fishing ====
+In Pokémon HeartGold and SoulSilver, when fishing, the walking Pokémon's friendship affects the odds of getting a bite. The higher the walking Pokémon's friendship is, the higher chance the player has of getting a bite.
+
+
+==== Evolutions based on friendship ====
+Main article: Friendship Evolution
+From Generation II onwards, several Pokémon evolve when they level up while having a high friendship. These Pokémon evolve when they have at least 220 friendship from Generations II to VII, or 160 friendship from Generation VIII onwards.
+
+
+==== Rewards ====
+In Pokémon Yellow, Melanie in Cerulean City will give the player a Bulbasaur if the partner Pikachu's friendship is at least 147. Melanie will give the player this Bulbasaur even if Pikachu is not in the party or even in the game.
+In Pokémon FireRed and LeafGreen, a man at the end of the Water Labyrinth will give the player a Togepi Egg if their lead Pokémon has maximum friendship.
+In Johto, the friendship rater in the Goldenrod Department Store will give the player TM21 (Frustration) if shown a Pokémon with low enough friendship and TM27 (Return) if shown a Pokémon with high enough friendship.
+In Hoenn:
+A woman in the Pokémon Fan Club in Slateport City will give the player a Soothe Bell if their lead Pokémon's friendship is at least 150.
+The friendship rater in Pacifidlog Town will give the player TM21 (Frustration) if shown a Pokémon with less than 50 friendship and TM27 (Return) if shown a Pokémon with at least 150 friendship. In Pokémon Ruby, Sapphire, and Emerald, this can be repeated weekly, but only one of the two TMs can be received each week.
+In Pokémon Omega Ruby and Alpha Sapphire, the Nameless Cavern only appears when the player has three Pokémon with maximum friendship in their party.
+In Sinnoh, a man in the Celestic Pokémon Center will give the player a Great Ball if their lead Pokémon's friendship is high enough. This can be repeated daily.
+In Pokémon Black and White, a woman in Nimbasa City will give the player a Soothe Bell if their lead Pokémon's friendship is high enough.
+In Pokémon X and Y:
+A Madame in Shalour City will give the player a Soothe Bell if their lead Pokémon's friendship is at least 70.
+A Lady in the Coumarine Hotel will give the player a Lucky Egg if their lead Pokémon has maximum friendship.
+
+
+=== Misconceptions ===
+Though often thought otherwise, the following factors do not affect friendship:
+
+Trying to release the partner Pikachu or evolve it with a Thunder Stone
+Battling against an Elite Four member or the Champion
+Depositing a Pokémon in the Pokémon Storage System (except it loses some friendship in Pokémon Yellow, and the friendship resets in the Stadium games)
+Letting a Pokémon's HP fall to critical status
+Letting a Pokémon get a status condition, or walking with a Pokémon with a status condition
+Healing a Pokémon with low HP or with a status condition
+Giving a Pokémon an item to hold that is not the Soothe Bell.
+Evolving a Pokémon without trading it
+Using a Pokémon in battle or winning a battle with it.
+Increasing affection
+Using a Scent on a Pokémon
+
+
+== Generation- and game-specific mechanics ==
+
+
+=== Generation I ===
+
+Friendship was introduced in Pokémon Yellow as a mechanic exclusively for the Pikachu received at the beginning of the game. Outsider Pikachu are not affected, nor are any Raichu (even if Raichu was evolved from the partner Pikachu through trade). However, any Pikachu whose Original Trainer is the player is treated as their partner Pikachu, and all partner Pikachu share the same friendship value. This value persists if the partner Pikachu is traded, and any change in this value applies to all partner Pikachu.
+When in the party and not fainted, the partner Pikachu (or the first Pikachu with the player’s OT in the party, if there are multiple) follows the player in the overworld, and interacting with Pikachu brings up a pop-up window showing Pikachu's face. Apart from certain special events that cause special reactions, Pikachu's expression changes based on its current friendship. At maximum friendship, Pikachu jumps up and down before the window appears.
+
+
+==== Modification ====
+Various actions can change Pikachu's friendship level:
+
+Vitamins, battle items, and HP-restoring items increase Pikachu's friendship even if they would have no effect (e.g., attempting to use a Potion on a Pikachu that is fainted or has full health). Using an item in this way does not consume it, so the same item can repeatedly increase Pikachu's friendship. 
+Waking Pikachu with the Poké Flute (either in or out of battle) does not change its friendship.
+If the battle ends in a tie exactly when Pikachu faints (such as from Self-Destruct), no friendship will be lost as a result.
+
+
+=== Generation II ===
+In Generation II, friendship was expanded to apply to all Pokémon. All Pokémon have a base friendship of 70, but any Pokémon caught in a Friend Ball starts with 200 friendship, and any Pokémon hatched from an Egg starts with 120 friendship. 
+
+
+==== Modification ====
+Various actions can change a Pokémon's friendship:
+
+In Pokémon Crystal, if a Pokémon is leveled up at its met location, it will gain twice as much friendship from that level up as usual. Since only Pokémon caught in Pokémon Crystal have a defined met location, Pokémon caught in the Generation I games, Pokémon Gold and Silver, and Pokémon from in-game trades will not receive this bonus. If a Pokémon that has a defined met location is traded to a Generation I game, this data is permanently erased, so it can no longer receive this bonus.
+
+
+=== Generation III ===
+In Generation III, each Pokémon was assigned a specific base friendship value. The Luxury Ball and Soothe Bell boosts were also introduced. 
+
+
+==== Modification ====
+Various actions can change a Pokémon's friendship:
+
+Fainting in battle will not alter a Pokémon's friendship if it fainted from poison at the end of a turn.
+In the Generation III core series games, if a Pokémon is currently at its met location, any increase to its friendship is boosted by 1. This does not apply in Pokémon XD: Gale of Darkness.
+
+
+=== Generation IV ===
+ 
+Unlike the previous generation, a Pokémon's met location does not affect the amount of friendship it gains. 
+
+
+==== Modification ====
+Various actions can change a Pokémon's friendship:
+
+In Pokémon Diamond, Pearl, and Platinum, the massage at the Ribbon Syndicate is not affected by any friendship boosts, and the Soothe Bell does not affect friendship gained when using a battle item.
+In Pokémon Diamond and Pearl only, due to a bug, using herbal medicine on a Pokémon with low friendship while in battle can cause its friendship to underflow to a value near the 255 maximum.
+
+
+=== Generation V ===
+
+
+==== Modification ====
+The met location friendship boost introduced in Generation III returned. Additionally, Generation V introduced Befriending Power as a Pass Power; it boosts any increase to friendship by one to three points depending on the strength of the power used. However, friendship boosts do not apply to the massage in Castelia City.
+Various actions can change a Pokémon's friendship:
+
+
+=== Generation VI ===
+
+
+==== Modification ====
+In Generation VI, Befriending Power became an O-Power. Friendship boosts do not apply to massages, drinks from the Juice Shoppe, or the Soothing Bag in Super Training.
+Various actions can change a Pokémon's friendship:
+
+
+=== Generation VII ===
+
+
+==== Pokémon Sun, Moon, Ultra Sun, and Ultra Moon ====
+
+
+===== Modification =====
+ 
+Friendship boosts do not apply to massages.
+Various actions can change a Pokémon's friendship:
+
+
+==== Pokémon: Let's Go, Pikachu! and Let's Go, Eevee! ====
+In Pokémon: Let's Go, Pikachu! and Let's Go, Eevee!, friendship is factored into all of a Pokémon's stats, except HP. At maximum friendship, a Pokémon will receive a 10% boost to its stats, before AVs are added in. The friendship multiplier scales directly with the level of friendship, starting from a 0% boost at 0 friendship to receiving the full 10% at 255.
+
+
+===== Modification =====
+Various actions can change a Pokémon's friendship:
+
+
+=== Generation VIII ===
+
+
+==== Pokémon Sword and Shield ====
+
+
+===== Modification =====
+In Pokémon Sword and Shield, friendship can only be increased to a certain cap without using Pokémon Camp or Berries. While this is enough to evolve Pokémon that evolve with high friendship, it is not enough to receive any in-battle friendship bonuses. Pokémon Camp and friendship-raising Berries are the only ways to reach the maximum friendship value of 255.
+Various actions can change a Pokémon's friendship:
+
+The following methods can only increase Pokémon's friendship up to a maximum of 179. After 179 friendship, these methods no longer boost friendship.
+
+Leveling up.
+Walking with them in the party.
+Using battle items on them.
+Using vitamins or feathers on them. (Excluding Rare Candy, Exp. Candy, and Dynamax Candy which have unused values and do not grant Friendship)
+Battling with them against Gym Leaders or other "tough" Trainers.
+The following methods can increase a Pokémon's friendship regardless of their current friendship (up to the maximum of 255).
+
+Using friendship-raising Berries
+Pokémon Camp:
+Playing with them using toys, especially toy balls.
+Breaking up fights involving the Pokémon by calling it over to you.
+Cooking curry with the Pokémon, especially when using lots of rare Berries.
+The following methods can decrease a Pokémon friendship (down to a minimum of 0).
+
+Letting a Pokémon faint, especially when battling a much stronger opponent.
+Using herbal medicine on it.
+
+
+===== Effects =====
+In these games, friendship has the following effects:
+
+These effects do not occur in link battles, the Battle Tower, Restricted Sparring, or Max Raid Battles. In addition, Pokémon with at least 1 heart may find items after cooking together at Pokémon Camp.
+
+
+==== Pokémon Brilliant Diamond and Shining Pearl ====
+
+
+===== Modification =====
+In Pokémon Brilliant Diamond and Shining Pearl, leveling up can once again increase friendship all the way to the maximum of 255.
+Various actions can change a Pokémon's friendship:
+
+
+===== Effects =====
+Walking Pokémon have a chance to find Berries; this chance increases with Pokémon's friendship value.
+In these games, friendship has the following effects:
+
+These effects are not applied in link battles and in the Battle Tower.
+
+
+==== Pokémon Legends: Arceus ====
+
+
+===== Effects =====
+Friendship has no mechanical effect during battle.
+
+
+===== Modification =====
+Various actions can change a Pokémon's friendship:
+
+Leveling up may increase a Pokémon's friendship
+Any instance of gaining Experience increases friendship by 1. This includes
+Breaking rocks, shaking trees, etc. for items
+If multiple Exp. Candies are used on a Pokémon at once, then friendship increases by 1 for each Candy used.
+Gaining Experience after a winning battle, regardless of participation
+The following methods can decrease a Pokémon's friendship (down to a minimum of 0)
+
+Letting a Pokémon faint
+Using herbal medicine on it
+
+
+=== Generation IX ===
+
+
+==== Pokémon Scarlet and Violet ====
+
+
+===== Modification =====
+Similar to Sword and Shield, most actions only increase friendship up to 160. To reach the friendship cap of 255, friendship-raising Berries must be used or picnic activities must be done.
+Various actions can change a Pokémon's friendship:
+
+
+===== Effects =====
+
+Friendship effects do not occur in Tera Raid Battles.
+
+
+== In the side series games ==
+
+
+=== Pokémon Stadium 2 ===
+Depositing a Pokémon in a Pokémon Stadium 2 box will reset its friendship to 70.
+
+
+=== Pokémon Colosseum and Pokémon XD: Gale of Darkness ===
+ 
+In Pokémon Colosseum and Pokémon XD: Gale of Darkness, purifying a Pokémon increases its friendship by 70.
+
+
+== In the spin-off games ==
+
+
+=== Pokémon Mystery Dungeon series ===
+
+
+==== Friendship Evolutions ====
+Main article: Friendship Evolution → Pokémon Mystery Dungeon series
+In the Pokémon Mystery Dungeon series, the friendship Evolutions (such as Pichu evolving into Pikachu) use the Pokémon's IQ, a hidden stat, no Evolution requirement, or  Evolution Crystals.
+
+
+==== Friendship-based moves ====
+In the Pokémon Mystery Dungeon series, the friendship-based moves (such as Return and Frustration) use the Pokémon's IQ or the number of dungeons that the player has been to.
+
+
+=== Pokémon Ranger: Shadows of Almia ===
+
+Friendship also has an effect in the second game of the Pokémon Ranger series. Partner Pokémon can have the condition of Fine, Happy, or Very Happy. When it is in a Happy Mood, black musical notes appear to come out of it. Multicolored musical notes come out when it is Very Happy. This may happen whether or not it is with the player. This state of mind increases the speed the Partner Gauge fills up due to more Partner Energy being provided.
+
+
+=== Pokémon Pinball: Ruby & Sapphire ===
+Main article: Friendship Evolution → Pokémon Pinball: Ruby & Sapphire
+In Pokémon Pinball: Ruby & Sapphire, the concept of friendship Evolution is represented by obtaining hearts to evolve certain Pokémon in the Evolution Mode.
+
+
+=== Pokémon Pokopia ===
+
+
+== In animation ==
+
+
+=== Pokémon the Series ===
+In Pokémon the Series, the bond between Trainers and their Pokémon has been a theme since the first episode, in which Ash had trouble to form a friendship with his newly obtained Pikachu. After risking his safety to protect Pikachu from a flock of angry Spearow, he had earned Pikachu's trust, and the two have been inseparable ever since.
+Pokémon that have friendly relationships with their Trainers are said to perform better in battles. Ash believes that befriending a Pokémon will make it grow stronger, and he treats all his Pokémon with utmost care and respect. However, throughout the series, some Trainers have been shown to focus on raw strength alone, disregarding their Pokémon's feelings and well being. Examples include Paul and Cross.
+Aside from regular battles, friendship is valued in Pokémon Contests, since the level of cooperation between Coordinator and Pokémon is observed by the panel of judges during the Performance Stage. Additionally, in the Battle Stage, Coordinators are expected to be in synchronicity with their Pokémon the entire time. In Cruisin' for a Losin', the Director of the Contest Committee, Mr. Contesta, stated that a Pokémon's well being must be the number one priority of a Coordinator.
+In the Pokémon the Series: Diamond and Pearl episode Our Cup Runneth Over!, Contest Master Wallace stressed the importance of kinship. He also said that playing with Pokémon can help Trainers and Coordinators in learning how to bring out the potential of their Pokémon. In addition to enhancing a Pokémon's appearance, Pokémon grooming is said to make them happier. Trainers who devote themselves to the development of techniques that improve a Pokémon's health and happiness are known as Pokémon Breeders. Some people study to become Pokémon Connoisseurs to be able to identify the compatibility between Trainers and Pokémon and then offer advice on how to strengthen their friendship.
+Just like in the games, friendship affects the power of Frustration. This was shown in the Pokémon the Series: Ruby and Sapphire episode Going for Choke!, in which Harley's Banette received a boost while using the move under the command of Jessie, a Trainer it does not like. Although the concept of Friendship Evolution has not been addressed directly, the Soothe Bell has appeared in Pokémon the Series. In Pokémon the Series: XY, the friendship between Ash and his Greninja triggered a temporary transformation known as the Bond Phenomenon.
+In contrast with the games, where a Pokémon of a certain level will only obey its Trainer if the Trainer possesses specific achievements, disobedient Pokémon in Pokémon the Series will gain respect for their Trainers after realizing how far the Trainer is willing to go to befriend, protect, and care for the Pokémon.
+
+
+== Trivia ==
+In all core series games from Generation III to Generation VII, every non-playable Trainer's Pokémon that knows Frustration or is in Emerald's Battle Factory has 0 friendship, and all other NPCs' Pokémon in those generations have 255 friendship.
+The instruction manual for the original version of Pokémon Gold and Silver erroneously claims that happiness could be decreased by storing the Pokémon in the PC, and increased by just using any beneficial item on it. These are actually relics from Pikachu's happiness system in Pokémon Yellow and have no effect whatsoever on happiness in Pokémon Gold and Silver.
+
+
+== In other languages ==
+
+
+== Notes ==
+
+
+== References ==
+
+
+== External links ==
+GameFAQs: Pokemon Gold Version (GBC) Happiness Points FAQ by IDeLucas
+Generation IV Friendship FAQ by Ruimound
+Pokemon Gold, Silver and Crystal :: Happiness Guide
+
+
+== Related articles ==
+List of Pokémon by base friendship
+Friendship rating
+Friendship Evolution
+Affection

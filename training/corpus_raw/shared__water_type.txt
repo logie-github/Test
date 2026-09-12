@@ -1,0 +1,119 @@
+The Water type (Japanese: みずタイプ Water type) is one of the eighteen types. Water-type moves are super effective against Fire-, Ground-, and Rock-type Pokémon, while Water-type Pokémon are weak to Electric- and Grass-type moves.
+
+
+== Battle properties ==
+Note: Type effectiveness multipliers may vary in other games outside the core series.
+
+The Steel type was introduced in Generation II.
+
+
+=== Additional effects ===
+During the rain (introduced in Generation II) or heavy rain (introduced in Pokémon Omega Ruby and Alpha Sapphire) weather conditions, the power of Water-type moves is increased by 50%. During harsh sunlight (introduced in Generation II), the power of Water-type moves is decreased by 50%. During extremely harsh sunlight (introduced in Pokémon Omega Ruby and Alpha Sapphire), all Water-type moves will fail.
+The move Soak, introduced in Generation V, causes the target to become a pure Water-type Pokémon (except if it is Terastalized, which will cause the move to fail).
+Water-type Pokémon are weak to the Ice-type move Freeze-Dry, introduced in Generation VI, despite normally being resistant to Ice-type moves.
+
+
+== Pokémon ==
+As of Generation X, 162 Pokémon are Water-type (counting those that are Water-type in at least one of their forms), which makes up 15.76% of all Pokémon, making it the most common type among Pokémon, followed by the Normal type.  After the introduction of Volcanion in Generation VI, all other types have been paired up with Water at least once, making it the second type to have this trait, after Flying and followed by Psychic.
+The Pokémon below are listed by their current types. Some Pokémon have had their types changed, usually when a new type was introduced.
+
+
+=== Pure Water-type Pokémon ===
+
+
+=== Half Water-type Pokémon ===
+
+
+==== Primary Water-type Pokémon ====
+
+
+==== Secondary Water-type Pokémon ====
+
+
+=== Unique Terastallized states ===
+
+
+=== Changed types ===
+These Water-type Pokémon have had their types changed.
+
+
+== Moves ==
+As of Generation IX, there are 53 Water-type moves, which makes up 5.67% of all moves (excluding those that are Water-type only under certain circumstances), causing it to tie with Dark as the 5th most common type among moves after Fighting and before Electric.
+Prior to changes in Generation IV, all damaging Water-type moves were special, but they may now also be physical depending on the attack.
+
+
+== Abilities ==
+
+
+=== Interacting with the Water type ===
+A Pokémon with Protean or Libero will become Water-type if it uses a Water-type move. A Pokémon with the Ability Color Change, Imposter, Forecast, RKS System, or Multitype will become a Water-type Pokémon if (respectively) it is hit with a Water-type move, is sent out against a Water-type opponent, if the weather is rainy, if it is holding a Water Memory, or if it is holding a Splash Plate/Waterium Z.
+
+
+=== Exclusive Abilities ===
+Only Water-type Pokémon have these Abilities. This does not include signature Abilities.
+
+
+== Items ==
+
+
+=== Natural Gift's Berries ===
+
+
+=== Cram-o-matic ===
+
+
+== Notable Water-type Trainers ==
+Main article: Category:Water-type Trainers
+
+
+== Icons ==
+
+
+=== Core series ===
+
+
+=== Side series ===
+
+
+=== Spin-off games ===
+
+
+== Statistical averages ==
+
+
+=== Overall ===
+
+
+=== Fully evolved ===
+
+
+== In spin-off games ==
+
+
+=== Pokémon Sleep ===
+Unlike in the core series games, in Pokémon Sleep, each Pokémon can only have one type, which determines the kind of Berry that the Pokémon will gather for Snorlax to feed on. Water-type Pokémon will gather Oran Berries, and typically have the Slumbering sleep type.
+The following is a list of Water-type Pokémon in Pokémon Sleep.
+
+
+== In the TCG ==
+Main article: Water (TCG)
+Due to the decreased amount of types in the TCG, Water generally adopts all Ice-type Pokémon under its typing.
+Similar to the games, Water-type Pokémon in the TCG are generally weak to Grass and Lightning with no resistances. Water-type Pokémon are strong against Fighting and Fire Pokémon, whilst Grass Pokémon and some Colorless Pokémon can resist this type.
+
+
+== Trivia ==
+Generation I introduced the most Water-type Pokémon of any generation, with 32, and Generation VI introduced the fewest Water-type Pokémon, with nine.
+Generation VIII introduced the most Water-type moves of any generation, with twelve, and Generation II and VI introduced the fewest Water-type moves with three.
+Generation II is the only generation to have not introduced a Water-type specialist.
+Starting in Generation II, Water has the most Pokémon with a specific type.
+Out of every type, Water has the most Gym Leaders, at eight.
+The Water type has the most Pokémon that evolve from trading, at six.
+The Water type has the most Gigantamax forms of all types, at six, as well as the most G-Max Moves, at five.
+Out of the usual three first partner Pokémon types, Water is the only one to have all of its members — including their respective Evolutions — be listed as the same color, namely blue.
+Junichi Masuda has stated that Water is his favorite type.
+
+
+== References ==
+
+
+== In other languages ==

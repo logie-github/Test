@@ -1,0 +1,386 @@
+Evolution (Japanese: 進化 Evolution) is a process in which a Pokémon changes into a different species of Pokémon.
+
+
+== In the core series games ==
+Evolution is not a merely visual change. When a Pokémon evolves, it becomes a new species of Pokémon. This new species has a different Pokédex number and base stats, and may be a different type (although normally at least one of the pre-evolved form's types remains the same), learn different moves, and have a different Ability. The Pokémon's personal properties, however, such as Nature and Shininess, remain.
+Holding an Everstone prevents a Pokémon from evolving by level up or trade. Additionally, the player can prevent a Pokémon from evolving upon leveling up by pressing the B button when it would evolve. Evolution cannot be prevented using the B button if it is the result of a directly used item or a trade. In Pokémon FireRed and LeafGreen before the player obtains the National Pokédex, if a Pokémon in the Kanto Pokédex meets its Evolution conditions but its evolved form is not in the Kanto Pokédex (for example, Chansey's Evolution into Blissey), it will attempt to evolve but fail.
+When a Pokémon evolves, it immediately attempts to learn all moves that the evolved form can learn at its current level. Additionally, starting in Generation VII, some Pokémon have Evolution moves, which are moves that Pokémon will always attempt to learn when evolving into that species, regardless of level.
+Professor Elm and Professor Rowan are leading experts in Pokémon Evolution. According to Rowan's research, over 90% of all Pokémon are connected to at least one other through Evolution. Currently, the actual percentage is 80% of all known Pokémon. Rowan's research focuses on whether Evolution is a form of maturity in Pokémon, and looking at the implications of the process on Legendary Pokémon (which could not evolve in Generation IV, when Rowan debuted).
+
+
+=== Evolutionary lines ===
+
+An evolutionary line is a group of Pokémon who are all related by Evolution. The species at the lowest evolutionary stage in an evolutionary line can ultimately evolve into any member of the evolutionary line.
+Pokémon evolutionary lines can have one, two, or three stages. In a one-stage line, there is only a single Pokémon that cannot evolve. In a two-stage line, any member of the line can evolve at most once, from the unevolved form into one of the evolved forms. In a three-stage line, at least one of the evolved forms can evolve once again.
+
+
+==== One-Evolution lines ====
+See also: Category:Pokémon that are part of a two-stage evolutionary line
+These are evolutionary lines in which a Pokémon can only ever evolve once. These are the most common type of evolutionary lines. An example of this type of evolutionary line is below.
+
+
+==== Two-Evolution lines ====
+See also: Category:Pokémon that are part of a three-stage evolutionary line
+These are evolutionary lines in which a Pokémon can evolve twice. All regional first partner Pokémon have this type of evolutionary line. An example of this type of evolutionary line is below.
+
+
+==== Pokémon that do not evolve ====
+Main article: List of Pokémon that are not part of an evolutionary line
+These are evolutionary lines with a single member, which cannot evolve. Many of the Pokémon that have no evolutionary relatives are Legendary or Mythical Pokémon, although there are some Legendary and Mythical Pokémon that can evolve.
+
+
+==== Branched Evolution lines ====
+Main article: List of Pokémon with branched Evolutions
+Several one- and two-Evolution lines are also branched Evolution lines. A branched Evolution line has a member that can evolve into one of multiple different Pokémon. Eevee is the most extreme example, having eight different possible evolved forms. An example of this type of Evolution line is below.
+
+
+===== Eeveelutions =====
+Main article: Eeveelution
+Eevee holds the record for most branched Evolutions of any Pokémon, being able to evolve into eight different species. Each Evolution of Eevee has a unique type, unlike most other Evolutions that keep at least one type when evolving.
+
+
+=== Methods of Evolution ===
+Main article: Methods of Evolution
+In the core series games, most Pokémon only evolve after one of three events:
+
+Gaining a level (the most common trigger)
+Being exposed to an item (such as an Evolution stone)
+Being traded
+Before Generation VIII, the above were the only triggers to evolve Pokémon. However, Generation VIII introduced several new triggers, each used either by a single Pokémon species or by two.
+In addition to the trigger, many Pokémon have one or more additional requirements for them to be able to evolve. These include:
+
+Having high friendship
+Holding a specific item
+The time of day
+Knowing a certain move or a move of a certain type
+Using a certain move a certain number of times
+The location the player is in, or the current weather in that location
+Having a certain Pokémon or a certain type of Pokémon in the party
+Battling a certain Pokémon under special circumstances
+Being upside-down
+Being traded for a specific Pokémon
+Some Evolutions are dependent on the Pokémon's gender. For example, only female Combee can evolve into Vespiquen—male Combee cannot evolve at all. Similarly, all Snorunt can evolve into Glalie, but only female Snorunt can evolve into Froslass. On the other hand, male Burmy can only evolve into Mothim, while female Burmy can only evolve into Wormadam.
+For some Evolutions into Pokémon with multiple forms, the form of the evolved Pokémon depends on how it evolved. For example, Wormadam's cloak depends on the cloak Burmy had when it evolved. Similarly, the form of Toxtricity that Toxel evolves into depends on its Nature.
+
+
+=== Abilities ===
+Normally, a Pokémon will retain its Ability slot upon Evolution - if it had its species' second Ability before evolving, it will still have its species' second Ability after evolving (e.g. a Poochyena with Quick Feet will still have Quick Feet after evolving into Mightyena, but Poochyena with Run Away will instead have Intimidate after evolving).
+However, some Pokémon originally from the Generation III games can change Ability slot upon Evolution. Some Pokémon only had one possible Ability when Abilities were introduced in Generation III, but gained a second Ability in Generation IV. If a Pokémon whose species gained an Ability after Generation III is transferred to a Generation IV or V game, it will initially retain its original Ability; upon evolving, however, its Ability slot will be recalculated and its Ability may change. When a Pokémon is transferred to Generation VI or Generation VII, however, it will be locked into the appropriate slot for its current Ability.
+
+
+=== Animations ===
+In games with animated sprites, the Pokémon will display this on the evolution screen. In Pokémon Omega Ruby and Alpha Sapphire onward, the Pokémon performs an attack animation.
+In Pokémon Sun, Moon, Ultra Sun, and Ultra Moon, Evolution into an Alolan form has a different theme and a different colored background during Evolution. In Pokémon Scarlet and Violet, if there is enough space around the player when a Pokémon evolves, the area that the player is in will be used as the background and the camera can be moved, but if there is not enough space or the player is currently in Area Zero, the game will cut to an abstract colored background with a fixed camera for the Evolution like in previous games.
+Unlike other Pokémon, Shedinja does not utilize an evolution animation, instead appearing in the party automatically if there is space. Similarly, if Tandemaus levels up to level 25 or higher in a battle it was not sent out in, it will evolve into Maushold immediately after the battle ends without an animation.
+
+
+== In the side series games ==
+
+
+=== Pokémon Stadium series ===
+In Pokémon Stadium and Stadium 2, a Pokémon on a Game Boy or Game Boy Color game connected via Transfer Pak can evolve by fulfilling the conditions required for Evolution, such as using an Evolution stone, trading a Pokémon, or using Rare Candy to level up a Pokémon to the required Evolution, as in the main series.
+Using items on a Pokémon or trading Pokémon are features available in devices from the Pokémon Lab. In Pokémon Stadium 2, the Pokémon Lab is located in White City.
+These Evolution features were not available in the original Japanese Pokémon Stadium. In particular, the Evolution stones are not visible in the item list when selecting an item to use on a Pokémon. In this game, there is no Pokémon trade feature either.
+
+
+=== Pokémon Colosseum and Pokémon XD: Gale of Darkness ===
+In Pokémon Colosseum and XD: Gale of Darkness, while Evolution typically works as normal in the main series, Shadow Pokémon are incapable of evolving until they are purified and return to normal. Although Colosseum does not prevent Shadow Pokémon from evolving through Evolution stone, no Pokémon evolve using one.
+In Pokémon XD: Gale of Darkness, because the game does not have a time mechanic, the player's Eevee cannot evolve into Espeon or Umbreon through the same means as the core series games. Early in the game, the player can choose one of five Evolution items, each of which will cause Eevee to evolve into a different Pokémon. Among these items are the exclusive Sun Shard and Moon Shard, Key Items that allow Eevee to evolve into Espeon or Umbreon, respectively, after it levels up with high friendship.
+
+
+== In the spin-off games ==
+
+
+=== Hey You, Pikachu! ===
+Some missions in Hey You, Pikachu! involve Pikachu interacting with other Pokémon in certain ways to cause their Evolution. In Caring for Caterpie, the player and Pikachu supervise a group of Caterpie, who will evolve into Metapod and then Butterfree if treated well. In Field Trip, Pikachu can water wild Oddish and Gloom, causing them to evolve into Gloom and Vileplume, respectively.
+
+
+=== Pokémon Conquest ===
+Main article: Link → Pokémon Evolution
+In Pokémon Conquest, because the mechanics of levels, experience, and friendship do not exist, Pokémon typically evolve once they reach a certain link threshold with their partnered Warrior or Warlord. Pokémon that normally evolve via high friendship in the main series games, such as Golbat, instead evolve after reaching a certain link percentage, usually between 60 and 70 percent. Pokémon that normally evolve starting at a specific level instead evolve when a certain statistic reaches a specific value. For example, Spheal evolves when its HP has reached a value of 138, which is partially determined by the link with its Warrior. Warriors with Pokémon that require an Evolution stone to evolve must equip themselves with that item and then perform an action that causes their link to improve, such as completing a battle.
+
+
+=== Pokémon Pinball series ===
+In Pokémon Pinball and Pokémon Pinball: Ruby & Sapphire, once the Evolution Mode or Evo Mode starts and the player chooses a Pokémon to evolve, then three instances of the same Evolution Item appear somewhere on the table, one at a time. The player is required to get the three repeated Evolution Items before the time runs up to evolve the chosen Pokémon. For instance, if the player attempts to evolve a Vulpix into Ninetales, they will be required to find three Fire Stones on the table. Most available Pokémon evolve by experience, which requires getting three "Ex" Evolution Items. If the Pokémon evolves by trade in the core series, then the player needs to get three Link Cable Evolution Items.
+Additionally, the manual of Pokémon Pinball refers to the act of upgrading a Poké Ball (for instance, changing a Great Ball into an Ultra Ball) as "evolving" the Ball.
+
+
+=== Pokémon Mystery Dungeon series ===
+Main article: Evolution (Mystery Dungeon)
+Evolution is activated differently in the Mystery Dungeon series, typically triggered manually at a certain location rather than occurring automatically. This location may be inaccessible until a certain point in the game, preventing Evolution beforehand. This prevention can extend to all Pokémon, or just the hero Pokémon and partner Pokémon.
+As a result of the different stat layouts in the Mystery Dungeon series, evolving has a different impact on stat increases. Evolution items also still exist for Pokémon that require them.
+
+
+=== Pokémon Snap ===
+In Pokémon Snap, the player can interact with Pokémon in certain ways that will make them evolve.
+
+At the end of Pokémon Island's Tunnel stage, if the player lures the three Magnemite together, they will fuse and become a Magneton.
+At the end of Volcano stage, if the player knocks a Charmeleon into the crater of magma it is circling, it will evolve and come out as a Charizard.
+Luring a Slowpoke to a fishing area along the River will prompt it to fish with its tail, hooking a Shellder, causing it to evolve into Slowbro.
+Hitting the Grimer in the Cave three times with Pester Balls will cause it to evolve into Muk.
+In the Valley, completing a series of events will cause a Magikarp to evolve into Gyarados.
+
+
+=== Pokémon GO ===
+
+In Pokémon GO, the player can evolve Pokémon by spending Candy. The Candy cost for Evolution varies between Pokémon species, ranging from 12 (to evolve Caterpie into Metapod) to 400 (to evolve Magikarp into Gyarados or Meltan into Melmetal).
+
+See also: List of Pokémon by evolutionary line in Pokémon GO
+In addition to Candy, some Pokémon have additional requirements to evolve. These additional requirements include:
+
+Random Evolution — For some Pokémon with multiple Evolutions, the one it will evolve into is determined at random. These include:
+Eevee → Vaporeon, Jolteon, or Flareon
+Wurmple → Silcoon or Cascoon
+Clamperl → Huntail or Gorebyss
+Cherubi → Overcast Form or Sunshine Form Cherrim
+Item requirements
+Introduced with Generation II:  Sun Stone,  Metal Coat,  King's Rock,  Upgrade,  Dragon Scale
+Introduced with Generation IV:  Sinnoh Stone
+Introduced with Generation V:  Unova Stone
+IV requirements
+Tyrogue evolves into Hitmonlee, Hitmonchan, or Hitmontop if its highest IV is for Attack, Defense, or HP, respectively.
+Buddy Pokémon requirements — Some Pokémon require players to complete Research-like tasks with it as their Buddy Pokémon to evolve.
+Only Espeon and Umbreon must be set as the player's current buddy to evolve
+Gender requirements — Some Evolution paths are only possible if the Pokémon is of a specific gender. These requirements are the same in Pokémon GO as they are in the core series.
+Lure Module requirements — Some Pokémon require players to be in range of a special type of lure to evolve. These include:
+ Mossy Lure Module
+ Glacial Lure Module
+ Magnetic Lure Module
+ Rainy Lure Module
+Weather requirements — Sliggoo can only evolve into Goodra when it's raining (unless a Rainy Lure Module is present)
+Time requirements — Some Pokémon can only evolve, or evolve into different Pokémon or forms depending on time, depending on whether it is day or night. Ursaring can only evolve into Ursaluna during a full moon.
+Trade Evolution — Some Pokémon will cost zero Candy to evolve if it has been traded.
+Nicknames — If Eevee has a particular nickname, then, once per nickname, it is guaranteed to evolve into the following, regardless of other conditions:
+Rainer → Vaporeon
+Sparky → Jolteon
+Pyro → Flareon
+Sakura → Espeon
+Tamao → Umbreon
+Linnea → Leafeon
+Rea → Glaceon
+Kira → Sylveon
+
+
+=== Pokémon Duel ===
+
+In Pokémon Duel, before a figure can evolve, the player must own both the pre-evolved figure and the evolved figure. The pre-evolved Pokémon must be set in the deck, and the evolved Pokémon must be set as that figure's Evolution. During a duel, the pre-evolved Pokémon will be able to evolve when it wins a battle and either knocks out or displaces its battle opponent. Pokémon can also be evolved by the effects of Attacks, Abilities, and Plates. An evolved figure (including Mega Evolution) will receive +10 to its White and Gold Attacks and +1 ★ to its Purple Attacks. This boost stacks for a Pokémon that has evolved more than once.
+
+
+=== Pokémon Masters EX ===
+In Pokémon Masters EX, Pokémon from certain sync pairs are allowed to evolve through sync pair stories, where they must win a 1-on-1 battle. These sync pair stories become available once the sync pair reaches a specific level, and can be played at the cost of evolutionary items. Evolution requires Evolution Shard ×5 and the sync pair to be at least level 30; if the Pokémon can evolve again, another Evolution requires Evolution Crystal ×3 and the sync pair to be at least level 45. Evolved Pokémon will have increased stats, and in some cases their moves will change. If a Pokémon reaches its final evolutionary stage, then it also receives a new sync move.
+
+See also: Pokémon Masters EX → Sync Pair Stories
+
+Pokémon that are hatched from Pokémon Eggs can be evolved using Evolution Shards and Evolution Crystals through the Affinity menu. Their level requirements are the same as standard sync pairs, but their item costs are lower, at just Evolution Shard ×1 or Evolution Crystal ×1. However, egg sync pairs do not receive sync pair stories, and do not receive a new sync move once fully evolved.
+
+See also: Egg Pokémon (Masters)
+
+
+=== Pokémon UNITE ===
+In Pokémon UNITE, Evolution is a major game mechanic. Unite Licenses featuring Pokémon that can evolve start each game at their lowest evolutionary stage that is not a Baby Pokémon.(Pikachu does not evolve, Duraludon does not evolve as its Evolution did not exist when it was added to UNITE.) When Pokémon reach certain levels, they evolve after either scoring at a goal zone or defeating another Pokémon in battle. "Defeating another Pokémon" can be done either through directly Knocking Out a Pokemon or getting an Assist for contributing to Knocking Out a Pokémon on the opposing team. The level requirement varies by the species, and a Pokémon which can evolve at a certain level but has not evolved yet is unable to gain additional levels until it evolves. (Any Exp. Points gained before evolving at that level are applied after Evolution.) While evolving, Pokémon are briefly invincible.
+Evolving increases the Pokémon's stats, and Pokémon usually learn a new move when they evolve. Most Holowear only applies to a Pokémon's final Evolution, but some Holowear modifies the appearance of prior evolutionary stages. 
+Some Pokémon, such as Kubfu and Scyther, choose their evolutionary line by choosing to learn specific moves. As a result of this, these Pokémon only evolve after learning the relevant move. Magikarp has an alternate method of evolving available exclusively to it. Rattled provides it an effort gauge which it can fill by contributing to the battle. If the effort gauge is filled up, Magikarp gets to evolve into Gyarados earlier than normal. This also causes Gyarados to learn moves whenever it evolves, rather than at a specific level.
+Wild Pokémon involved in Unite Battles evolve during the Final Stretch portion of each Unite Battle. After evolving, they hold more Aeos energy than their unevolved forms. (However, wild Pokémon that do not evolve do still hold more Aeos energy during the Final Stretch, so this may not be linked to Evolution.) Note that wild Pokémon which appear as part of groups with their evolved form do not evolve.
+Aeos energy can be used to make Pokémon evolve. Before every battle, Aeos energy is also used to reduce a Pokémon to level 1, causing it to devolve in the process.
+In Panic Parade, the player's Pokémon gain Experience points, level up, and evolve at a set pace based on completed waves. The allied Tinkaton evolves similarly, starting from a Tinkatink. This may involve the functionality of the Aeos Shooter.
+
+
+=== Eevee × Tamagotchi ===
+ 
+In Eevee × Tamagotchi, the player's virtual pet Eevee changes form 72 hours after it has hatched. There are eleven possible outcomes, including Eevee's eight standard Evolutions (Sylveon, Vaporeon, Jolteon, Flareon, Leafeon, Glaceon, Espeon, and Umbreon) and three additional forms (Costume Eevee, Team Rocket Eevee, and Ditto).
+The word "Evolution" is not mentioned in the game text and manual. Instead, the Japanese manual uses the word 「すがた」(form) referring to Eevee's forms.
+
+
+=== e-Reader games ===
+Some e-Reader applications feature Pokémon Evolution:
+In Machop At Work, if the player character Machop smashes 50-99 rocks, it evolves into Machoke at the end. If the player manages to smash all 100 rocks, the Machop evolves into Machoke, and then again into Machamp.
+In Metronome, one of the short animations features Clefairy evolving into Clefable.
+
+
+=== Pokémon Zany Cards ===
+In Pokémon Zany Cards, if the player matches all three cards of a Johto first partner Pokémon and its Evolutions, the game dialogue indicates that this Pokémon has evolved.
+Specifically, it is possible to match:
+
+Chikorita, Bayleef, and Meganium cards
+Cyndaquil, Quilava, and Typhlosion cards
+Totodile, Croconaw, and Feraligatr cards
+This is seen as the text "Evolved" appears during the card matching animation. At the end of the current card game, "Chikorita evolved", "Cyndaquil evolved", and/or "Totodile evolved" appear if applicable when counting the player scores.
+
+
+=== Pokémon Masters Arena ===
+In Pokémon Masters Arena, the Mudkip's Bingo minigame includes 36 possible questions about the Pokémon Evolutions available as of Generation III. In these questions, "2nd evolution" and "3rd evolution" refer to the second and third stages, respectively. Some examples:
+
+"What is the 3rd evolution of Aron?" (Answer: Aggron)
+"What is the 2nd evolution of Magikarp?" (Answer: Gyarados)
+
+
+=== Pokémon Team Turbo ===
+In Pokémon Team Turbo, the Charizard's Crossword Challenge is a crossword minigame about the Pokémon Evolutions available as of Generation III, except the evolutionary lines of Nidoran♀ and Nidoran♂ and some branched Evolutions are missing from this game.
+In this game, "2nd Evolution" and "3rd Evolution" refer to the second and third evolutionary stages, respectively. Some possible in-game examples:
+
+"Whiscash evolves from ... ?" (Answer: Barboach)
+"2nd Evolution of Ponyta ?" (Answer: Rapidash)
+"3rd Evolution of Whismur ?" (Answer: Exploud)
+If a Pokémon has branched Evolutions, only the first Evolution in the National Pokédex order is accepted as the correct answer. For instance:
+
+"3rd Evolution of Oddish ?" (Answer: Vileplume)
+"2nd Evolution of Eevee ?" (Answer: Vaporeon)
+
+
+== In animation ==
+
+
+=== Pokémon animated series ===
+
+In the animated series, Evolution happens in much the same way as it does in the games; though level-based Evolutions and trade-based Evolutions do not occur using those methods, there are similarities in the way they come about. For example, Misty's Poliwhirl evolved into Politoed because it found Ash's King's Rock and was holding it when Misty sent it out, while in the games it is required that Poliwhirl be traded while holding the King's Rock for the Evolution to take place (it should be noted that Poliwhirl had been through a machine in connection with it being healed at the Pokémon Center while holding the item). When a Beedrill attacked Ash's Metapod, it caused a crack to appear on its shell, which Butterfree came out of (although later examples of Metapod evolving into Butterfree were treated as the more familiar form of Evolution used in the animated series).
+Additionally, a difference can be seen in the fact that Pokémon evolve during a battle, as opposed to after it. Pokémon may also evolve when they are needed to, for an extra boost of power or gaining new abilities, instead of after a set amount of training, such as when Ash's Charmeleon evolved into Charizard to battle an Aerodactyl just three episodes after he evolved from Charmander, where the game requires Charmeleon to grow twenty levels to reach that stage. In addition, Pokémon can sometimes choose not to evolve, even if they evolve by a 'natural' method such as leveling up. This was shown when Ash's Bulbasaur refused to evolve during an Evolution festival for all Bulbasaur to evolve in Bulbasaur's Mysterious Garden. It appears that Evolution has emotional implications for Pokémon - some Pokémon, such as Team Rocket's Meowth, dislike their evolved forms, while others such as Ash's Pikachu simply want to prove they can be powerful without evolving. Conversely, when Pokémon do evolve, this can often be linked with an experience that causes them to mature emotionally or deal with an emotional issue, such as when the Poochyena in A Bite to Remember evolved, or the Paras in The Problem With Paras. Poochyena, for some reason, had an aversion to using the move Bite, while Paras was extremely timid and weak in battle. Both of them evolved shortly after overcoming these issues. In Enter Pikachu!, it was revealed that Ash's Pikachu evolved from a Pichu in the wild during a silent, tearful parting with a pack of Kangaskhan that had acted as his surrogate family. On the other hand, Evolution is not always linked with maturity or the age of a Pokémon where the episode Tree's a Crowd features an elderly Treecko. Another example is in Odd Pokémon Out! where even after Evolution, Ash's Donphan still acted quite playful as it did when it was a Phanpy.
+When a Pokémon begins to evolve, it will be enveloped by a brightly colored light while slowly changing form; in the original series, Pokémon the Series: Ruby and Sapphire, and Pokémon the Series: Diamond and Pearl, the light is simply white in color while in Pokémon the Series: Black & White and Pokémon the Series: XY, the light is blue in color. In Pokémon the Series: Sun & Moon, different Evolution effects were introduced depending on which Pokémon is evolving; for instance, when Mallow's Bounsweet evolved into Steenee, she shined pink and the physical changes that came with the Evolution could be seen happening. Although some Pokémon returned to the old-style Evolution effect (for instance, Sandygast into Palossand and Mareanie into Toxapex), others have been seen with completely new effects (notably Rockruff and Litten).
+In Pokémon Journeys: The Series and Pokémon Horizons: The Series, the Evolution light returns to being blue in color constantly. In Hatenna and the Otherworldly, Liko's Hatenna was depicted glowing briefly several moments before her Evolution, hinting that she was about to evolve. In Operation Infiltration!, Liko's Charcadet did not glow as it evolved; instead, what glowed was the Auspicious Armor it wore.
+For a list of all Evolutions that Pokémon belonging to the main cast have undergone, see the List of animated series Pokémon by Evolution.
+
+		
+			
+			
+		
+		
+			
+			
+		
+		
+			
+			
+		
+		
+			
+			
+		
+		
+			
+			
+		
+
+
+== In the manga ==
+ 
+Evolution is portrayed differently across manga adaptations. For example, in Pokémon Pocket Monsters, Pokémon are capable to evolve whenever they wish, and they revert to previous Evolution stages. It seems that Pokémon can skip Evolution stages as well, as is the case with Green's Charmander when it skips its Charmeleon stage and evolves directly into Charizard.
+
+
+=== Pokémon Adventures ===
+
+In the Pokémon Adventures manga, Evolution happens in much the same way as it does in the games, though it often displays them in a way that would be impossible. For example, even though Blue's Machoke evolved after being traded to Red, it took time before the Evolution took place instead of happening right away. Twice, a Pokémon that required an Evolution stone to evolve did so by being exposed to a similar energy. Red's Poliwhirl was able to evolve into Poliwrath due to the bottom of Vermilion Harbor having traces of a Water Stone, and Gold's Sunkern evolved into Sunflora due to the harsh sunlight made by her usage of Sunny Day reflecting off the rocks near Ilex Forest and replicating a Sun Stone's effects.
+Additionally, a difference can be seen in the fact that Pokémon evolve during a battle, as opposed to after it. Pokémon may also evolve when they need an extra boost of power or to gain new abilities, instead of after a set amount of training, such as when Y's Frogadier evolved into Greninja to help keep himself from falling asleep under Xerosic's Malamar's Hypnosis.
+Pokémon, under most circumstances, are unable to stop their Evolution once it begins. The only consistent way to prevent it is by using a function of the Pokédex. White once delayed Black's Tepig from evolving by shaking him, though it ultimately didn't stop it.
+It is not uncommon for Pokémon that share a deep connection to evolve at the same time. This has been displayed multiple times, with a notable example coming from the Johto first partner Pokémon—Exbo, Silver's Feraligatr, and Megaree—when they all evolved into their final forms while fighting Lugia.
+Due to experimentations done on him by Team Rocket, Red's Eevee was capable of freely changing from an Eevee into any of his three Generation I Evolutions (Vaporeon, Jolteon, and Flareon) and back. After evolving into Espeon, he lost this ability.
+When a Pokémon begins to evolve, it will be enveloped by a bright light while changing form. In the earlier parts of the series, this was often displayed by the Pokémon twitching before transforming into their new form. Over time, the Evolution would be accompanied by the bright white light.
+For a list of all Evolutions that Pokémon belonging to the Pokédex holders have undergone, see the List of manga series Pokémon by Evolution.
+
+
+=== Pokémon UNITE Manga - Come On Over to Aeos Island! ===
+In Pokémon UNITE Manga - Come On Over to Aeos Island!, no Evolutions have been seen on panel. However, in Aeos Energy, Professor Phorus recalled a time where the latent Aeos energy of Aeos Island caused her Beldum and a wild Scorbunny to appear to have evolved. This was depicted as having their Evolutions appear behind the original Pokémon in faded tones.
+
+
+== In the TCG ==
+Evolution in the Pokémon Trading Card Game is the process of playing an Evolution Pokémon (also known as an Evolution card). Evolution Pokémon cards, which include but are not limited to Stage 1 Pokémon and Stage 2 Pokémon, have a section which says which Pokémon they evolve from. Normally, Evolution Pokémon cards depict Pokémon that evolve from other Pokémon in the core series. Evolution cards normally cannot enter play without evolving a Pokémon that is already in play.
+To evolve a Pokémon, a player puts an Evolution Pokémon on top of a Pokémon that is in play that has the name of the card that the Evolution Pokémon "evolves from". In most cases, the name being checked for is the name of the prior Evolution of the Pokémon depicted on the Evolution card. However, this is not always the case, as many (but not all) cards with modified names are not part of normal Evolution chains. Those cards usually (but not always) check for a card with the name of the relevant pre-Evolution with the same modification to the card name. A Pokémon that has evolved is an evolved Pokémon, meaning that it has one or more Pokémon placed underneath it that it evolved from. 
+When a Pokémon evolves, any damage counters that were on the prior evolved form remain on the evolved Pokémon, and so are any attached cards like Energy and Pokémon Tools. However, it recovers from all Special Conditions, and any other assorted effects are also cleared off the Pokémon. 
+The characteristics of the prior Evolution, such as type, weakness, HP, and Retreat Cost, no longer have any effect on the evolved Pokémon. They are overridden by the characteristics of the Evolution card, which generally increases a Pokemon's HP and Retreat Cost and allows for its typing to change through Evolution. This also means that evolved Pokémon cannot use any of the attacks, Abilities, and other capabilities that the prior Evolution had, but also means evolved Pokémon benefit from usually having stronger attacks and more useful Abilities compared to their prior Evolutions. 
+Certain effects can care about if a Pokémon has evolved, if a Pokémon has evolved on a specific turn, what Pokémon it evolved from, or a combination of these criteria. Some effects can allow an evolved Pokémon to use attacks from its prior Evolutions. 
+The prior Evolutions of a Pokémon are still considered to be part of that Pokémon. While they are in play, the entire Pokémon is only one card. If an evolved Pokémon leaves play and moves to another zone, its prior Evolutions are moved along with that card. The cards, however, return to being separate objects. Similarly, the prior Evolutions are not considered to be "attached" to the Pokémon. Some cards, such as AZ, move a Pokémon out of play but do something different to the cards attached to it. In such cases, the prior Evolutions move with the Pokémon card. 
+During each player's turn, that player can play any number of Evolution cards from their hand to evolve their Pokémon. Certain other effects can cause an Evolution card to be played and evolve a Pokémon, such as that of Evosoda. However, Pokémon cannot be evolved on the first turn that each player takes in a game or on the first turn they come into play. As Evolution counts as entering play, Pokémon cannot evolve on the same turn they have previously evolved or devolved. However, some effects exist which can circumvent these rules. The most common of them are the Adaptive Evolution and Evolutionary Advantage Abilities. The Ancient Trait Δ Evolution is a mechanic from Roaring Skies which allows this as well. Note that affordances to evolve on a turn cannot be extended to other cards that cause Pokémon to evolve. For instance, a Pokémon with Δ Evolution does not allow a player to evolve that Pokémon using Rare Candy if it is that Pokémon's first turn in play.
+
+
+=== Stages of Evolution ===
+There are three main stages of Evolution in the TCG.
+
+Basic Pokémon, which represent the initial evolutionary stage. Pokémon that evolve from a Pokémon released in a later generation, such as Electabuzz or Pikachu, are usually Basic Pokémon, despite being the second Pokémon in their evolutionary lines. Their pre-Evolutions, like Elekid and Pichu, are also usually Basic Pokémon.
+Stage 1 Pokémon, which represent the middle or final evolutionary forms of certain Pokémon and is the initial stage of Fossil Pokémon in some sets. They usually evolve from Basic Pokémon, and are Evolution cards
+Stage 2 Pokémon, which represent the final evolutionary forms of certain Pokémon. They usually evolve from Stage 1 Pokémon, and are Evolution cards.
+A number of stages can be found on older cards, but no longer see print on newer cards.
+
+In the Neo Series and the e-Card series, Baby Pokémon was a stage that Baby Pokemon, excluding Togepi, used. Current sets designate Pokémon that used to have the Baby stage as Basic Pokémon.
+In the Black & White Series and the XY Series, Restored Pokémon was a stage that Fossil Pokémon used. Prior sets and later sets designate Pokémon that have had this stage as Stage 1 Pokémon.
+Additionally, many special kinds of Pokémon cards have Stages unique to them.
+
+Pokémon LEGEND, for certain Legendary Pokémon divided into two cards in the HeartGold & SoulSilver Series.
+Mega Evolution Pokémon, for Mega Evolved Pokémon, Primal Groudon, and Primal Kyogre from the XY Series. They are Evolution cards, which usually evolve from Basic Pokémon-EX
+Pokémon BREAK, for Pokémon from the Parallel Worlds that have evolved past their final Evolution from the XY Series. They are Evolution cards, but there is not a preference for evolving from any particular Stage. They undergo a specific BREAK Evolution process, meaning they continue to have several characteristics from their previous Evolution.
+Pokémon VMAX, for Dynamax, Gigantamax, and Eternamax Pokémon from the Sword & Shield Series. They are Evolution cards, which usually evolve from Basic Pokémon V
+Pokémon VSTAR, for Pokémon blessed by Arceus from the Sword & Shield Series. They are Evolution cards, which usually evolve from Basic Pokémon V
+Pokémon V-UNION, for Pokémon divided into four cards from the Sword & Shield Series.
+(Pokémon LV.X appear to have a Stage, but actually do not and instead have the Evolution Stage of the Pokémon that they Level-Up from.)
+Only Baby Pokémon and Basic Pokémon may be placed onto the Bench when setting up to play and during a game. Other stages of Pokémon have a restriction preventing them from being played directly onto the Bench, usually because they are considered to be Evolution cards or Evolution Pokémon and cannot enter play without evolving from a Pokémon that is in play. Pokémon LEGEND can be played from hand to the Bench if a player has both halves of the card available, but cannot be put into play when setting up.
+The stage of Evolution of a Pokémon can be located in the top left corner of every Pokémon card, along with the name and a picture of the Pokémon the card evolves from, if any. During the EX Series, this information was still found on the left side of the card, but below the artwork instead.
+
+
+=== Ability to evolve ===
+Pokémon cards can only be put on top of another card to evolve if their "Evolves from Pokémon" field says that it does indeed evolve from the Pokémon it is being put on top of. For a normal Evolution chain, this is fairly straightforward. For example, the Cinccino from Crimson Invasion says it "Evolves from Minccino. So it can be played to evolve from any card with the name "Minccino", be that the older Minccino from Black & White, the Minccino from the same set as the Cinccino, or the Minccino from the later released Temporal Forces. Sometimes this allows for some silliness. Kabutops evolves from Kabuto, as it should given the video games. But there are Stage 1 Kabuto and Stage 1 Kabutops, due to different Series printing cards for Fossil Pokémon in different ways. And a Stage 1 Kabutops like Kabutops can indeed evolve from a Stage 1 Kabuto like Kabuto. Only the name matters; all details like Stage and the artwork of the cards compared to the "Evolves from" field are irrelevant. (This is despite the commonly held and officially stated idea that Stage 2 Pokémon can only evolve from Stage 1 Pokémon, which is just a simplification of the rules in question.)
+Cards that are not part of normal Evolution chains may only evolve from specific other cards or not evolve at all. A classic example is Dark Blastoise, which states on the card that it "Evolves from Dark Wartortle". This means Dark Blastoise can evolve from any card named Dark Wartortle. But it is unable to evolve from a card simply named Wartortle. Likewise, a Pokémon like Turtwig  is not named Turtwig. No Grotle card that exists can evolve from Turtwig , because they all say"Evolves from Turtwig". And some cards are Basic Pokémon despite the species of Pokémon they depict, because the cards have a gameplay mechanic which means they are Basic Pokémon. Cards like Camerupt, Radiant Steelix, and Shining Noctowl all do not evolve from any card. Some, like the Camerupt , do have an Evolution. For that card, it would be Camerupt.
+The "evolves from" field affects more than just playing cards from one's hand. Effects that cause Evolution, like the Salvatore and the aforementioned Evosoda, are also bound by these rules and can only locate cards in the deck that do evolve from a Pokémon in play. These cards are also bound by the "meta-rule" preventing a non-attack effect from being used if it would have no effect: If no Pokémon in play have any Evolutions that could be in the player's deck, then the card cannot be played. (If it's an attack, then the attack simply has no effect.) This accounts for the format being played. When BREAKthrough was legal in the Standard format, one could use Evosoda on a Raichu to evolve into Raichu. However, such a play is no longer allowed in the Standard format, because no legal card evolves from Raichu. (This is actually a change from a 2018 decision that used to allow for precisely this play because Raichu  was merely printed, even in formats where the card is not legal.)
+Some effects circumvent the "evolves from" field, allowing a Pokémon to evolve into a second Pokémon of a specified name even though the second Pokémon does not evolve from the first Pokémon. Examples of this include the additional text on Buried Fossil, the Ultra Evolution attack found on cards like Scatterbug and the Baby Evolution Poke-Power found on some Baby Pokémon like Budew. In rare cases, this can just be a permission to evolve into Pokémon of a larger group, rather than just cards of a specific name. For instance, the Ascension DNA Ability on Eevee means that any Pokémon that evolves from Eevee can evolve from Eevee and Ditto  has the Ability Almighty Evolution, which lets any Stage 1 Pokémon evolve from it. The Ditto Marker used in the alternate formats of Pack Battle and Ditto Draft grants any Basic Pokemon without a Rule Box the Evolutionary Advantage Ability, which allows them to evolve into any Stage 1 Pokémon or Stage 2 Pokémon. 
+Note that non-attack effects enabling Evolution cannot be combined with other cards that cause Evolution. A card like Evosoda cannot be used on the cards which use non-attack effects because no existing card has a "Evolves from" field listing such a card. Equally so, Rare Candy is unable to be used because the rules do not recognize any other card as "evolving from" these kinds of cards. For instance, while Ditto  can have any card put on top of it to evolve it, that does not mean Rare Candy allows any Stage 2 Pokémon to evolve from it. As far as the rules are concerned, no card "evolves from" Ditto .
+
+
+=== Unevolved Pokémon ===
+An unevolved Pokémon is a Pokémon that has not evolved. In most cases, Basic Pokémon are the only entities that are unevolved Pokémon, and Stage 1 Pokémon and Stage 2 Pokémon are evolved Pokémon, but there are exceptions that go both ways. Some variations on Pokémon cards are unevolved non-Basic Pokémon. Examples of these include Pokémon V-UNION and Restored Pokémon. More critically, there are methods by which an Evolution cards can enter play without evolving from another Pokémon, such as through the effects of Maxie or Orbeetle's Evomancy attack. An Evolution card entering play in such a manner has no previous Evolutions, therefore making it a unevolved Pokémon while still being an Evolution card. The main effect this affects is devolution effects. Evolved Pokémon can be devolved, but unevolved Pokémon cannot even if they are Evolution cards.
+
+
+=== Devolution ===
+Main article: Devolution
+Devolution is essentially Evolution in reverse. One or more of the Evolution cards on top of a devolving Pokémon are removed from that Pokémon and put in another zone. This leaves one of the lower stages of that Pokémon visible, and that prior card is now in play. As with Evolution, damage and attached cards are retained, while Special Conditions and effects are removed. After devolving, a Pokémon cannot evolve on the same turn. Only evolved Pokémon can be devolved. Unevolved Pokémon, even ones that are Evolution cards, are unable to be devolved.
+Devolution can not be done normally as part of a turn. It can only be performed by following the effects of certain cards.
+
+
+=== "Evolution-like mechanics" ===
+As is trading card game tradition, there are a few mechanics which resemble Evolution, but are not actually Evolution. They are as follows.
+
+Ditto from the Laboratory expansion exclusive to the Pokémon Trading Card Game video game has the attack Morph, which searches for a random Basic Pokémon from the player's deck and replaces Ditto with that Pokémon. Doing so removes all effects, including Special Conditions, and has the added benefit of healing all damage from Ditto before the switch occurs. The healing makes it similar to Baby Evolution..
+Pokémon LV.X are placed on top of Pokémon like an Evolution. However, Pokémon LV.X are not Evolution cards, but rather Pokémon Level-Up cards. These cards are put on top of a Pokémon with a matching name, causing them to Level-Up. This can only be done to an Active Pokémon, but Special Conditions and effects are cleared from that Pokémon just like Evolution does. Additionally, the LV.X card has the attacks, Poké-Powers, and Poké-Bodies of its previous Level, that being the card the LV.X card was placed over.
+Ditto from Boundaries Crossed has the Transform Ability, which allows a Basic Pokémon card to be put on top of Ditto, causing the Ditto to become that Pokémon. This is likened more to the card switching mechanic, in that Ditto never evolved and the other card never entered play. The second card keeps any effects, like Special Conditions, that were on Ditto. It is considered to have been in play for the same number of turns as the Ditto. While Ditto is underneath the second card, the second card is not an Evolved Pokémon
+
+
+== In relation to the real world ==
+Evolution in Pokémon is closer to the real-life phenomenon of metamorphosis rather than actual evolution, as real-life evolution happens to populations over a long period of time, not to individuals. In the Pokémon Adventures manga, it is mentioned that Pokémon Evolution is an entirely separate phenomenon from the normal process of evolution, and is a mysterious ability exclusive to Pokémon that is still not fully understood. In Pokémon Super Mystery Dungeon, it is described in the health class at the school in Serene Village as being akin to puberty, where a Pokémon's body rapidly grows larger along with other changes that bring it closer to adulthood.
+Real-life evolution still appears to have happened in the Pokémon universe and is mentioned or referenced in multiple media. Different Pokémon lines are related to each other evolutionarily, but not necessarily all of them, as some are man-made or alien in origin. There is also Sinnoh Folk Story 3 which claims there was a time there was no difference between Pokémon and humans. Many Pokémon can interbreed based on their Egg Group pointing to a potential relation. Pocket Monsters Encyclopedia describes how Pokémon adapt to different environments and uses Cinnabar Island and its unique ecosphere as an example which is thought to have strongly influenced its native Pokémon, like Growlithe, and now is famous as a home to many Fire-type Pokémon. Starting with the Generation VII games, each new region features new forms of previously known Pokémon called regional forms which look different, most of the time have different types, and sometimes evolve into different species.
+Other mentions:
+
+Drowzee is said to be descended from the legendary beast Baku, and is also thought to share common ancestry with Munna and Musharna.
+Omastar's heavy shell is thought to be the reason this ancient Pokémon died out. It's apparently a distant ancestor of Octillery.
+Shellos and Gastrodon's cells indicate that they had shells covering their backs in the ancient past, and they are related to Shellder and Cloyster.
+Pachirisu is related to Pikachu's line.
+Seismitoad is a relative of Croagunk and Toxicroak.
+Skorupi shares a common ancestor with Sizzlipede.
+Archen is believed to be a progenitor of bird Pokémon, although some of the latest research suggests this may not be the case.
+Tirtouga is reputed to be the ancestor of most turtle Pokémon, having lived in warm seas approximately 100 million years ago.
+Anorith is said to be an ancestor of modern bug Pokémon.
+Zubat's eyes and vision have atrophied over time in favor of echolocation.
+Relicanth has remained unchanged for 100 million years. Similarly, Kabuto has not changed for 300 million years.
+In the distant past, Kabutops began transitioning to a terrestrial lifestyle, but it was not able to fully adapt before it became extinct.
+Bagon's belief that it will be able to fly one day is apparently the influence of information carried in its genes. Some theories suggest that its behavior affected its Evolution.
+Wailmer is descended from a land-dwelling ancestor. It also appears to be related to Cetoddle, whose ancestors at some point transitioned from the ocean back to land.
+Diancie is a spontaneous mutation of Carbink.
+
+
+== Trivia ==
+Of all non-Legendary and non-Mythical Pokémon, 87.65%  are part of an evolutionary line.
+Counting Legendary and Mythical Pokémon, 80.39%  of all Pokémon are part of an evolutionary line.
+Out of all Pokémon that evolve by leveling up, Larvesta evolves later than any other unevolved Pokémon, starting at level 59.
+Of all the Pokémon that evolve by leveling up, Hydreigon evolves from its pre-Evolution later than any other Pokémon, starting at level 64.
+Generation IX introduced the most non-Legendary and non-Mythical Pokémon that do not evolve, with 29.
+Generations IV and VI are tied for the fewest, with just five each.
+Pokémon Legends: Arceus is the only core series game in which Evolution is not required for obtaining any species of Pokémon (without trading or transferring), as all species in the game can be caught without using Evolution as of the Daybreak update. However, the Alolan form of Ninetales cannot be caught and must be evolved from the gift Alolan Vulpix.
+
+
+== In other languages ==
+
+
+== Notes ==
+
+
+== References ==
+
+
+== Related articles ==
+Episodes in which a main character's Pokémon evolves
+Episodes in which a main character's Pokémon refuses to evolve
+Pokémon aging

@@ -1,0 +1,111 @@
+The fainted status condition (Japanese: 瀕死(ひんし) near death) is a status condition in which a Pokémon is no longer able to battle. Prior to Generation VI, it was abbreviated as FNT, or as Ft in Pokémon Stadium 2.
+During a battle, if all Pokémon in a Trainer's party have fainted, the Trainer loses that battle (except for Pokémon Legends: Arceus).
+
+
+== In the core series games ==
+
+In the core series Pokémon games, fainting occurs when a Pokémon reaches 0 HP, causing the Pokémon to leave the battle with a slowed or distorted cry. A Pokémon which has fainted is unable to battle or gain experience points or effort points if it would have until it has been revived. However, it can still evolve after battle if the required criteria were met (unless the player blacks out), and it is still able to use field moves, such as Fly or Cut. When the player's party is viewed, any fainted Pokémon will have a red FNT status bar or a status condition of FNT. In Generation VI, fainted Pokémon are moved to the bottom of the party during battle.
+If all Pokémon in the player's party have fainted, the player blacks out and loses some money. In Trainer battles, the money is paid to the winner, whereas in battles with wild Pokémon the money is dropped in panic. The amount of money lost is determined by the highest level of the Pokémon in the player's party, and is the same amount in either case.
+
+
+=== Fainting without damage or losing HP ===
+Destiny Bond and Perish Song cause affected Pokémon to faint. The moves Self-Destruct, Explosion, Memento, Healing Wish, Lunar Dance, Final Gambit, and Misty Explosion cause the user to faint.
+Held items Focus Sash and Focus Band, Endure, and Sturdy (from Generation IV onwards) do not protect the user against these non-damage fainting effects.
+
+
+=== Fainting through indirect damage ===
+Fainting can also be caused through indirect damage, including status conditions, weather, and entry hazards.
+When a Pokémon has been poisoned, it will lose HP during battle, which can cause it to faint. Additionally, prior to Generation IV, a poisoned Pokémon in the player's party outside of battle will lose 1 HP every four steps until it faints (in Generation IV, the Pokémon will be cured of poison when it has 1 HP remaining). Burned Pokémon take damage in battle, which can cause fainting, but not outside of battle. A confused Pokémon is at risk of hurting itself, which can make itself faint. Recoil damage from the move may cause its user to faint. A Pokémon affected by Leech Seed may faint from the resulting HP loss at the end of each turn.
+
+
+=== Fainting through a Pomeg Berry ===
+Main article: Pomeg glitch
+Fainting can also happen when using the Pomeg Berry in certain older games, known as the Pomeg glitch. As the Pomeg Berry reduces HP EVs, if a Pomeg Berry is applied to a Pokémon with low HP, the Pokémon may faint as a result.
+
+
+=== Effects of fainting ===
+Fainting will cause a Pokémon to lose friendship, and may grow to resent its Trainer if it faints often and spends a lot of time unconscious.
+If all of the player's Pokémon faint, then the Trainer will lose the battle and black (or white) out. The player will then be warped back to the last Pokémon Center they visited and lose money. In FireRed and LeafGreen and from Generation IV onwards, a small cut scene explains what happens.
+
+
+==== Reviving ====
+Normal items, such as Potions or status condition healing items, cannot be used on a fainted Pokémon. Instead, they can only be healed by talking to a certain NPC (usually at a Pokémon Center), resting in a bed, depositing the Pokémon in a Box (prior to Generation VIII), using the move Revival Blessing in battle, or using a reviving item either in battle or otherwise.
+
+Rare Candy and Exp. Candy can also potentially revive a fainted Pokémon (except Shedinja from Generation VI onward) due to the HP gained upon leveling up. Pokémon caught after making them faint, such as in a Max Raid Battle or Tera Raid Battle, are revived with 1 HP upon being caught.
+
+
+=== Avoiding fainting ===
+There are many ways that fainting can be avoided, with the most straightforward being to recalling a Pokémon from battle while it is still healthy. Several mechanics allow Pokémon to survive an attack that would otherwise make it faint with 1 HP: Endure, held items Focus Sash and Focus Band, Sturdy from Generation IV onwards, and affection level of 3 or higher.
+The following items can prevent a Pokémon from fainting:
+
+
+=== Icons ===
+
+
+== In the spin-off games ==
+
+
+=== Pokémon Mystery Dungeon series ===
+In the Pokémon Mystery Dungeon series, fainting occurs under the same conditions as the core series.
+Prior to Super Mystery Dungeon, when a Pokémon faints, a Reviver Seed will be taken from the player's bag and automatically be used, becoming a Plain Seed. If a Pokémon faints and the player does not have a Reviver Seed, the Pokémon will be sent out of the dungeon, but it will not be dismissed unless it was recruited on this visit. If the player, the partner in story-related missions, a client that is being escorted, or another important character faints, the mission will be considered a failure, the entire team will be sent back and all or half of their Poké and a majority of their inventory will be lost. If the player attacks a Kecleon Shop and gets defeated by Kecleon, items that are not lost will be turned into Plain Seeds.
+In Super Mystery Dungeon, if both Tiny Reviver Seeds and Reviver Seeds are in the Bag, the player may choose which one to use on a fainted party member. Outside of story missions, the player may also choose to not use either type of Reviver Seed when a party member faints, though only if the Pokémon isn't the last one remaining. If a party member faints without using a Reviver Seed, a Revive All Orb will still be able to revive it later. If a Guest Pokémon (excluding Hoopa) faints, it will warp to a random room on the floor and must be given a Tiny Reviver Seed or Reviver Seed before it can continue exploring. Unlike previous games, the party will not lose their Poké or items if they move on to a different floor without reviving the guest.
+In Rescue Team DX, the player can find fainted Pokémon randomly in dungeons. These Pokémon can be recruited by giving them any variety of Apple from the Toolbox.
+
+
+=== e-Reader games ===
+In the e-Reader game Machop At Work, the player Machop faints if it loses the game from being hit by a falling rock. 
+
+
+=== Stadium-style games ===
+In Stadium 1, a light appears when a Pokémon faints, Stadium 2 has a Pokéball model overlay, and the Orre games and Battle Revolution have differing frames when it occurs, Colosseum and Battle Revolution recalls after a while, XD recalls instantly after it happens.
+
+
+== In animation ==
+
+
+=== Pokémon the Series ===
+In Pokémon the Series, fainting is referred to as being unable to battle (Japanese: 戦闘不能 unable to fight). These Pokémon are not necessarily unconscious, but merely do not have the energy, ability, or other reasons to continue battling.
+Fainted Pokémon are often depicted with stunned expressions or as having spirals in their eyes, presumably to emulate dizziness. Since not all Pokémon have eyes, they often have different ways of displaying that they have fainted, such as Staryu and Starmie's core flashing.
+During Gym battles, League Conference matches, and other battle-oriented Pokémon competitions, once a Pokémon is deemed unable to battle by a judge, it must be recalled and cannot be used again. This rule is also observed during informal battles Ash has with his rivals, in which Brock or another person acts as the referee.
+The grounds for what is considered a Pokémon unable to battle varies between League Conferences. The Indigo Plateau Conference is extremely strict with this rule as switching out, disobedience and even Pokémon being put to sleep is what makes them considered as fainted. Later League Conferences only consider Pokémon that are fainted to be unable to battle, the Lily of the Valley Conference allowing Ash's Heracross to continue fighting, despite being put to sleep by Dark Void by Tobias's Darkrai while Paul consistently switched Pokémon out during his matches.
+
+
+==== Battle Off ====
+
+In the Battle Stage of Pokémon Contests, once the panel of judges—usually formed by Mr. Contesta, Mr. Sukizo, and Nurse Joy—decide that a Pokémon is unable to continue battling, a red X mark will appear on the monitors of the judges' desk. This is called Battle Off (Japanese: バトルオフ Battle Off) and indicates the battle has come to an end, as contestants are not allowed to recall the fainted Pokémon and send a substitute. When this happens, the Coordinator with the remaining Pokémon will be declared the winner of the match. In the case of a Double Battle, the fainted Pokémon may be recalled but not substituted, leaving the remaining Pokémon to battle alone. 
+When the judges rule Battle Off for a Pokémon, their decision is promptly announced by the master of ceremonies and becomes effective immediately. The decision will be upheld even if the Coordinator feels that their Pokémon is able to continue battling, as the judges treat the Pokémon's health as a priority. Coordinators whose Pokémon fainted will have their remaining points depleted, and the scoreboard will show the opposing side as the winner.
+
+
+=== Pokémon Horizons: The Series ===
+
+
+== In the manga ==
+
+
+=== Pokémon Adventures ===
+In the early chapters of Pokémon Adventures, even one Pokémon fainting in a battle was enough to decide the winner, unlike in the games. This rule stopped being in regular use starting from the FireRed & LeafGreen arc, although it was temporarily put back to use during the Unova Pokémon League tournament in the Black & White arc.
+
+
+== In the TCG ==
+In the Trading Card Game, fainting is instead referred to as a Pokémon being Knocked Out. This occurs when a Pokémon's Damage, represented by Damage Counters, is greater than or equal to that Pokémon's Hit Points. Some effects are similar to one-hit knockout moves in that they immediately declare the recipient of the effect to be Knocked Out. (Usually, but not always, the Defending Pokémon has to have a certain property or be affected by another effect in order for it to be Knocked Out by this kind of effect.)  Other effects are similar to Explosion and Healing Wish as they cause the user to be Knocked Out in exchange for some beneficial effect. Many effects in the TCG care about if a Pokémon was Knocked Out on a prior turn or by a specific attack.
+When a Pokémon is Knocked Out, it is removed from the Active position or the Bench, and it and its attached cards are placed in the discard pile. The opponent of the player of that Pokémon takes one of their Prize Cards, bringing them closer to winning the game. Some effects can remove a Pokémon from play without knocking it out, such as moving that Pokemon to the discard pile, Hand, Deck, or Lost Zone. Prize Cards are not awarded by these effects. 
+Some other effects alter the number of Prize Cards taken when a Pokémon is Knocked Out or prevent an opponent from taking any Prize Cards after Knocking Out a specific Pokémon. Notably, the latter effect overrides the former; the number of Prize Cards an opponent takes after Knocking Out a Pokémon cannot be increased if they are already not taking any Prize Cards.
+There are some effects that prevent a Pokémon from being Knocked Out. These effects generally replace being Knocked Out with setting that Pokémon's remaining Hit Points to 10. Among these effects are direct adaptations of Focus Sash, Focus Band, and Sturdy.
+In the Pokémon Trading Card Game Online and the Pokémon Trading Card Game Live, a Pokémon that is Knocked Out is rotated slightly clockwise (not as much as Paralyzed), then moved to the discard pile. Live features a more dramatic visual where the card wobbles before landing in that position.
+
+
+== In other languages ==
+
+
+== Trivia ==
+In an interview, Satoshi Tajiri explained that Pokémon were designed to faint instead of die in the core series games to avoid children developing an abnormal understanding of death and dying, as he felt they do when playing other video games, and to encourage children to treat death with respect.
+
+
+== References ==
+
+
+== External links ==
+Fainting on Wikipedia
+
+
+== Related articles ==

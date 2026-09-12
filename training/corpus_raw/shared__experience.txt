@@ -1,0 +1,271 @@
+XP redirects here. For the 2026 event in San Francisco, see PokémonXP.
+Slow redirects here. For the move whose Japanese name can mean Slow, see Curse (move).
+
+The amount of experience (Japanese: 経験 experience) an individual Pokémon has is an indication of how much it has battled. In the games, it is quantified as Experience Points (Japanese: 経験値 Experience Points), which a Pokémon can gain in battle by defeating an opponent Pokémon without fainting. After a certain amount of experience points have been gained, a Pokémon will grow a level, all the way up to level 100, where a Pokémon will no longer gain experience (in Generations I and II, the game will still erroneously state that it has gained experience points).
+
+
+== In the core series games ==
+In the core series games, experience is normally gained by all Pokémon who have been sent out against an opponent's Pokémon, divided evenly among them. Experience is gained upon the opponent Pokémon fainting, and its amount is calculated as a function of the fainted Pokémon's level, as well as species. Certain items can affect the distribution and amount of experience gained, as can other conditions, such as whether or not the Pokémon was caught by another person or in another language of the game.
+Other ways to gain experience include Rare Candies, a Day Care, the Pokéwalker, the Poké Pelago, Poké Jobs, Pokémon Camp, Let's Go!, and picnics.
+If a Pokémon from the Virtual Console releases of Generation I and II is transferred to Pokémon Bank using Poké Transporter, its nature will be determined by the remainder of its number of Exp. Points after dividing by 25.
+
+
+=== Relation to level ===
+The amount of experience points a Pokémon has is tied directly to its level. Though the amount varies depending on species, always remaining consistent throughout an evolutionary line, a given amount of experience points will always set a Pokémon at the corresponding level. Wild Pokémon of any level will always have the base amount of experience required to reach that level when caught, as will Pokémon hatched from Eggs.
+All Pokémon fall into one of six experience groups, four of which were introduced in Generation I, and two of which were introduced in Generation III. The main difference between these experience groups is the amount of experience points required to reach level 100, and thus, the amount required to reach each level. The names used for these groups below are fan descriptions, as they have not received official names.
+
+All those introduced in Generation I are only polynomial functions of the level, while the two introduced in Generation III operate as piecewise functions, changing the equation depending on the level range. The original four functions, the ones for the Fast, Medium Fast, Medium Slow, and Slow groups, are cubic. The two that were added in Generation III (Erratic and Fluctuating), however, are made by multiplying the cube of the level by a linear function of it (a negative slope one in the case of Erratic, going from 2 to 0.6; and a positive slope one in the case of Fluctuating, going from 0.48 to 1.64), making those functions effectively quartic.
+Although the various experience groups' level-up rates can be calculated using an equation, from Generation III onward, the games use a lookup table. This ensures that the Medium Fast, Medium Slow, and Slow experience groups have 0 experience at level 1, preventing a glitch associated with the Medium Slow formula at level 1 that occurs in the Generation I and II games.
+In Generations V, VII, and VIII, the amount of experience gained is dependent on both Pokémon's levels: the lower the victor's level is compared to the defeated Pokémon, the more experience points the victor will gain.
+
+
+==== Erratic ====
+EXP={n3(100−n)50n<50n3(150−n)10050≤n<68n3⌊1911−10n3⌋50068≤n<98n3(160−n)10098≤n≤100
+The Erratic experience group, one of the two groups introduced in Generation III, features the lowest level 100 value for experience, at only 600,000 points. A majority of the Pokémon in this experience group were introduced in Generation III as well, with most of them being Bug or Water types.
+Receiving its name due to the highly erratic experience point requirement to reach the next level from level 68 to level 98, Pokémon in this group level up rather slowly in their lower levels, requiring the most experience to grow from level 1 to level 10 (1800 as compared to 1250 for Slow, the next highest requirement), and increase the rate of their growth at higher levels, requiring the least experience to grow from level 90 to level 100 (108654 points as compared to 216800 for Fast, the next lowest requirement).
+Due to the erraticness of this function, it actually takes fewer experience points to go from level 99 to 100 than it does to go from level 66 to 67.
+For a list of all Pokémon in this group, see Pokémon in the Erratic experience group.
+
+
+==== Fast ====
+EXP=4n35
+The Fast experience group is one of the four experience groups introduced in Generation I, with 800,000 experience points making for a level 100 Pokémon. Many Normal- and Fairy-type Pokémon are in this group.
+For a list of all Pokémon in this group, see Pokémon in the Fast experience group.
+
+
+==== Medium Fast ====
+EXP=n3
+Among all Pokémon, the most plentiful experience group is the Medium Fast group, which was also introduced in Generation I. Requiring Pokémon to have an even 1,000,000 experience points to be at level 100, it is the most average of the experience groups and the one with the simplest equation: to be at a given level, any Pokémon in this group requires experience equal to that level cubed. This group is also often called "cubic", due to its function being a simple cube of the level.
+This experience group actually grows more slowly than the Medium Slow group from level 6 until level 68 (level 46, if considering amount of experience required to reach the next level).
+For a list of all Pokémon in this group, see Pokémon in the Medium Fast experience group.
+
+
+==== Medium Slow ====
+EXP=65n3−15n2+100n−140
+The Medium Slow experience group, like the Medium Fast group, accounts for many Pokémon, containing the second largest amount of them. Most of the Pokémon in this group are part of three-stage evolutionary lines. This group also contains all of the regional first partner Pokémon trios. Requiring 1,059,860 experience points for a Pokémon to reach level 100, it is the only experience group whose level 100 experience is not evenly divisible by 10,000. Pokémon in this group level up relatively quickly in their lower levels, requiring only 11,735 experience to reach level 25 (as compared to 12,187 for Fluctuating, the second lowest requirement).
+The inflection point for this polynomial function is between levels 4 and 5 instead of at level 0. Thus, it actually takes more experience points to go from level 2 to 3 (48) than it does to go from 5 to 6 (44). Additionally, according to the function, level 1 Pokémon in this group are calculated to have -54 (rounded down from -53.8) experience points. This causes the experience underflow glitch in Generations I and II. For a list of all Pokémon in this group, see Pokémon in the Medium Slow experience group.
+
+
+==== Slow ====
+EXP=5n34
+The final of the four Generation I experience groups, the Slow group features the highest amount of experience required for a Pokémon to reach level 100 in Generations I and II, and the second highest amount since then. Containing many rare, powerful, and Legendary Pokémon, Pokémon in this group are typically very hard to raise; all Powerhouse Pokémon, by definition, are in this experience group. At level 100, a Pokémon in this experience group will have 1,250,000 experience points.
+For a list of all Pokémon in this group, see Pokémon in the Slow experience group.
+
+
+==== Fluctuating ====
+EXP={n3(⌊n+13⌋+24)50n<15n3(n+14)5015≤n<36n3(⌊n2⌋+32)5036≤n≤100
+The second experience group introduced in Generation III and a direct opposite to the Erratic group, the Fluctuating experience group contains the Pokémon which grow the slowest of all, reaching level 100 with a whopping 1,640,000 experience points. It is also, unsurprisingly, the smallest of the experience groups, containing only 14 species. All of these species, minus Drifloon and Drifblim, were introduced in Generation III as well. Pokémon within this group require the least amount of experience to grow from level 1, needing only 540 points to reach level 10, as compared to 560 for Medium Slow, the next lowest requirement. They also require the most experience points to go from level 90 to 100—517,340 as compared to 338,750 for Slow, the next highest. Like the Erratic function, the Fluctuating group's level-up equation is calculated in a piecewise fashion.
+Also like the Erratic experience group, the Fluctuating group gets its name from the wildly fluctuating requirement for each level to go to the next level, from Level 36 to Level 100.
+For a list of all Pokémon in this group, see Pokémon in the Fluctuating experience group.
+
+
+=== Experience at each level ===
+Below is a table; on the left side of the level is the minimum number of experience points required for a Pokémon to be at that level, and the amount of experience points a Pokémon of that level will have when caught from the wild; on the right is the number of experience points required to advance from the respective level to the next level.
+
+
+=== Experience gain in battle ===
+The amount of experience that a Pokémon gives when it is defeated depends on its level and its species. The higher the level of the defeated Pokémon, the more experience points it yields. However, numerous factors can influence how much experience any individual Pokémon actually gains.
+Any Pokémon that is sent into battle against an opponent will receive experience points when that opponent is defeated, provided the Pokémon is not fainted. Prior to Generation VI, if only one Pokémon participates in battle, it will gain "full" experience points, but if more than one Pokémon participate in battle, each Pokémon will be allotted an even portion of the full experience. In Generation VI, this was changed so that all Pokémon that participate in battle receive "full" experience.
+The Exp. All and Exp. Share are ways for a Pokémon that does not directly participate in a battle to still gain experience from it. Prior to Generation VI, it also affects how much experience the direct participants are allotted.
+
+In Generation VI: if Exp. Share is turned on, any Pokémon that did not participate in battle will receive half of the "full" experience.
+From Generations II to V: if a Pokémon in the player's party is holding an Exp. Share, the Pokémon that participated directly in the battle will receive half of the experience they normally would have, and any Pokémon that were holding Exp. Share will be allotted an even portion (depending on how many are holding an Exp. Share) of 50% of the "full" experience. If a Pokémon both participated in the battle and held Exp. Share, it will receive two separate messages awarding its share of experience from each of those allotments.
+In Generation I: if Exp. All is in the Bag, the Pokémon that participated directly in the battle will receive half of the experience they normally would have, and every Pokémon in the player's party also receives experience equal to the amount that a battling Pokémon received (before any bonuses) divided by the number of Pokémon in the player's party (this method of calculation appears to be an error).
+From Generation V onward, except in Generation VI, the amount of experience a Pokémon gains is also scaled depending on how its level compares to the opponent's: the higher a defeated opponent's level is compared to the "winner", the more experience points the winner will gain. This does not apply to Pokémon defeated in an Auto Battle in Generation IX.
+If multiple opponents are knocked out by the same move:
+
+From Generations III to V, the experience is gained separately for each Pokémon that was knocked out, in sequence. In Generation V (where the experience gained depends on the recipient's level), if gaining experience from the first fainted Pokémon causes the player's Pokémon to gain one or more levels, subsequent experience gains are calculated using that increased level (i.e. award less experience than they would have if awarded first).
+From Generation VI onward, the experience is gained for all Pokémon at the same time. In Generations VII and VIII (where the experience gained depends on the recipient's level), this means that experience gained is based on the user's level before gaining any of the experience.
+Various other factors may boost the amount of experience a Pokémon receives. These factors include:
+
+If the Pokémon is an outsider (was traded); furthermore, in Generation IV onward, it gains even more EXP if it is additionally from a different language game
+If the battle is a Trainer battleGen I-Gen VI
+If the Pokémon is holding a Lucky EggGen II+
+If the Pokémon has high enough AffectionGen VI-/friendship onward
+If a positive Exp. Point Power (Pass PowerGen V, O-PowerGen VI, Rotom PowerGen VII, Exp. Charm, Meal PowerGen IX) is active
+If the Pokémon is at or past the level where it would be able to evolve but has notGen VI+
+The only negative factor that may affect experience gain is a negative Exp. Point Power from the Entralink in Generation V. Pokémon defeated in an Auto Battle in Generation IX yield fewer experience points than those defeated otherwise and the experience gained from Auto Battling cannot be boosted by other factors.
+From Generation VI onward, experience is also obtained by catching a wild Pokémon.
+
+
+==== Gain formula ====
+In the main Pokémon games, only two basic formulas have ever been used: a flat formula, where the winner's level is not taken into account, and a scaled formula, where the difference between both opponents' levels affects the amount of experience the winner receives. Generation V, VII, VIII, and IX games use the scaled formula. All other generations use the flat formula, although each generation generally makes its own additions or tweaks to the previous mechanics.
+Note that if a Pokémon both participated in battle and was holding an Exp. Share—or, in Generation I, the Exp. All is in the Bag—they actually receive experience both from participating in battle and from Exp. Share/Exp. All. Therefore, to arrive at their total experience gained, the formula must be evaluated both for a Pokémon that battled and for one that was holding Exp. Share, and those results must be summed. This does not apply in Generation VI or later, as Exp. Share works differently in those games. Up to Generation V, the result is rounded down after each multiplier. From Generation V onward, the result is subject to standard rounding after each multiplier, rounding down at 0.5, unless specified otherwise. However, the calculations for the base EXP (minus the scaling factor, in the scaled formula) are rounded down (integer divisions).
+The flat formula in the first four generations is ΔEXP=b×L7×1s×e×a×t.
+The flat formula in Generation VI is ΔEXP=b×L7×a×1s×t×e×v×f×p.
+The scaled formula in Generation V is ΔEXP=(b×L5×a×1s×(⌊2L+10×(2L+10)2⌋⌊L+Lp+10×(L+Lp+10)2⌋)+1)×t×e×p, where each square root is rounded to the nearest multiple of 1/4096, subject to standard rounding, rounding up at 0.5. In Black 2 and White 2 only, if a Pokémon would gain more than 100,000 experience at once, it instead gains exactly 100,000 experience.
+The scaled formula in Generation VII onward is ΔEXP=(b×L5×1s×(2L+10L+Lp+10)2.5+1)×t×e×v×f×p.
+Where:
+
+a is equal to...
+1.5 if the fainted Pokémon is owned by a Trainer
+1 otherwise
+b is the base experience yield of the fainted Pokémon's species; values for the current Generation are listed here
+e is equal to...
+1.5 if the winning Pokémon is holding a Lucky Egg
+1 otherwise
+f is equal to...
+4915/4096 (~1.2) if the Pokémon has an Affection of two hearts or moreGen VI-/100 or higher friendship/220 or higher friendship onward; in Generation VI only, the multiplier is exactly 1.2, and the result is rounded down
+1 otherwise
+L is the level of the fainted/caughtGen VI+ Pokémon
+Lp is the level of the victorious Pokémon
+p is equal to...
+1 if no Exp. Point Power or other boost (Pass PowerGen V, O-PowerGen VI, Rotom Power, Exp. Charm) is active (this is rounded down to the nearest integer after multiplying):
+If an Exp. Point Power is active...
+0.5 for ↓↓↓, 0.66 for ↓↓, 0.8 for ↓, 1.2 for ↑, 1.5 for ↑↑, or 2 for ↑↑↑, S, or MAX
+1.5 for Roto Exp. Points or the Exp. Charm
+s is equal to...
+In Generation I...
+If Exp. All is not in the player's Bag...
+The number of Pokémon that participated in the battle and have not fainted
+If Exp. All is in the player's Bag...
+Twice the number of Pokémon that participated and have not fainted, when calculating the experience of a Pokémon that participated in battle
+Twice the number of Pokémon that participated and have not fainted times the number of Pokémon in the player's party, when calculating the experience given by Exp. All
+From Generations II to V...
+If no Pokémon in the party is holding an Exp. Share...
+The number of Pokémon that participated in the battle and have not fainted
+If at least one Pokémon in the party is holding an Exp. Share...
+Twice the number of Pokémon that participated and have not fainted, when calculating the experience of a Pokémon that participated in battle
+Twice the number of Pokémon holding an Exp. Share, when calculating the experience of a Pokémon holding Exp. Share
+In Generation VI and later...
+1 when calculating the experience of a Pokémon that participated in battle
+2 when calculating the experience of a Pokémon that did not participate in battle and if Exp. Share is turned on
+t is equal to...
+1 if the winning Pokémon's current owner is its Original Trainer
+1.5 if the Pokémon is an outsider Pokémon (i.e. its current owner is not its Original Trainer)
+Generation IV+ only: 1.7 if the Pokémon is an outsider Pokémon and has a different language of origin (in Generation V+, this is instead approximated very closely as 6963/4096)
+v is equal to...
+Generation VI+ only: 4915/4096 (~1.2) if the winning Pokémon is at or past the level where it would be able to evolve, but it has not
+1 otherwise
+
+
+===== Example (Generations II to IV) =====
+In an English game, an originally owned Skitty holding a Lucky Egg and a French outsider Meowth have just defeated a Level 78 Trainer-owned Garchomp, with an originally owned Salamence in the winner's party holding an Exp. Share.
+The base experience yield of a Garchomp is 218, meaning that a Level 78 Garchomp will normally yield 2429 experience points.
+Since the Exp. Share in is effect, half the experience points are given to the battling Pokémon, which is halved again due to being split between Skitty and Meowth, so each starts with 607. The Lucky Egg and Trainer battle bonus boost apply 1.5× multipliers, earning the Skitty 1365 experience points. Meowth gets a 1.5× Trainer battle bonus, and then a 1.7× inter-language outsider bonus, earning it 1547 experience points.
+Lastly, the Exp. Share gives the remaining half of the initial experience points to the Salamence, which is 1214 experience points, boosted to 1821 with the 1.5× Trainer battle bonus.
+
+
+===== Example (Generation V) =====
+In an English game, a level 55 Japanese Venusaur has just defeated a wild, level 62 Zekrom.
+The base experience yield of Zekrom is 306, meaning that a level 62 Zekrom will normally yield 3794 experience points, when defeated by another Pokémon at level 62. However, this Venusaur is at level 55, meaning that it will yield 4338 experience points. The constant of 1 is added, giving 4339, and the inter-language outsider bonus multiplies this by (roughly) 1.7, meaning that this Zekrom will yield a total of 7376 experience points.
+
+
+==== Bonus multipliers ====
+In Pokémon: Let's Go, Pikachu! and Let's Go, Eevee!, the bonus multipliers mechanic is introduced, which provide more experience to the player's Pokémon based on how a wild Pokémon was captured. The bonus multipliers, in addition, stack on top of the ×1.5 multiplier for traded Pokémon and the ×1.2 for Pokémon with high friendship.
+
+
+==== Apparent Exp. All programming error in Generation I ====
+In Generation I, the behavior of Exp. All seems to be coded wrong. Presumably, Exp. All is intended to apportion half of the total battle experience for distribution among the Pokémon that battled and half for distribution among the party members. However, the portion distributed among party members is instead equal to the experience that one battling Pokémon received.
+This works correctly if only one Pokémon battles while the Exp. All is in the player's bag. For example, if one Pokémon out of a party of five battles, then the battler will get 50% of the experience and all five party members will also split 50%, each getting 10% of the total experience, adding up to 100%.
+However, some battle experience will be lost if multiple Pokémon are sent into one battle. For example, if two Pokémon out of a party of five battle, then the battlers will each get 25% of the experience. All five party members will then also split 25%, each getting 5% of the experience, adding up to only 75%, with the remaining 25% of the experience lost. Experience that would go to a fainted Pokémon is also lost. If two of the five Pokémon are fainted, the remaining three still only get 5% of the split experience each, with the remaining 10% lost (meaning the player has now lost 35% of the total experience for the battle).
+
+
+=== Experience underflow glitch ===
+In Generation I and Generation II, level 1 Pokémon in the Medium Slow group were calculated to have -54 experience points. However, due to the use of unsigned integers, the game interpreted this value as 16,777,162 experience points. If a level 1 Pokémon with negative experience points completed a battle without gaining enough experience points to reach 0 or higher, the game, attempting to determine its level based on the number of experience points it had, would consider it to be at level 245, but it underflows to level 100.
+It is due in part to this bug that no level 1 Pokémon could be found in the wild without abusing a glitch or hacking the game in Generation I and Generation II. It is also partially for this reason that Pokémon hatched from Eggs at level 5 when Eggs were introduced in Generation II (although level 2–4 Pokémon could be found in the wild).
+The glitch was fixed in Generation III, which uses a lookup table, rather than a formula, to determine experience requirements (this is also why the two new functions introduced in that generation are able to be piecewise functions). Despite this, Eggs still hatched at level 5, and the lowest level that Pokémon could be found at in the wild was still level 2. Generation IV finally featured the first instance of legitimate level 1 Pokémon, where Eggs hatch at level 1 and level 1 Pokémon can be found in the wild.
+Additionally, for Generation I, any Pokémon in the Medium Slow group that was deposited in the PC at level 1 will cause the game to freeze upon attempting to withdraw it, causing it to be permanently stuck in the PC due to a glitch.
+
+
+==== Generation I ====
+
+
+==== Generation II ====
+
+
+== In the spin-off games ==
+
+
+=== Pokémon Mystery Dungeon series ===
+ 
+Pokémon may also gain experience in the Pokémon Mystery Dungeon series. After a Pokémon is defeated, each member of the team will gain the full share of experience points. The experience earned is equal to ⌊BaseEXP×(Level−1)10⌋+BaseEXP.
+In Pokémon Mystery Dungeon: Red and Blue Rescue Team and Pokémon Mystery Dungeon: Explorers of Time, Darkness and Sky, if a Pokémon with experience is defeated using only regular attacks or throwing items, the experience gain is only half of the base value (rounded down). If at least one move was successfully used against the foe, or if the foe uses a move that targets itself or other enemy Pokémon, the experience gain is the full base value. If the qualifying attack is part of a linked move, the experience gain becomes 1.5× the base value.
+As with the core series games, Pokémon acquiring enough experience points will level up. The amount needed differs from the core series games, generally being significantly higher, and is defined differently for each Pokémon. For example, Yanma, which requires 1,000,000 experience points to reach level 100 in the core series games, requires 2,165,010 experience points to reach level 100 in Red and Blue Rescue Team. From the Explorers games onward, most Pokémon in the same evolutionary family require the same amount of experience points to level up.
+In the Explorers games, most Pokémon are in the same experience group, subject to a constant multiplier. For example, for any given level, Charmander requires 1.0360948 times the experience that Bulbasaur requires, rounded to the nearest integer. All first partner Pokémon are in this experience group, as are the majority of Pokémon in the game, but certain Pokémon, such as Kecleon and Solrock are not in this group.
+
+If a Pokémon levels up with a Joy Seed or Golden Seed, its EXP will change to the EXP requirement for the new level. If a Pokémon levels down with a Doom Seed, its EXP will change to the number that is one less than the old level's requirement. For example, if a Bulbasaur eats a Doom Seed while at Level 10, it will drop to Level 9 with 1,710 experience points, with only one experience point away from Level 10. 
+Temporary team members, such as job clients and accompanying team members (e.g. Bidoof and Grovyle in the Explorers games), cannot gain experience points. The same applies for guest Pokémon in Pokémon Super Mystery Dungeon and Pokémon Mystery Dungeon: Rescue Team DX, with an exception to Hoopa in the former.
+In Pokémon Mystery Dungeon: Gates to Infinity, all recruited Pokémon receive any EXP that the active party gains, but they will not level up from the accumulated EXP until brought into a dungeon. In Super Mystery Dungeon and Rescue Team DX, all recruited Pokémon receive any EXP that the active party gains. They will not automatically learn new moves this way.
+
+
+=== Pokémon Ranger series ===
+In the Pokémon Ranger series, when a Pokémon is successfully captured using the Styler, the Styler will gain experience points, and a certain number of experience points will cause the Styler to level up. However, each Pokémon of the same species will yield exactly the same amount of experience points, as there is no concept of level in the Ranger games.
+In Pokémon Ranger: Shadows of Almia, certain bonuses can be applied to the experience points gained under certain conditions, such as if the capture was made using only one line, or multiple Pokémon were captured at once.
+
+
+=== Pokémon Shuffle ===
+
+Pokémon in Pokémon Shuffle gain experience when they are used as a Support Pokémon to play a stage. Typically, main stages grant experience equal to the number of moves they allow the player to make, Expert Stages grant 10 experience, and special stages grant 5 experience. If the player runs out of moves or time, experience is only awarded in proportion with the damage done to the opponent's HP (for example, depleting 20% of its HP would translate to 20% of the normal experience). If the stage is cleared, the Support Pokémon whose icons were cleared most (identified by a crown on its head) receives twice as much experience.
+The item  Exp. Points ×1.5 can increase the experience Pokémon earn from a single stage, while the Enhancement Exp. Booster ( S,  M, or  L) can directly increase a Pokémon's experience (by 50, 200, or 1,000 respectively).
+Additionally, using a  Level Up will grant just enough experience for a Pokémon to reach the next level, without any extra experience carried over.
+
+The amount of experience each Pokémon needs to level up depends on the Attack power it has at Level 1. The table below details the required experience for each level, based on a Pokémon's Level 1 Attack power.
+By default, a Pokémon has a level cap of 10. To reach levels higher than this, the Pokémon must use a  Raise Max Level item to unlock each additional level. Each Pokémon has its own limit to how many Raise Max Levels it can use, varying from 5 to 20.
+
+For a list of all Pokémon with their attack power, as well as their Raise Max Level limits, see List of Pokémon by Pokémon Shuffle list number.
+The experience required to advance from any level to the next can be written as a multiple of the experience required for advancing from Level 1 to Level 2, with multiples for the same level being the same across the experience groups.
+
+
+=== Pokémon GO ===
+Main article: Trainer level
+
+In Pokémon GO, the player earns experience (abbreviated XP), rather than the Pokémon. As the player gains experience they gain levels. Leveling up awards the player with items, and certain levels unlock particular items. After reaching level 5, the player can choose a team, which allows them to use Gyms.
+Pokémon can be strengthened by powering up, which is the equivalent to raising their levels in the core series. Rather than by battling, this is done using Stardust and Candy.
+
+
+=== Pokémon Masters EX ===
+
+In Pokémon Masters EX, sync pairs gain experience either by battling or by using Level-Up Manuals. The amount of experience required is typically the same between all sync pairs, with two exceptions:
+
+Sync pairs obtained through Legendary events/Legendary Adventures, with the exception of  Professor Sycamore  & Xerneas, require significantly more experience to level up than normal.
+Egg sync pairs, involving Scottie/Bettie and Pokémon hatched through Eggs, require significantly less experience than normal.
+
+
+=== Pokémon Pinball series ===
+In Pokémon Pinball and Pokémon Pinball: Ruby & Sapphire, the player gets three "Ex" (experience) symbols in order to evolve a Pokémon that would normally evolve by level in the core series games.
+In Pokémon Pinball, the player is also able to "evolve" a Pokémon that has no actual known Evolution, in which case the player gets three "Ex" symbols and completes the Evolution as usual, but this does not change the Pokémon's appearance.
+
+
+==== Gallery ====
+
+
+== Trivia ==
+In Generation I and Generation II, the games will still say how many experience points a Pokémon would have gained, even if the Pokémon is already Level 100 and cannot gain any more experience.
+As of Generation IX, the Pokémon with the highest base experience yield is Blissey, with a yield of 635. The Pokémon with the lowest base experience yields are Sunkern and Blipbug, both with yields of 36.
+Before Generation V, the Pokémon with the lowest base experience yield was Magikarp with a yield of 20, and the Pokémon with the highest base experience yields were Arceus, Happiny, Chansey, and Blissey, with a yield of 255.
+In Black and White only, the Pokémon with the lowest base experience yield were Snivy, Tepig, and Oshawott with a yield of 28. This was done specifically for the first two battles of the games, so the player's first partner Pokémon would not level up after defeating Bianca and thus have a level advantage over Cheren. From Pokémon Black 2 and White 2 onward, their base experience yields were raised to 62 to bring them in line with the other first partner Pokémon in the series.
+The highest possible number of experience points that can legally be gained at one time from knocking Pokémon out in any game is 286,980. This can be done by simultaneously defeating three level 100 Blissey in a Trainer battle that's set up as a Triple Battle in a Secret Base in Omega Ruby or Alpha Sapphire, with Exp. Point O-Power Lv. 3 active, and having a different language, outsider, unevolved Pokémon that is at or beyond the level it normally evolves, with at least two Affection hearts and holding a Lucky Egg, participate in the battle without fainting. For the Pokémon with the lowest Evolution level (Caterpie, Weedle, and Wurmple), this would cause them to level up from 7 to 65.
+Theoretically, the highest amount of experience points that could be gained all at once is 573,932. This would be achieved by, in Sword and Shield, simultaneously knocking out two level 100 Blissey with a level 1 different language, outsider Pokémon holding a Lucky Egg and with 220 or more friendship, all with the Exp. Charm in the bag. For a Pokémon in the Erratic experience group, this would bring it from level 1 to 97.
+The lowest possible number of experience points for a single Pokémon to obtain in a single battle is one. This can be done in Generation V by defeating a wild level 1 Patrat, Purrloin, or any other Pokémon with a base experience yield lower than 100, using a level 99 Pokémon.
+Before Generation V, this could be done by defeating a wild level 1 Magikarp and splitting the experience points between two or more battling Pokémon.
+The Medium Fast experience group is the only group not to have either the highest or the lowest total experience requirement at any level, being bounded by the Slow and Fast functions. The Medium Slow group is the only one to have both the highest and the lowest total experience requirement in at least one level before level 50.
+In the early levels, Medium Slow and Fluctuating have very similar EXP requirements, being within 5% of each other for levels 10 through 26, inclusively.
+In Generation IV, if a Pokémon is at least 7/8 of the way to its next level, its Poké Ball on the battle interface will shake from time to time.
+Starting in Generation V, there are Legendary Pokémon the player must capture to progress the story. Defeating these Pokémon does not award experience.
+In Black and White, defeating Reshiram or Zekrom does not yield experience, even if it is knocked out at Dragonspiral Tower due to having a full party and Boxes upon initial encounter.
+In Pokémon X and Y, defeating Xerneas or Yveltal at Team Flare Secret HQ does not yield experience.
+In Pokémon Omega Ruby and Alpha Sapphire, defeating Rayquaza at Sky Pillar during the Delta Episode does not yield experience.
+In Pokémon Sun and Moon, defeating Solgaleo or Lunala at the Altar of the Sunne or Altar of the Moone does not yield experience.
+In Pokémon Sword and Shield, out of the three, no battle with Eternatus yields experience.
+However, the second battle remains unfinished, as Zacian and Zamazenta interrupt the battle, leading to a Max Raid Battle, which does not grant experience.
+In Generation I, it is possible to receive zero experience points. This is done by having six Pokémon in the party and fighting a level 2 Pokémon with the Exp. All in the bag. When the battle ends, the experience given to the other participants will be zero.
+Generations I and II have two unused experience groups:
+The first group's (“Slightly Fast”) total experience at level n is equal to 3n34+10n2−30. It requires 849,970 experience to reach level 100.
+The second group's (“Slightly Slow”) total experience at level n is equal to 3n34+20n2−70. It requires 949,930 experience to reach level 100.
+It is possible, with the scaled experience formula, to receive less experience points than expected. This is since, to apply the scaling factor, the game internally calculates a numerator, multiplies the base EXP (potentially itself modified by the Trainer battle bonus in Gen V) by it, then calculates a denominator and divides the result by it and rounds down, adding 1 after doing so. When multiplying by the numerator, if the result is greater than 4,294,967,295 (the highest value that can be stored in an unsigned four byte integer), it will overflow, since the operation only uses four bytes max. For instance, a level 84 Blissey will have the result overflow to a considerably lower value, so much that it will only give 54 experience points if knocked out by a level 84 Pokémon. This is only possible via hacks/modding, however; the highest value this result could be legitimately (against Nurse Carol's level 67 Blissey in Pokémon Black 2 and White 2 in Challenge Mode) is only just barely greater than 3 billion, not enough to trigger the overflow.
+
+
+== Related articles ==
+List of Pokémon by effort value yield
+List of Pokémon by experience type
+
+
+== In other languages ==
+
+
+== References ==
+
+
+== External links ==
+Pokémon Mystery Dungeon: Explorers of Sky Level Stats and Experience Guide

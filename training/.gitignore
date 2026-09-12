@@ -1,0 +1,6 @@
+# Rebuildable from the scripts plus the cached Bulbapedia text, and far too
+# large to keep in the repository.  The shipped models live in
+# ../pokemon_observer_ai/brains/.
+corpus/
+out/
+__pycache__/

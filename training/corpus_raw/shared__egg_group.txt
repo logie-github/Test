@@ -1,0 +1,57 @@
+An Egg Group (Japanese: タマゴグループ Egg Group), capitalized as Egg group in Pokémon Stadium 2, is a category which determines which Pokémon are able to interbreed. The concept was introduced in Generation II, along with breeding. Similar to types, a Pokémon may belong to either one or two Egg Groups.
+
+
+== Overview ==
+Egg Groups are based on biological traits of Pokémon species, generally allowing biologically similar species to breed. However, there are some oddities within Egg Groups: for example, the Field Group contains a particularly wide variety of Pokémon species, so that seemingly illogical pairings can be noted within it, such as Skitty and Wailord.
+Egg Groups are generally preserved along evolutionary lines; however, baby Pokémon, Nidorina, Nidoqueen, and Shedinja are not in the same group as their evolutionary relatives: baby Pokémon, Nidorina and Nidoqueen are in the No Eggs Discovered Group and thus unable to breed, while Shedinja is in the Mineral Group (although it requires Ditto to breed due to being a gender-unknown Pokémon).
+Egg Groups are not displayed in any core series game; however, they have been canonically mentioned in Pokémon Stadium 2 as a part of Earl Dervish's Pokémon Academy's extensive data banks, in Pokédex 3D, and in various strategy guides.
+
+
+== Breeding chains ==
+Many Pokémon are included in two different Egg Groups and can form what are known as breeding chains. These link many unrelated Pokémon together, allowing moves that would not normally be accessible to certain Pokémon to be legal, like Heal Bell on Blissey.
+TMs are also passed down through breeding from the father. Any move in the father's current moveset that can be learned via TM, Egg Move, or Move Tutor (in Crystal) will be passed down to the Pokémon hatching from the Egg.
+
+
+=== Combinations ===
+The Ditto and No Eggs Discovered Groups are unique in terms of combination, being the only Egg Groups unable to breed with themselves. The Ditto Group can breed with any group (other than itself and No Eggs Discovered) and the No Eggs Discovered Group cannot breed with any Pokémon, neither with itself nor with Ditto.
+In the Generation II, when the Egg Groups were introduced, most of the remaining groups were connected and could allow direct crossbreeding and passing down moves to other groups with exception of Amorphous, Mineral, and Human-Like. All three groups became connected starting from Generation III.
+The number indicates the generation in which two Egg Groups were directly connected through a Pokémon.
+
+
+== Egg Groups ==
+This is a list of Egg Groups by their index number in the games:
+
+Monster Group: Pokémon in this group are saurian/kaiju-like in appearance and nature.
+Water 1 Group: Pokémon in this group are amphibious in nature.
+Bug Group: Pokémon in this group are insectoid (bug-like) in appearance.
+Flying Group: Pokémon in this group are avian (birdlike) in appearance.
+Field Group: The largest group, Pokémon here are terrestrial in nature. In Stadium 2, this Egg Group was known as "Ground".
+Fairy Group: Pokémon in this group are petite and considered very cute.
+Grass Group: Pokémon in this group are plantlike in appearance. In Stadium 2, this Egg Group was known as "Plant".
+Human-Like Group: Pokémon in this group are fully bipedal humanoids. In Stadium 2, this Egg Group was known as "Humanshape".
+Water 3 Group: Pokémon in this group resemble aquatic invertebrates.
+Mineral Group: Pokémon in this group are inorganic in nature.
+Amorphous Group: Pokémon in this group are amorphous, having no definite form. In Stadium 2, this Egg Group was known as "Indeterminate".
+Water 2 Group: Pokémon in this group are piscine (fishlike) in appearance.
+Ditto Group: As the name implies, Ditto is the only Pokémon in this group, and is capable of breeding with all other Pokémon (regardless of gender) aside from those in the No Eggs Discovered and Ditto groups.
+Dragon Group: Pokémon in this group are reptilian or draconic in appearance.
+No Eggs Discovered Group: Pokémon in this group are unable to breed. In Stadium 2, this Egg Group was known as "No Eggs".
+
+
+== Changes ==
+In Generation VIII, several Pokémon that were previously only in one Egg Group gained an additional Egg Group.
+
+
+== In other languages ==
+
+
+=== Notes ===
+
+
+== Related articles ==
+Pokémon breeding
+Pokémon Egg
+List of Pokémon by Egg Group/Egg cycles
+
+
+== References ==

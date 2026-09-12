@@ -1,0 +1,180 @@
+A Pokémon Day Care (Japanese: ポケモン育て屋 Pokémon Breeding House), known as Daycare and Day-Care in early generations, is a place for Pokémon Trainers to drop off their Pokémon to be raised in the care of other people. Most locations are staffed by a Day-Care Couple, but some are only staffed by a Day-Care Man and one is staffed by the Day Care Lad and his older sister. Pokémon in Day Care gain one experience point per step the player takes. Where it is possible to leave two Pokémon, it is also possible for them to breed and produce Eggs.
+The Pokémon Day Care was removed after Generation VI. In Generations VII and VIII, the Pokémon Nursery replaces it for breeding, while Isle Evelup in Poké Pelago and Poké Jobs, respectively, replace its function of increasing experience and leveling up. In Pokémon Scarlet and Violet, picnics allow for breeding instead.
+
+
+== In the core series games ==
+The player can leave their Pokémon at Pokémon Day Care, where they gain experience over time. At Pokémon Day Care centers that can raise two Pokémon at once, if the player leaves a compatible pair of Pokémon, they will produce a Pokémon Egg in a process known as Pokémon breeding. All Pokémon Day Care centers except those in Kanto and Orre can raise two Pokémon at once, facilitating Pokémon breeding.
+Leaving a Pokémon at the Day Care is free, but withdrawing it will cost $100 plus an additional $100 for each level the Pokémon has gained while in Day Care. Any Pokémon left in the Day Care is completely healed.
+In Pokémon Black and White, the Pokémon Day Care will initially only raise one Pokémon at a time; two Pokémon may be left after the player has received the Bicycle in Nimbasa City. In Pokémon Black 2 and White 2, the Pokémon Day Care is not accessible until the player has entered the Hall of Fame, as Skyarrow Bridge is blocked until the player has completed the game.
+
+
+=== Experience ===
+Pokémon left in the Day Care gain one experience point per step walked by the player. As they level up in the Day Care, Pokémon will not undergo Evolution. If a Pokémon reaches a level where it can learn a new move, it will always learn that move; if the Pokémon already knows four moves, all of its moves will be shifted up one move slot, so that it forgets its earliest known move, and the newly learned move is placed last. From Generation II onward, a Pokémon may even forget HM moves this way; in Generation I, the player cannot deposit Pokémon that know HM moves in Pokémon Day Care.
+In Generation II only, when a Pokémon is taken out of the Day Care, its experience will lower to the minimum value for its current level. Therefore, if a Pokémon with more than the minimum amount for its level is deposited in the Day Care, and it is then withdrawn before it gains enough experience to level up, then it will effectively lose experience points in the Day Care.
+In Pokémon Colosseum, if a Shadow Pokémon is left at the Day Care, it will gradually be purified. In Pokémon XD, however, Shadow Pokémon can no longer be left at the Day Care.
+
+
+=== Step counting ===
+
+
+==== Generation I ====
+In Generation I, going through a door, a cave entrance, stairs, a ladder, a hole in the ground, or a teleport tile, jumping over a ledge, walking automatically as part of an in-game event or as a result of stepping on a certain tile, or turning around without moving do not count as regular steps. The Pokémon deposited on the Day Care gains no experience as a result of those actions.
+If the player uses Surf from the party menu (going from land to water, or from water to land), this does not count as a step either. However, if the player moves directly from water to land, this counts as a regular step, causing the deposited Pokémon to gain experience.
+
+
+=== Breeding ===
+Main article: Pokémon breeding
+If the player leaves two Pokémon of opposite genders and have an Egg Group in common at a Day Care, or any Pokémon that can breed and a Ditto, an Egg may be produced. 
+This does not occur in Generation I, Pokémon Colosseum, Pokémon XD: Gale of Darkness, or Pokémon Let's Go, Pikachu! and Let's Go, Eevee!, as Eggs cannot legitimately exist in these games.
+
+
+=== Item rewards ===
+In Pokémon Let's Go, Pikachu! and Let's Go, Eevee!, leaving Pokémon in the Day Care will not produce Eggs, but based on the number of steps the player travels after depositing a Pokémon, they will receive different item rewards when the Pokémon is retrieved, in addition to any experience gained by the Pokémon:
+
+500 Steps
+
+1500 Steps
+
+3000 Steps
+
+5000 Steps
+
+8000 Steps
+
+
+=== Locations ===
+
+
+=== Gallery ===
+
+
+==== Outside ====
+
+		
+			
+			
+		
+
+
+==== Inside ====
+
+		
+			
+			
+		
+		
+			
+			
+		
+		
+			
+			
+		
+		
+			
+			
+		
+		
+			
+			
+		
+		
+			
+			
+		
+		
+			
+			
+		
+		
+			
+			
+		
+		
+			
+			
+		
+		
+			
+			
+		
+		
+			
+			
+		
+		
+			
+			
+		
+		
+			
+			
+		
+		
+			
+			
+		
+
+
+== In the spin-off games ==
+
+
+=== Super Smash Bros. Brawl ===
+In Super Smash Bros. Brawl, the Pokémon Day Care is mentioned in Manaphy's trophy.
+
+
+== In animation ==
+
+Several Pokémon Day Cares have been shown in the animated series.
+
+Eggseter in Johto
+Appeared in Extreme Pokémon!. Several Day Cares are present in the Eggseter, including one run by Mr. Shellby. These Day Cares are run by Nesters who care for Pokémon Eggs and protect the babies that hatch. Races are held in the town, where winners receive Eggs as prizes. Ash received an Egg by winning a race.
+Near Dewford Town in Hoenn
+Appeared in A Mudkip Mission. This Day Care is run by Old Man Swamp who raises only Mudkip. The Day Care receives Mudkip Eggs from the Pokémon League and raises them to be first partner Pokémon.
+Near Saffron City in Kanto
+Appeared in May's Egg-Cellent Adventure. It is run by Christopher and Jeannie, along with their daughter. May received an Egg from this Day Care center.
+Solaceon Town in Sinnoh
+Appeared in If the Scarf Fits, Wear It!. It is owned by Angie's parents.
+Near Nacrene City in Unova
+Appeared in Here Comes the Trubbish Squad!. It is owned by Karena. Ash received an Egg from this Day Care center.
+Near Driftveil City in Unova
+Appeared in The Lonely Deino!. This Day Care is owned by Bobby.
+Near Humilau City in Unova
+Appeared in Unrest at the Nursery!. It is owned by a Principal and Layla.
+
+
+== In the manga ==
+
+
+=== Pokémon Adventures ===
+
+
+==== Gold, Silver & Crystal arc ====
+The Day-Care Couple debuted in Gligar Glide, where they were visited by Gold. The Day-Care Lady made Gold battle against a group of strong Pokémon, exploiting his desire to train by having him make the Pokémon exercise without her having to do anything. During the training, Gold's Cyndaquil ended up evolving into a Quilava. The Day-Care Couple then gave Gold a King's Rock as a reward for completing the training.
+In Popular Pupitar, Yellow and her uncle Wilton were brought to the Route 34 Day Care to recover after they had almost drowned at the Whirl Islands. Red and Yellow's respective Pikachu, Pika and Chuchu, ended up producing an Egg together, which would later hatch into Gold's Pichu. In The Last Battle VII, the Day Care was attacked by members of Neo Team Rocket, who were after the Rainbow and Silver Wings that Yellow unknowingly had in her possession.
+
+
+==== Platinum arc ====
+In The Final Dimensional Duel XI, the Day-Care Couple was revealed to have moved to Solaceon Town in Sinnoh to run the local Day Care. They helped Diamond, Pearl, and Platinum in taking care of the Manaphy and Phione that they had hatched and told them of a boy they knew who had a special talent of making Eggs hatch.
+
+
+=== Pokémon Gold & Silver: The Golden Boys ===
+In Pokémon Gold & Silver: The Golden Boys, the Day-Care Couple is portrayed as young adults, as opposed to the usual older couple. In Let's Use Fighting Type Pokémon!!, they invited Gold to a tournament at the Goldenrod Game Corner, which was held using rental Pokémon provided by the Day Care.
+In A Huge Mysterious Tree!!, the Day-Care Couple gave Gold a Pokémon Egg.
+
+
+== Trivia ==
+In the internal data of the Generation II games, if a Pokémon with a level lower than 100 is deposited in the Day Care, it will be able to keep gaining experience even after reaching level 100. However, this is not seen in normal gameplay, because the experience of a level 100 Pokémon resets to the expected amount once it is withdrawn from the Day Care.
+In this generation, a Pokémon in the Day Care can have up to 5,308,415 experience points (hexadecimal 0x50ffff) as seen in the internal game data. If the player attempts to raise its experience even higher, it will actually go down to 5,242,880 (hexadecimal 0x500000), because the first byte cannot have a value higher than hexadecimal 50. This ultimately prevents the experience from overflowing all the way down to 0.
+
+
+== In other languages ==
+
+
+== References ==
+
+
+== Related articles ==
+Day-Care Couple
+Pokémon Nursery
+Pokémon breeding
