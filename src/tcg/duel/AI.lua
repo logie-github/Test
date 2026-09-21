@@ -3758,6 +3758,58 @@ function AI:_decideImakuni()
   return status ~= self.c.CONFUSED
 end
 
+-- AIDecide_Gambler:: Imakuni?'s deck has its own 2-in-10 roll (matching the
+-- same idiom used elsewhere, e.g. _decidePokemonFlute/_decideMaintenance).
+-- Every other deck only plays it once wAIBarrierFlagCounter's AI_MEWTWO_MILL
+-- bit is raised by the Mewtwo Lv53 mill detector (not yet implemented
+-- elsewhere in this file) -- until that detector ever sets the bit, this
+-- branch is correctly always false, matching real hardware with the flag
+-- never raised; it needs no changes once the detector lands.
+function AI:_decideGambler()
+  local deckId = self.memory:readSymbol8("wOpponentDeckID")
+  if deckId == self.c.IMAKUNI_DECK_ID then
+    return self.rng:random(10) < 2
+  end
+
+  local flag = bit.band(self.memory:readSymbol8("wAIBarrierFlagCounter"), self.c.AI_MEWTWO_MILL or 0)
+  if flag == 0 then return false end
+
+  local notInDeck = self.duelVars:get(self.c.DUELVARS_NUMBER_OF_CARDS_NOT_IN_DECK)
+  return notInDeck >= self.c.DECK_SIZE - 4
+end
+
+-- AIPlay_Gambler:: for every deck except Imakuni?'s own, GamblerEffect's coin
+-- toss (and the deck reshuffle after it) runs against wRNG1/wRNG2/wRNGCounter
+-- temporarily forced to $50/$50/$50, restored to their real values once the
+-- whole Trainer play completes. This is preserved as the literal mechanical
+-- byte-poke regardless of outcome: verified directly against RNG:update
+-- Sources(), seeding all three to $50 actually yields an odd result (TAILS,
+-- one card drawn) under this game's real RNG algorithm, which contradicts
+-- the source's own comment claiming it forces heads -- the comment appears
+-- to be simply wrong; the mechanical behavior (confirmed by running the
+-- already-verified RNG module, not just derived by hand) is what a real
+-- cartridge actually produces, so that is what is reproduced here.
+function AI:_playGamblerWithRNGCheat(cardId, selection)
+  local deckId = self.memory:readSymbol8("wOpponentDeckID")
+  if deckId == self.c.IMAKUNI_DECK_ID then
+    return self.playerActions:playTrainer(cardId, selection)
+  end
+
+  local rng1 = self.memory:readSymbol8("wRNG1")
+  local rng2 = self.memory:readSymbol8("wRNG2")
+  local counter = self.memory:readSymbol8("wRNGCounter")
+  self.memory:writeSymbol8("wRNG1", 0x50)
+  self.memory:writeSymbol8("wRNG2", 0x50)
+  self.memory:writeSymbol8("wRNGCounter", 0x50)
+
+  local ok, reason = self.playerActions:playTrainer(cardId, selection)
+
+  self.memory:writeSymbol8("wRNG1", rng1)
+  self.memory:writeSymbol8("wRNG2", rng2)
+  self.memory:writeSymbol8("wRNGCounter", counter)
+  return ok, reason
+end
+
 -- AICheckIfAttackIsHighRecoil:: despite the name, the source routine's final
 -- carry (after its `ccf`) means "there IS a usable attack AND it is NOT
 -- flagged High Recoil" -- i.e. a normal, safe attack is available. Every
@@ -4706,13 +4758,20 @@ function AI:_decideTrainer(constantName, phase, currentTrainerDeckIndex)
     return self:_decideLass()
   elseif constantName == "IMAKUNI_CARD" then
     return self:_decideImakuni()
+  elseif constantName == "GAMBLER" then
+    return self:_decideGambler()
   end
   return nil, "untranslated_ai_trainer:" .. constantName
 end
 
 function AI:_playTrainerForAI(constantName, selection, parameter)
   local cardId = self.c[constantName]
-  local ok, reason = self.playerActions:playTrainer(cardId, selection)
+  local ok, reason
+  if constantName == "GAMBLER" then
+    ok, reason = self:_playGamblerWithRNGCheat(cardId, selection)
+  else
+    ok, reason = self.playerActions:playTrainer(cardId, selection)
+  end
   if not ok then return nil, reason end
   if constantName == "SWITCH" then self:_setPreviousAIFlag(self.c.AI_FLAG_USED_SWITCH) end
   if constantName == "GUST_OF_WIND" then self:_setPreviousAIFlag(self.c.AI_FLAG_USED_GUST_OF_WIND) end
@@ -4726,7 +4785,7 @@ function AI:_playTrainerForAI(constantName, selection, parameter)
   end
   if constantName == "MAINTENANCE" or constantName == "ITEM_FINDER"
       or constantName == "ENERGY_RETRIEVAL" or constantName == "SUPER_ENERGY_RETRIEVAL"
-      or constantName == "LASS" then
+      or constantName == "LASS" or constantName == "GAMBLER" then
     self:_setPreviousAIFlag(self.c.AI_FLAG_MODIFIED_HAND)
   end
   return true
@@ -4777,7 +4836,7 @@ function AI:processHandTrainerCards(phase)
         or constantName == "GUST_OF_WIND" or constantName == "POKE_BALL"
         or constantName == "SUPER_POTION" or constantName == "POKEMON_BREEDER"
         or constantName == "IMPOSTER_PROFESSOR_OAK" or constantName == "SCOOP_UP"
-        or constantName == "LASS" or constantName == "IMAKUNI_CARD"
+        or constantName == "LASS" or constantName == "IMAKUNI_CARD" or constantName == "GAMBLER"
       if not supported then return nil, "untranslated_ai_trainer:" .. constantName end
       if self:_chooseRandomlyNotToDoAction() then break end
       local decision, selectionOrErr, parameter =

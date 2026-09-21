@@ -795,7 +795,8 @@
         "ScoopUp_PlayerSelection",
         "ScoopUp_ReturnToHandEffect",
         "LassEffect",
-        "ImakuniEffect"
+        "ImakuniEffect",
+        "GamblerEffect"
       ],
       "target": "src/tcg/duel/EffectCommands.lua",
       "state": "translated",
@@ -1113,6 +1114,16 @@
       ],
       "target": "src/tcg/duel/AI.lua",
       "state": "translated"
+    },
+    {
+      "source": "src/engine/duel/ai/trainer_cards.asm",
+      "labels": [
+        "AIPlay_Gambler",
+        "AIDecide_Gambler"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "The general (non-Imakuni-deck) branch reads wAIBarrierFlagCounter's AI_MEWTWO_MILL bit, which is only ever written by the still-pending InitAITurnVars Mewtwo-mill identification branch (see that entry in behavior_pending.json); until that lands this branch is correctly always false, matching real hardware with the flag never raised. AIPlay_Gambler's RNG-forcing byte-poke (wRNG1/wRNG2/wRNGCounter set to $50 for every deck but Imakuni?'s own) is reproduced mechanically; running it through the real RNG module shows it actually yields tails, not the heads the source's own comment claims."
     }
   ]
 }

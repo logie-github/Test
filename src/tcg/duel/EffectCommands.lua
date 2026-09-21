@@ -1294,6 +1294,50 @@ function EffectCommands:_installSharedHandlers()
     return false
   end)
 
+  -- Gambler tosses a coin, discards itself, shuffles the WHOLE remaining
+  -- hand into the deck (every card, not just Trainers -- unlike Lass), then
+  -- draws 8 on heads or 1 on tails. Against every deck but Imakuni?'s own,
+  -- the AI plays this with wRNG1/wRNG2/wRNGCounter forced by
+  -- _playGamblerWithRNGCheat before this effect runs, so the coin toss below
+  -- consumes that forced state.
+  self:register("GamblerEffect", function(s, context)
+    local a = context.playerActions
+    if not a then return nil, "effect_context_missing_player_actions" end
+
+    local result, tossErr = s.setup:tossCoin()
+    if result == nil then return nil, tossErr end
+    local heads = result == s.c.HEADS
+
+    local playedDeckIndex = a.memory:readSymbol8("hTempCardIndex_ff9f")
+    a.duelOps:removeCardFromHand(playedDeckIndex)
+    a.duelOps:putCardInDiscardPile(playedDeckIndex)
+
+    a.duelOps:createHandCardList()
+    a.duelOps:sortCardsInDuelTempListByID()
+    local base, bank = a.memory:address("wDuelTempList")
+    local pos = 0
+    while true do
+      local deckIndex = a.memory:read8("wram", base + pos, bank)
+      if deckIndex == 0xff then break end
+      a.duelOps:removeCardFromHand(deckIndex)
+      a.duelOps:returnCardToDeck(deckIndex)
+      pos = pos + 1
+    end
+
+    local failed, exchangeErr = a.combat.setup:exchangeRNG()
+    if failed then return nil, exchangeErr end
+    a.duelOps:shuffleDeck()
+
+    local drawCount = heads and 8 or 1
+    for _ = 1, drawCount do
+      local deckIndex, carry = a.duelOps:drawCardFromDeck()
+      if carry then break end
+      a.duelOps:addCardToHand(deckIndex)
+    end
+    s:_event("gambler", { heads = heads, drawCount = drawCount })
+    return false
+  end)
+
   self:register("Potion_DamageCheck", function(s, context)
     local a = context.playerActions
     if not a then return nil, "effect_context_missing_player_actions" end
