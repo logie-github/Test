@@ -211,18 +211,6 @@
       "notes": "Basic placement/evolution and the complete state path for normal/Rain Dance Energy attachment are native; PlayPokemonCard/PlayTrainerCard still omit broad cartridge UI/link presentation and many individual effects."
     },
     {
-      "source": "src/engine/duel/ai/decks/sams_practice.asm",
-      "labels": [
-        "AIPerformScriptedTurn"
-      ],
-      "target": "src/tcg/duel/AI.lua",
-      "state": "partial",
-      "remaining": [
-        "cartridge OppAction/AIMakeDecision presentation and incidental UI state writes"
-      ],
-      "notes": "All seven scripted state/action branches and the source turn-5 comparison bug are implemented for the playable practice slice."
-    },
-    {
       "source": "src/home/substatus.asm",
       "labels": [
         "HandleNoDamageOrEffectSubstatus",

@@ -1434,6 +1434,15 @@
       "target": "src/tcg/duel/AI.lua",
       "state": "translated",
       "notes": "These high-frequency Trainer families make native source-shaped decisions and execute through the translated player-side Trainer effect engine. Every card name AI_TRAINER_PHASES references is covered by AI_TRAINER_SUPPORTED (33/33). The shared random action-skip gate (AI:_chooseRandomlyNotToDoAction) reproduces the source's exact three-tier probability table (0% boss-deck range/post-Legendary-Cards, 50% for the six listed decks, 25% otherwise) and deck-ID boundaries, verified under real LuaJIT execution. Potion/Super-Potion high-recoil and BOOST_IF_TAKEN_DAMAGE interactions are complete for Super Potion; Potion's own simpler heal path never required that branch."
+    },
+    {
+      "source": "src/engine/duel/ai/decks/sams_practice.asm",
+      "labels": [
+        "AIPerformScriptedTurn"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "All seven scripted state/action branches (AIPerformScriptedTurn) and the source's turn-5 deck-index-vs-card-ID comparison bug are native, now verified under real LuaJIT execution turn by turn, including AI:_retreatSamPractice's Raticate-specific retreat-cost quirk (its Arena-holds-Raticate precondition comes from AI:koSwitch's own Sam fallback -- getPlayAreaLocationOfRaticateOrRattata -- firing when the player's attacks knock out the original Arena Machop between Sam's scripted turns, not from Sam's own script). The screen/menu rendering side of AIMakeDecision's cartridge presentation remains untranslated as pure UI, outside the AI decision-making surface this ledger tracks."
     }
   ]
 }
