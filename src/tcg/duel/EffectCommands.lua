@@ -833,6 +833,9 @@ function EffectCommands:_installSharedHandlers()
   end
   self:register("ZubatSupersonicEffect", supersonic)
   self:register("NidorinaSupersonicEffect", supersonic)
+  self:register("LickitungSupersonicEffect", supersonic)
+  self:register("ShellderSupersonicEffect", supersonic)
+  self:register("TentacruelSupersonicEffect", supersonic)
 
   -- Common SUBSTATUS1 families. These are direct translations of the small
   -- wrappers in effect_functions.asm and feed the already-translated common
@@ -2720,6 +2723,87 @@ function EffectCommands:_installSharedHandlers()
     return finish(false)
   end)
 
+  -- Devolution Spray (Trainer): unlike Devolution Beam, only the Turn
+  -- Duelist's own side, and the player may repeat the devolution multiple
+  -- times on the SAME chosen Play Area card in one use (source: a menu loop
+  -- offering "devolve again" vs. "done" after each step, tracked here as a
+  -- single step count rather than re-modeling that loop). Each step reuses
+  -- cardOneStageBelow (the same primitive Devolution Beam uses) and carries
+  -- existing damage forward onto the lower stage's max HP, then the source
+  -- explicitly runs HandleDestinyBondAndBetweenTurnKnockOuts itself (Trainer
+  -- cards, unlike attacks, don't fall through a shared AFTER_DAMAGE/KO
+  -- pipeline) -- reusing the same combat.status:handleDestinyBondSubstatus/
+  -- combat.knockouts:handlePendingResolution pair Curse's own damage-
+  -- transfer effect already calls for the identical reason.
+  self:register("DevolutionSpray_PlayAreaEvolutionCheck", function(s, context)
+    local actor = s:_actor(context)
+    if not actor then return nil, "effect_context_missing_actor" end
+    local count = actor.duelVars:get(s.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+    for slot = 0, count - 1 do
+      local deckIndex = actor.duelVars:get(s.c.DUELVARS_ARENA_CARD + slot)
+      if deckIndex ~= 0xff then
+        local row = actor.cardData:get(actor.cardData:getCardIDFromDeckIndex(deckIndex))
+        if row and row.stage ~= s.c.BASIC then return false end
+      end
+    end
+    return true
+  end)
+  self:register("DevolutionSpray_PlayerSelection", function(s, context)
+    local actor = s:_actor(context)
+    if not actor then return nil, "effect_context_missing_actor" end
+    local slot, err = s:_selectPlayArea(context)
+    if slot == nil then return nil, err end
+    local count = actor.duelVars:get(s.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+    if type(slot) ~= "number" or slot < s.c.PLAY_AREA_ARENA or slot >= count
+        or actor.duelVars:get(s.c.DUELVARS_ARENA_CARD + slot) == 0xff
+        or actor.duelVars:get(s.c.DUELVARS_ARENA_CARD_STAGE + slot) == s.c.BASIC then
+      return nil, "invalid_selection:devolutionPlayArea"
+    end
+    local steps, stepsErr = s:_selection(context, "devolutionSteps", "selectDevolutionSteps",
+      { playArea = slot })
+    if steps == nil then return nil, stepsErr end
+    if type(steps) ~= "number" or steps < 1 then
+      return nil, "invalid_selection:devolutionSteps"
+    end
+    context.effectState = context.effectState or {}
+    context.effectState.devolutionPlayArea = slot
+    context.effectState.devolutionSteps = steps
+    return false
+  end)
+  self:register("DevolutionSpray_DevolutionEffect", function(s, context)
+    local actor = s:_actor(context)
+    if not actor then return nil, "effect_context_missing_actor" end
+    local st = context.effectState or {}
+    local slot = st.devolutionPlayArea
+    local steps = st.devolutionSteps or 0
+    if slot == nil then return nil, "effect_context_missing_devolution_selection" end
+    s.memory:writeSymbol8("hTempPlayAreaLocation_ff9d", slot)
+    for _ = 1, steps do
+      local lower, lowerErr = cardOneStageBelow(s, actor, slot)
+      if lower == nil then return nil, lowerErr end
+      local oldDeckIndex = actor.duelVars:get(s.c.DUELVARS_ARENA_CARD + slot)
+      local oldId = actor.cardData:getCardIDFromDeckIndex(oldDeckIndex)
+      local old = actor.cardData:get(oldId)
+      local lowerId = actor.cardData:getCardIDFromDeckIndex(lower)
+      local lowerRow = actor.cardData:get(lowerId)
+      if not old or not lowerRow then return nil, "missing_card_data" end
+      local remaining = actor.duelVars:get(s.c.DUELVARS_ARENA_CARD_HP + slot)
+      local damage = math.max(0, (old.hp or 0) - remaining)
+      actor.duelVars:set(s.c.DUELVARS_ARENA_CARD + slot, lower)
+      actor.duelVars:set(s.c.DUELVARS_ARENA_CARD_HP + slot, math.max(0, lowerRow.hp - damage))
+      actor.duelVars:set(s.c.DUELVARS_ARENA_CARD_STAGE + slot, lowerRow.stage)
+      actor.duelOps:putCardInDiscardPile(oldDeckIndex)
+    end
+    if slot == s.c.PLAY_AREA_ARENA then actor.duelOps:clearAllStatusConditions() end
+    local combat = context.combat
+    if combat then
+      combat.status:handleDestinyBondSubstatus()
+      local finished, koErr = combat.knockouts:handlePendingResolution()
+      if koErr then return nil, koErr end
+      context.powerEndedDuel = finished == true
+    end
+    return false
+  end)
 
   -- Final AI-selection families. These preserve source quirks rather than
   -- normalizing them: Metronome's AI selector is a literal no-op, Prophecy's
