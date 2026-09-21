@@ -3843,6 +3843,29 @@ function AI:_decideComputerSearch()
   return false
 end
 
+-- AIDecide_PokemonTrader:: has no deck-agnostic path at all -- every one of
+-- the ten decks that can ever play this card (Legendary Moltres/Articuno/
+-- Dragonite/Ronald, Blistering Pokemon, Sound of the Waves, Power
+-- Generator, Flower Garden, Strange Power, Flamethrower) dispatches to its
+-- own dedicated card-search routine, and every other deck never plays it
+-- at all (a straight `or a; ret`). Those ten routines remain their own
+-- tracked pending gap rather than being approximated.
+local POKEMON_TRADER_SPECIAL_DECKS = {
+  "LEGENDARY_MOLTRES_DECK_ID", "LEGENDARY_ARTICUNO_DECK_ID", "LEGENDARY_DRAGONITE_DECK_ID",
+  "LEGENDARY_RONALD_DECK_ID", "BLISTERING_POKEMON_DECK_ID", "SOUND_OF_THE_WAVES_DECK_ID",
+  "POWER_GENERATOR_DECK_ID", "FLOWER_GARDEN_DECK_ID", "STRANGE_POWER_DECK_ID",
+  "FLAMETHROWER_DECK_ID",
+}
+function AI:_decidePokemonTrader()
+  local deckId = self.memory:readSymbol8("wOpponentDeckID")
+  for _, name in ipairs(POKEMON_TRADER_SPECIAL_DECKS) do
+    if self.c[name] and deckId == self.c[name] then
+      return nil, "untranslated_ai_pokemon_trader_special_deck"
+    end
+  end
+  return false
+end
+
 -- AICheckIfAttackIsHighRecoil:: despite the name, the source routine's final
 -- carry (after its `ccf`) means "there IS a usable attack AND it is NOT
 -- flagged High Recoil" -- i.e. a normal, safe attack is available. Every
@@ -4797,6 +4820,8 @@ function AI:_decideTrainer(constantName, phase, currentTrainerDeckIndex)
     return self:_decideClefairyDollOrMysteriousFossil()
   elseif constantName == "COMPUTER_SEARCH" then
     return self:_decideComputerSearch()
+  elseif constantName == "POKEMON_TRADER" then
+    return self:_decidePokemonTrader()
   end
   return nil, "untranslated_ai_trainer:" .. constantName
 end
@@ -4875,7 +4900,7 @@ function AI:processHandTrainerCards(phase)
         or constantName == "IMPOSTER_PROFESSOR_OAK" or constantName == "SCOOP_UP"
         or constantName == "LASS" or constantName == "IMAKUNI_CARD" or constantName == "GAMBLER"
         or constantName == "CLEFAIRY_DOLL" or constantName == "MYSTERIOUS_FOSSIL"
-        or constantName == "COMPUTER_SEARCH"
+        or constantName == "COMPUTER_SEARCH" or constantName == "POKEMON_TRADER"
       if not supported then return nil, "untranslated_ai_trainer:" .. constantName end
       if self:_chooseRandomlyNotToDoAction() then break end
       local decision, selectionOrErr, parameter =
