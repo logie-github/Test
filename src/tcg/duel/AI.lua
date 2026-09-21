@@ -4454,21 +4454,124 @@ function AI:_decideProfessorOak()
   return score >= 60
 end
 
+-- LookForEnergyNeededForAttackInHand:: true if the specific Energy the
+-- attack still needs (a single colored card, a single colorless card, or
+-- Double Colorless Energy for exactly two remaining colorless) is sitting
+-- in the (current turn duelist's) hand.
+function AI:_lookForEnergyNeededForAttackInHand(slot, attackIndex)
+  local need = self:checkEnergyNeededForAttack(slot, attackIndex)
+  if need == nil then return false end
+  local total = need.colored + need.colorless
+  if total == 1 then
+    if need.colored ~= 0 then
+      return self:_findCardIDInHand(need.energyCardId) ~= nil
+    end
+    return #self:_energyCardsInHand() > 0
+  elseif total == 2 and need.colorless == 2 then
+    return self:_findCardIDInHand(self.c.DOUBLE_COLORLESS_ENERGY) ~= nil
+  end
+  return false
+end
+
+-- CheckIfNotEnoughEnergyToAttack:: true when neither attack currently has
+-- enough Energy, or the second attack has enough but with surplus Energy
+-- beyond its printed cost (stripping one Energy card wouldn't actually
+-- disable an attack that has energy to spare).
+function AI:_checkIfNotEnoughEnergyToAttack(slot)
+  local need1 = self:checkEnergyNeededForAttack(slot, self.c.FIRST_ATTACK_OR_PKMN_POWER)
+  if need1 and need1.enough then return false end
+  local need2 = self:checkEnergyNeededForAttack(slot, self.c.SECOND_ATTACK)
+  if not (need2 and need2.enough) then return true end
+  local surplus = self:_surplusEnergyForAttack(slot, self.c.SECOND_ATTACK)
+  return surplus ~= nil
+end
+
+-- .FindHighestDamagingAttack local from AIDecide_EnergyRemoval:: best of
+-- both attacks' damage estimate for a Bench slot, ignoring usability
+-- entirely (matches EstimateDamage_VersusDefendingCard's own usability-
+-- blind behavior, same as _estimatePotentialKO's ignoreUsability use).
+function AI:_findHighestDamagingBenchAttack(slot)
+  local best = 0
+  for _, attackIndex in ipairs({self.c.FIRST_ATTACK_OR_PKMN_POWER, self.c.SECOND_ATTACK}) do
+    local estimate, err = self:_estimateDamageFromPlayArea(slot, attackIndex, { ignoreUsability = true })
+    if not estimate then return nil, err end
+    if estimate.damage > best then best = estimate.damage end
+  end
+  return best
+end
+
+-- AIDecide_EnergyRemoval:: picks a target in the Player's Play Area to
+-- strip an Energy card from.
+--
+-- First, decide where to start scanning: if the AI's own Active can
+-- already KO the Player's Active this turn and that attack is usable now
+-- (or would become usable by playing Energy already in hand), the
+-- Player's Active isn't worth stripping -- start from the Bench instead.
+-- Otherwise start from the Player's Active card.
+--
+-- Scan from that point for the first card with Energy attached that
+-- currently has enough Energy for either attack (stripping it would
+-- disable an attack the Player could otherwise make right now).
+--
+-- If nothing qualifies, fall back to a Bench-only pass picking whichever
+-- card (with Energy attached) has the single highest-damage attack
+-- estimate, ignoring whether it currently has enough Energy.
+--
+-- A third fallback in the source -- re-checking the Player's Active card
+-- specifically, only reached when the scan started from the Active -- is a
+-- dead branch, not reimplemented: by the time it runs, the scan has always
+-- already advanced past the Play Area's real slots to the first empty one,
+-- so it probes an out-of-range Play Area location code (CARD_LOCATION_
+-- PLAY_AREA | count) that no card is ever assigned (real location codes
+-- are DECK=$00/HAND=$01/DISCARD_PILE=$02, all outside the Play Area
+-- range), and so can never find Energy there.
 function AI:_decideEnergyRemoval()
+  local startFromBench = false
+  local canKO, koAttack, koErr = self:checkIfAnyAttackKnocksOutDefendingCard(self.c.PLAY_AREA_ARENA)
+  if canKO == nil then return nil, koAttack end
+  if canKO then
+    if self:_checkAttackUsableForAI(koAttack) then
+      startFromBench = true
+    else
+      startFromBench = self:_lookForEnergyNeededForAttackInHand(self.c.PLAY_AREA_ARENA, koAttack) == true
+    end
+  end
+
   self.duelVars:swapTurn()
   local count = self.duelVars:get(self.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
-  local targetSlot, energy
-  for slot = self.c.PLAY_AREA_ARENA, count - 1 do
-    local listCount = self.duelOps:createArenaOrBenchEnergyCardList(slot)
-    if listCount > 0 then
-      targetSlot = slot
-      energy = self:_pickAttachedEnergyToRemove(slot, false)
+  local startSlot = startFromBench and self.c.PLAY_AREA_BENCH_1 or self.c.PLAY_AREA_ARENA
+  local pickedSlot
+  for slot = startSlot, count - 1 do
+    if self.duelOps:getPlayAreaCardAttachedEnergies(slot) > 0
+        and not self:_checkIfNotEnoughEnergyToAttack(slot) then
+      pickedSlot = slot
       break
     end
   end
+
+  if not pickedSlot then
+    local bestDamage, bestSlot = 0, nil
+    for slot = self.c.PLAY_AREA_BENCH_1, count - 1 do
+      if self.duelOps:getPlayAreaCardAttachedEnergies(slot) > 0 then
+        local damage, err = self:_findHighestDamagingBenchAttack(slot)
+        if damage == nil then
+          self.duelVars:swapTurn()
+          return nil, err
+        end
+        if damage > bestDamage then bestDamage, bestSlot = damage, slot end
+      end
+    end
+    pickedSlot = bestSlot
+  end
+
+  if not pickedSlot then
+    self.duelVars:swapTurn()
+    return false
+  end
+  local energy = self:_pickAttachedEnergyToRemove(pickedSlot, false)
   self.duelVars:swapTurn()
-  if not targetSlot or not energy then return false end
-  return true, { opponentPlayArea = targetSlot, opponentEnergyDeckIndex = energy }
+  if not energy then return false end
+  return true, { opponentPlayArea = pickedSlot, opponentEnergyDeckIndex = energy }
 end
 
 

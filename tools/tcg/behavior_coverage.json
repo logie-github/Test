@@ -1332,6 +1332,16 @@
       ],
       "target": "src/tcg/duel/AI.lua",
       "state": "translated"
+    },
+    {
+      "source": "src/engine/duel/ai/trainer_cards.asm",
+      "labels": [
+        "AIDecide_EnergyRemoval",
+        "AIPlay_EnergyRemoval"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "Full target-priority cascade: KO-then-usability starting-point gate, first-match enough-to-attack scan, Bench-only highest-damage fallback. A third source fallback (re-checking the Player's Active specifically) is a dead branch (documented, not reimplemented) -- see AI:_decideEnergyRemoval's own comment."
     }
   ]
 }
