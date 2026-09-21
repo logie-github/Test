@@ -898,14 +898,6 @@
       "notes": "Native AI retreat-cost calculation applies each benched Dodrio Retreat Aid and preserves Muk suppression/clamping."
     },
     {
-      "source": "src/engine/duel/ai/retreat.asm",
-      "labels": [
-        "SetAIRetreatFlags"
-      ],
-      "target": "src/tcg/duel/AI.lua",
-      "state": "translated"
-    },
-    {
       "source": "src/engine/duel/ai/core.asm",
       "labels": [
         "AIChooseRandomlyNotToDoAction"
@@ -1043,6 +1035,17 @@
       "target": "src/tcg/duel/AI.lua",
       "state": "translated",
       "notes": "Normal Energy placement and all source preview modes are native: evolution anticipation, Venusaur/Barrier/poison/KO/low-HP scoring, generated per-deck caps/bonuses, Legendary Articuno priorities, repeated-Bench scoring, attached-energy-boost/discard branches, special DCE anticipation, boss DCE avoidance, Energy Spike skip-evolution preview, and the Energy Trans skip-evolution/skip-Arena score-backup preview."
+    },
+    {
+      "source": "src/engine/duel/ai/retreat.asm",
+      "labels": [
+        "AIDecideBenchPokemonToSwitchTo",
+        "AIDecideWhetherToRetreat",
+        "AITryToRetreat",
+        "SetAIRetreatFlags"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated"
     }
   ]
 }

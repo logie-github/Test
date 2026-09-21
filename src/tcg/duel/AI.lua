@@ -843,17 +843,29 @@ function AI:getPlayAreaCardRetreatCost(slot)
   return math.max(0, row.retreatCost - dodrio)
 end
 
-function AI:_estimateDamageFromPlayArea(slot, attackIndex)
+-- `opts.ignoreUsability` skips the energy-sufficiency/IGNORE_THIS_ATTACK_F
+-- gate below, matching the source's EstimateDamage_VersusDefendingCard, which
+-- never checks usability at all -- CheckIfAnyAttackKnocksOutDefendingCard is
+-- deliberately usability-blind, with usability checked as a separate later
+-- step by whichever caller needs it (see _estimatePotentialKO below). Every
+-- existing call site omits `opts`, so default behavior is unchanged.
+function AI:_estimateDamageFromPlayArea(slot, attackIndex, opts)
+  opts = opts or {}
   if slot == self.c.PLAY_AREA_ARENA then
     return self:estimateDamageVersusDefendingCard(attackIndex)
   end
   local deckIndex = self.duelVars:get(self.c.DUELVARS_ARENA_CARD + slot)
   if deckIndex == 0xff then return { damage = 0, min = 0, max = 0, usable = false } end
   local need = self:checkEnergyNeededForAttack(slot, attackIndex)
-  if not need or not need.enough then return { damage = 0, min = 0, max = 0, usable = false } end
+  if not need then return { damage = 0, min = 0, max = 0, usable = false } end
+  if not opts.ignoreUsability and not need.enough then
+    return { damage = 0, min = 0, max = 0, usable = false }
+  end
   local _, attack, cardId = self.combat:loadAttack(deckIndex, attackIndex)
-  if attack.nameTextId == 0 or attack.category == self.c.POKEMON_POWER
-      or self:_attackFlag(attack, 2, self.c.IGNORE_THIS_ATTACK_F) then
+  if attack.nameTextId == 0 or attack.category == self.c.POKEMON_POWER then
+    return { damage = 0, min = 0, max = 0, usable = false, attack = attack }
+  end
+  if not opts.ignoreUsability and self:_attackFlag(attack, 2, self.c.IGNORE_THIS_ATTACK_F) then
     return { damage = 0, min = 0, max = 0, usable = false, attack = attack }
   end
   local savedLocation = self.memory:readSymbol8("hTempPlayAreaLocation_ff9d")
@@ -913,11 +925,91 @@ function AI:checkIfAnyAttackKnocksOutDefendingCard(slot)
   return false
 end
 
+-- CheckIfAnyAttackKnocksOutDefendingCard:: the source primitive itself is
+-- purely damage-vs-HP with no usability gate at all -- EstimateDamage_Versus-
+-- DefendingCard only ever zeroes damage for a Pokemon Power, never for
+-- insufficient Energy. checkIfAnyAttackKnocksOutDefendingCard above already
+-- matches that for the Active slot (estimateDamageVersusDefendingCard never
+-- checked usability), but several existing callers pass a Bench slot and rely
+-- on _estimateDamageFromPlayArea's default Bench gate folding potential-KO and
+-- usability together. This is a separate, genuinely usability-blind primitive
+-- for the one caller that needs the source's real two-step shape: retreat and
+-- switch-target scoring, where a Bench Pokemon that WOULD KO if only it had
+-- its attack's Energy is still relevant if that Energy is sitting in hand.
+function AI:_estimatePotentialKO(slot)
+  slot = slot or self.c.PLAY_AREA_ARENA
+  local hp = self.duelVars:getNonTurn(self.c.DUELVARS_ARENA_CARD_HP)
+  for attackIndex = 0, 1 do
+    local estimate, err = self:_estimateDamageFromPlayArea(slot, attackIndex, { ignoreUsability = true })
+    if not estimate then return nil, err end
+    if estimate.damage >= hp and estimate.damage > 0 then
+      self.memory:writeSymbol8("wSelectedAttack", attackIndex)
+      return true, attackIndex, estimate.damage
+    end
+  end
+  return false
+end
+
+-- CheckIfSelectedAttackIsUnusable:: Bench-card path. Source skips the
+-- Active-only substatus/paralysis/sleep/amnesia/EFFECTCMDTYPE_INITIAL_EFFECT_1
+-- gate entirely for a Bench Pokemon (those substatuses only ever apply to the
+-- Arena card); only Energy sufficiency and IGNORE_THIS_ATTACK_F apply. The
+-- Active case is already covered by _checkAttackUsableForAI.
+function AI:_checkIfBenchAttackUnusable(slot, attackIndex)
+  local need = self:checkEnergyNeededForAttack(slot, attackIndex)
+  if not need or not need.enough then return true end
+  local deckIndex = self.duelVars:get(self.c.DUELVARS_ARENA_CARD + slot)
+  local _, attack = self.combat:loadAttack(deckIndex, attackIndex)
+  return self:_attackFlag(attack, 2, self.c.IGNORE_THIS_ATTACK_F) == true
+end
+
+-- Shared combinator for AIDecideWhetherToRetreat's Active gate and Bench-KO
+-- loop (retreat.asm), and AIDecide_SuperEnergyRemoval's active-defender check
+-- (_activeCanKONowOrWithHandEnergy below, now a thin ARENA-only wrapper):
+-- CheckIfAnyAttackKnocksOutDefendingCard (usability-blind) -> if the KO
+-- attack is not currently usable, LookForEnergyNeededForAttackInHand may still
+-- make it relevant with exactly one Energy from hand.
+function AI:_canKnockOutNowOrWithHandEnergy(slot)
+  slot = slot or self.c.PLAY_AREA_ARENA
+  local canKO, attackIndex = self:_estimatePotentialKO(slot)
+  if canKO == nil then return nil, attackIndex end
+  if not canKO then return false end
+  local unusable
+  if slot == self.c.PLAY_AREA_ARENA then
+    local usable, reason = self:_checkAttackUsableForAI(attackIndex)
+    if reason and reason:match("^untranslated_effect:") then return nil, reason end
+    unusable = not usable
+  else
+    unusable = self:_checkIfBenchAttackUnusable(slot, attackIndex)
+  end
+  if not unusable then return true end
+  return self:_lookForEnergyNeededInHand(slot, attackIndex)
+end
+
+-- LookForEnergyNeededForAttackInHand:: exact source branching on the
+-- already-selected attack (set by the caller, e.g. via
+-- CheckIfAnyAttackKnocksOutDefendingCard or LookForEnergyNeededInHand below).
+-- A single missing basic/colored Energy is satisfied only by that specific
+-- card; a single missing Colorless is satisfied by ANY Energy card; two
+-- missing Colorless are satisfied ONLY by Double Colorless Energy
+-- specifically. Any other total (0, or >=2 that is not exactly "2
+-- Colorless") fails. Previously this checked the colored and colorless
+-- branches independently of each other and of the source's b+c total, so a
+-- 2-Colorless requirement could be wrongly satisfied by any single ordinary
+-- Energy card in hand.
 function AI:_lookForEnergyNeededInHand(slot, attackIndex)
   local need = self:checkEnergyNeededForAttack(slot, attackIndex)
-  if not need or need.enough then return false end
-  if need.colored > 0 and need.energyCardId and self:_findCardIDInHand(need.energyCardId) then return true end
-  if need.colorless > 0 and #self:_energyCardsInHand() > 0 then return true end
+  if not need then return false end
+  local total = need.colored + need.colorless
+  if total == 1 then
+    if need.colored > 0 then
+      return need.energyCardId ~= nil and self:_findCardIDInHand(need.energyCardId) ~= nil
+    end
+    return #self:_energyCardsInHand() > 0
+  end
+  if total == 2 and need.colorless == 2 then
+    return self:_findCardIDInHand(self.c.DOUBLE_COLORLESS_ENERGY) ~= nil
+  end
   return false
 end
 
@@ -994,8 +1086,13 @@ function AI:decideBenchPokemonToSwitchTo()
       if estimate.usable ~= false then score = satAdd(score, math.floor(estimate.damage / 10) + 1) end
     end
 
-    local selected = self.memory:readSymbol8("wSelectedAttack")
-    if self:_lookForEnergyNeededInHand(slot, selected) then
+    -- .check_energy_card: LookForEnergyNeededInHand tries FIRST_ATTACK_OR_
+    -- PKMN_POWER then SECOND_ATTACK itself; it is not the already-selected-
+    -- attack variant, and does not depend on whatever wSelectedAttack held
+    -- from the score loop just above. It leaves wSelectedAttack naming
+    -- whichever attack it matched, which the damage bonus below then reads.
+    if self:_lookForAnyEnergyNeededInHand(slot) then
+      local selected = self.memory:readSymbol8("wSelectedAttack")
       local estimate, err = self:_estimateDamageFromPlayArea(slot, selected)
       if not estimate then return nil, err end
       score = satAdd(score, math.floor(estimate.damage / 20))
@@ -1096,14 +1193,15 @@ function AI:decideWhetherToRetreat()
   if bit.band(status, self.c.DOUBLE_POISONED) ~= 0 then score = satAdd(score, 2) end
   if bit.band(status, self.c.CNF_SLP_PRZ) == self.c.CONFUSED then score = satAdd(score, 1) end
 
-  local canKO, attackIndex, err = self:checkIfAnyAttackKnocksOutDefendingCard(self.c.PLAY_AREA_ARENA)
-  if canKO == nil then return nil, attackIndex end
-  if canKO then
-    local usable = self:_checkAttackUsableForAI(attackIndex)
-    if usable or self:_lookForEnergyNeededInHand(self.c.PLAY_AREA_ARENA, attackIndex) then
-      score = satSub(score, 5)
-      if meta.aiPrizes < 2 then score = satSub(score, 35) end
-    end
+  -- AIDecideWhetherToRetreat's Active gate: CheckIfAnyAttackKnocksOutDefending-
+  -- Card, then CheckIfSelectedAttackIsUnusable, then -- only if unusable --
+  -- LookForEnergyNeededForAttackInHand as a rescue. A working KO (now or with
+  -- one Energy from hand) discourages retreating.
+  local activeWorkingKO, activeKOErr = self:_canKnockOutNowOrWithHandEnergy(self.c.PLAY_AREA_ARENA)
+  if activeWorkingKO == nil then return nil, activeKOErr end
+  if activeWorkingKO then
+    score = satSub(score, 5)
+    if meta.aiPrizes < 2 then score = satSub(score, 35) end
   end
 
   local defendingCanKO, koDamage = self:checkIfDefendingPokemonCanKnockOut()
@@ -1159,18 +1257,30 @@ function AI:decideWhetherToRetreat()
   end
   if self:_benchHasMatching(meta.color, "resistance") then score = satAdd(score, 1) end
 
+  -- .check_ko_2/.loop_ko_1/.success: same potential-KO-then-usable-or-rescue
+  -- shape as the Active gate above -- a Bench Pokemon missing just one Energy
+  -- for its KO attack still counts.
   local benchCanKO = false
   for slot = self.c.PLAY_AREA_BENCH_1, count - 1 do
-    local can, e = self:checkIfAnyAttackKnocksOutDefendingCard(slot)
+    local can, e = self:_canKnockOutNowOrWithHandEnergy(slot)
     if can == nil then return nil, e end
     if can then benchCanKO = true break end
   end
   if benchCanKO then
     score = satAdd(score, 2)
     if not notBossDeck and meta.aiPrizes < 2 then
-      local activeCanKO, activeKOErr = self:checkIfAnyAttackKnocksOutDefendingCard(self.c.PLAY_AREA_ARENA)
-      if activeCanKO == nil then return nil, activeKOErr end
-      if not activeCanKO then
+      -- Source attempts no rescue here: only a currently-usable Active KO
+      -- skips the +40/energy-for-retreat bonus. A potential-but-unusable
+      -- Active KO falls through to the bonus exactly like no KO at all.
+      local activePotentialKO, activeAttackIndex, activeErr = self:_estimatePotentialKO(self.c.PLAY_AREA_ARENA)
+      if activePotentialKO == nil then return nil, activeAttackIndex end
+      local activeHasWorkingKO = false
+      if activePotentialKO then
+        local usable, reason = self:_checkAttackUsableForAI(activeAttackIndex)
+        if reason and reason:match("^untranslated_effect:") then return nil, reason end
+        activeHasWorkingKO = usable == true
+      end
+      if not activeHasWorkingKO then
         score = satAdd(score, 40)
         self.memory:writeSymbol8("wAIPlayEnergyCardForRetreat", self.c.TRUE)
       end
@@ -2393,21 +2503,18 @@ function AI:_canUseAnyAttackAtSlot(slot)
   return false
 end
 
+-- LookForEnergyNeededInHand:: tries FIRST_ATTACK_OR_PKMN_POWER then
+-- SECOND_ATTACK, delegating the one-Energy/two-Colorless rule itself to
+-- _lookForEnergyNeededInHand (LookForEnergyNeededForAttackInHand) above so
+-- the two source routines share one implementation of that rule. Source
+-- writes wSelectedAttack before each CheckEnergyNeededForAttack call
+-- regardless of outcome, so by the time either check succeeds the variable
+-- already names that attack; AIDecideBenchPokemonToSwitchTo reads
+-- wSelectedAttack right after calling this to score the matching damage.
 function AI:_lookForAnyEnergyNeededInHand(slot)
   for attackIndex = self.c.FIRST_ATTACK_OR_PKMN_POWER, self.c.SECOND_ATTACK do
-    local need = self:checkEnergyNeededForAttack(slot, attackIndex)
-    if need and not need.enough then
-      local total = (need.colored or 0) + (need.colorless or 0)
-      if total == 1 then
-        if (need.colored or 0) == 1 and need.energyCardId and self:_findCardIDInHand(need.energyCardId) then
-          return true
-        end
-        if (need.colorless or 0) == 1 and #self:_energyCardsInHand() > 0 then return true end
-      elseif total == 2 and (need.colorless or 0) == 2
-          and self:_findCardIDInHand(self.c.DOUBLE_COLORLESS_ENERGY) then
-        return true
-      end
-    end
+    self.memory:writeSymbol8("wSelectedAttack", attackIndex)
+    if self:_lookForEnergyNeededInHand(slot, attackIndex) then return true end
   end
   return false
 end
@@ -3901,13 +4008,7 @@ function AI:_superRemovalTargetCanAttack(slot)
 end
 
 function AI:_activeCanKONowOrWithHandEnergy()
-  local canKO, attackIndex = self:checkIfAnyAttackKnocksOutDefendingCard(self.c.PLAY_AREA_ARENA)
-  if canKO == nil then return nil, attackIndex end
-  if not canKO then return false end
-  local usable, reason = self:_checkAttackUsableForAI(attackIndex)
-  if usable then return true end
-  if reason and reason:match("^untranslated_effect:") then return nil, reason end
-  return self:_lookForEnergyNeededInHand(self.c.PLAY_AREA_ARENA, attackIndex)
+  return self:_canKnockOutNowOrWithHandEnergy(self.c.PLAY_AREA_ARENA)
 end
 
 -- AIDecide_SuperEnergyRemoval:: source target policy.  The discard cost is
