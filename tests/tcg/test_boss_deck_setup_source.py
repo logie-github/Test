@@ -14,7 +14,8 @@ and share byte-identical .start_duel/.forced_switch/.ko_switch/.take_prize
 sequences -- the only per-deck variation is their own generated priority-
 list data (already read through _deckAIList, same as every other deck-
 aware routine in this file) and, for 5 of the 16, .do_turn (a bespoke
-AIDoTurn_<Deck> that stays behind the turnSpecial adapter).
+AIDoTurn_<Deck> -- each now natively translated too, in its own dedicated
+fixture: legendary_{zapdos,moltres,dragonite,articuno,ronald}_turn_smoke.lua).
 
 The real logic (the reshuffle-until-satisfied threshold loop, the capture-
 then-draw ordering, and the Arena/Bench priority-list placement) is

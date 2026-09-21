@@ -171,8 +171,9 @@ local AI_BOSS_ACTION_TABLES = {
 
 -- Of the sixteen, these eleven route .do_turn straight to AIMainTurnLogic
 -- (== mainTurnLogic(false) below); the remaining five (the Legendary bosses
--- and Legendary Ronald) each have their own bespoke AIDoTurn_<Deck> routine
--- and stay behind the turnSpecial adapter boundary.
+-- and Legendary Ronald) each have their own bespoke AIDoTurn_<Deck> routine,
+-- now all natively translated (doTurnLegendary{Zapdos,Moltres,Dragonite,
+-- Articuno,Ronald}) rather than behind the turnSpecial adapter boundary.
 local AI_BOSS_GENERAL_TURN_TABLES = {
   AIActionTable_FirstStrike = true, AIActionTable_RockCrusher = true,
   AIActionTable_GoGoRainDance = true, AIActionTable_ZappingSelfdestruct = true,
@@ -5786,6 +5787,24 @@ function AI:doTurnLegendaryZapdos()
   return true, "finish_no_attack"
 end
 
+-- Shared "check if AI can play MoltresLv37 from hand and if so, play it"
+-- gate: byte-identical in both AIDoTurn_LegendaryMoltres and
+-- AIDoTurn_LegendaryRonald (the latter calls it twice, once per pass).
+-- Requires Bench space, more than 9 cards left in the deck, no Muk in play
+-- on either side, and MoltresLv37 actually in hand.
+function AI:_tryToPlayMoltresLv37Directly()
+  local playAreaCount = self.duelVars:get(self.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+  if playAreaCount >= self.c.MAX_PLAY_AREA_POKEMON then return true end
+  local notInDeck = self.duelVars:get(self.c.DUELVARS_NUMBER_OF_CARDS_NOT_IN_DECK)
+  if notInDeck >= self.c.DECK_SIZE - 9 then return true end
+  local _, muk = self.combat.status:countPokemonWithActivePkmnPowerInBothPlayAreas(self.c.MUK)
+  if muk then return true end
+  if not self:_findCardIDInHand(self.c.MOLTRES_LV37) then return true end
+  local ok, reason = self.playerActions:playBasic(self.c.MOLTRES_LV37)
+  if not ok and reason ~= "bench_full" then return nil, reason end
+  return true
+end
+
 -- AIDoTurn_LegendaryMoltres:: bespoke turn logic for the Legendary Moltres
 -- boss deck (engine/duel/ai/decks/legendary_moltres.asm). Like Zapdos's, the
 -- anti-Mewtwo-mill check runs immediately after InitAITurnVars, before any
@@ -5806,17 +5825,8 @@ function AI:doTurnLegendaryMoltres()
       if ok == nil then return nil, err end
     end
 
-    local playAreaCount = self.duelVars:get(self.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
-    if playAreaCount < self.c.MAX_PLAY_AREA_POKEMON then
-      local notInDeck = self.duelVars:get(self.c.DUELVARS_NUMBER_OF_CARDS_NOT_IN_DECK)
-      if notInDeck < self.c.DECK_SIZE - 9 then
-        local _, muk = self.combat.status:countPokemonWithActivePkmnPowerInBothPlayAreas(self.c.MUK)
-        if not muk and self:_findCardIDInHand(self.c.MOLTRES_LV37) then
-          local playOk0, reason0 = self.playerActions:playBasic(self.c.MOLTRES_LV37)
-          if not playOk0 and reason0 ~= "bench_full" then return nil, reason0 end
-        end
-      end
-    end
+    local moltresOk, moltresErr = self:_tryToPlayMoltresLv37Directly()
+    if moltresOk == nil then return nil, moltresErr end
 
     local playOk, playErr = self:decidePlayPokemonCard()
     if playOk == nil then return nil, playErr end
@@ -6017,6 +6027,76 @@ function AI:doTurnLegendaryArticuno()
   return true, "finish_no_attack"
 end
 
+-- AIDoTurn_LegendaryRonald:: bespoke turn logic for the Legendary Ronald
+-- boss deck (engine/duel/ai/decks/legendary_ronald.asm), the last of the
+-- five Legendary bosses. Unlike all four others, this one has NO
+-- anti-Mewtwo-mill check at all -- the whole turn runs unconditionally.
+-- Reuses the MoltresLv37-direct-play gate (AI:_tryToPlayMoltresLv37Directly,
+-- shared with Moltres's own translation) TWICE: once in the initial pass
+-- and again in its Professor-Oak repeat pass. No bespoke Energy-attach
+-- branch (plain processAndTryToPlayEnergy both times, like Articuno's).
+function AI:doTurnLegendaryRonald()
+  self:initTurnVars()
+  for _, phase in ipairs({self.c.AI_TRAINER_CARD_PHASE_01, self.c.AI_TRAINER_CARD_PHASE_02,
+      self.c.AI_TRAINER_CARD_PHASE_04}) do
+    local ok, err = self:processHandTrainerCards(phase)
+    if ok == nil then return nil, err end
+  end
+  local moltresOk, moltresErr = self:_tryToPlayMoltresLv37Directly()
+  if moltresOk == nil then return nil, moltresErr end
+  local playOk, playErr = self:decidePlayPokemonCard()
+  if playOk == nil then return nil, playErr end
+  for _, phase in ipairs({self.c.AI_TRAINER_CARD_PHASE_05, self.c.AI_TRAINER_CARD_PHASE_07}) do
+    local a, b = self:processHandTrainerCards(phase)
+    if a == nil then return nil, b end
+  end
+  local retreatOk, retreatErr = self:processRetreat()
+  if retreatOk == nil then return nil, retreatErr end
+  local ok10, err10 = self:processHandTrainerCards(self.c.AI_TRAINER_CARD_PHASE_10)
+  if ok10 == nil then return nil, err10 end
+  if self.memory:readSymbol8("wAlreadyPlayedEnergy") == 0 then
+    local energyOk, energyErr = self:processAndTryToPlayEnergy()
+    if energyOk == nil then return nil, energyErr end
+  end
+  local playOk2, playErr2 = self:decidePlayPokemonCard()
+  if playOk2 == nil then return nil, playErr2 end
+  local ok15, err15 = self:processHandTrainerCards(self.c.AI_TRAINER_CARD_PHASE_15)
+  if ok15 == nil then return nil, err15 end
+
+  if bit.band(self.memory:readSymbol8("wPreviousAIFlags"), self.c.AI_FLAG_USED_PROFESSOR_OAK) ~= 0 then
+    for _, phase in ipairs({self.c.AI_TRAINER_CARD_PHASE_01, self.c.AI_TRAINER_CARD_PHASE_02,
+        self.c.AI_TRAINER_CARD_PHASE_04}) do
+      local a, b = self:processHandTrainerCards(phase)
+      if a == nil then return nil, b end
+    end
+    local rmoltresOk, rmoltresErr = self:_tryToPlayMoltresLv37Directly()
+    if rmoltresOk == nil then return nil, rmoltresErr end
+    local rplayOk, rplayErr = self:decidePlayPokemonCard()
+    if rplayOk == nil then return nil, rplayErr end
+    for _, phase in ipairs({self.c.AI_TRAINER_CARD_PHASE_05, self.c.AI_TRAINER_CARD_PHASE_07}) do
+      local a, b = self:processHandTrainerCards(phase)
+      if a == nil then return nil, b end
+    end
+    local rretreatOk, rretreatErr = self:processRetreat()
+    if rretreatOk == nil then return nil, rretreatErr end
+    local rok10, rerr10 = self:processHandTrainerCards(self.c.AI_TRAINER_CARD_PHASE_10)
+    if rok10 == nil then return nil, rerr10 end
+    if self.memory:readSymbol8("wAlreadyPlayedEnergy") == 0 then
+      local renergyOk, renergyErr = self:processAndTryToPlayEnergy()
+      if renergyOk == nil then return nil, renergyErr end
+    end
+    local rplayOk2, rplayErr2 = self:decidePlayPokemonCard()
+    if rplayOk2 == nil then return nil, rplayErr2 end
+  end
+
+  local attacked, attackResult = self:processAndTryToUseAttack()
+  if attacked == nil then return nil, attackResult end
+  if attacked then return true, attackResult end
+  self.combat.core:clearNonTurnTemporaryDuelvars()
+  self.memory:writeSymbol8("wOpponentTurnEnded", 1)
+  return true, "finish_no_attack"
+end
+
 -- AIDoAction_Turn:: dispatches through the source DeckAIPointerTable. Generic
 -- tables now use the native common core; special/boss tables remain adapters.
 function AI:doTurn()
@@ -6031,9 +6111,9 @@ function AI:doTurn()
   elseif AI_BOSS_GENERAL_TURN_TABLES[label] then
     -- Eleven of the sixteen boss/special tables route .do_turn straight to
     -- AIMainTurnLogic with no wrapper of their own (verified directly
-    -- against engine/duel/ai/decks/*.asm); the remaining four (of the five
-    -- Legendary bosses) each have a bespoke AIDoTurn_<Deck> and stay on the
-    -- adapter path below.
+    -- against engine/duel/ai/decks/*.asm); the remaining five (the
+    -- Legendary bosses) each have their own bespoke AIDoTurn_<Deck>, handled
+    -- below.
     return self:mainTurnLogic(false)
   elseif label == "AIActionTable_LegendaryZapdos" then
     return self:doTurnLegendaryZapdos()
@@ -6043,7 +6123,12 @@ function AI:doTurn()
     return self:doTurnLegendaryDragonite()
   elseif label == "AIActionTable_LegendaryArticuno" then
     return self:doTurnLegendaryArticuno()
+  elseif label == "AIActionTable_LegendaryRonald" then
+    return self:doTurnLegendaryRonald()
   end
+  -- Every one of the 19 confirmed labels (3 general + 16 boss/special) is
+  -- now native; only a future/unverified AIActionTable_* label outside that
+  -- set still falls through to the adapter.
   return self:_required("turnSpecial")(label, self.memory:readSymbol8("wOpponentDeckID"))
 end
 

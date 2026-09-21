@@ -1323,6 +1323,15 @@
       ],
       "target": "src/tcg/duel/AI.lua",
       "state": "translated"
+    },
+    {
+      "source": "src/engine/duel/ai/decks/legendary_ronald.asm",
+      "labels": [
+        "AIActionTable_LegendaryRonald",
+        "AIDoTurn_LegendaryRonald"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated"
     }
   ]
 }

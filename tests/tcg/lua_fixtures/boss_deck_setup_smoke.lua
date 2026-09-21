@@ -337,17 +337,17 @@ do
   check("boss deck (RockCrusher): doTurn routes to mainTurnLogic (general .do_turn)", called, true)
 end
 do
-  -- Zapdos/Moltres/Dragonite/Articuno are now native (their own dedicated
-  -- fixtures); of the five Legendary bosses, only Ronald remains
-  -- adapter-backed.
+  -- All five Legendary bosses (Zapdos/Moltres/Dragonite/Articuno/Ronald) are
+  -- now native (their own dedicated fixtures), so all 19 confirmed
+  -- AIActionTable_* labels are native; only a future/unverified label
+  -- outside that set still falls through to the adapter.
   local ai = newHarness({})
   ai.memory.readSymbol8 = function(_, name) return name == "wOpponentDeckID" and 6 or 0 end
-  ai.decks.aiByOpponentDeckId = { [6] = "AIActionTable_LegendaryRonald" }
+  ai.decks.aiByOpponentDeckId = { [6] = "AIActionTable_SomeFutureUnverifiedDeck" }
   local usedAdapter = false
   ai.adapters.turnSpecial = function() usedAdapter = true; return true end
   ai:doTurn()
-  check("boss deck with bespoke turn logic (Legendary Ronald): still uses the adapter",
-    usedAdapter, true)
+  check("unverified boss label: still falls through to the adapter", usedAdapter, true)
 end
 
 if failures == 0 then

@@ -67,9 +67,12 @@ class LegendaryMoltresTurnSourceTests(unittest.TestCase):
             self.assertNotIn(absent, block)
 
     def test_moltres_direct_play_checks_all_four_gates_in_order(self):
-        block = self._block("function AI:doTurnLegendaryMoltres")
-        bench_pos = block.index("playAreaCount < self.c.MAX_PLAY_AREA_POKEMON")
-        deck_pos = block.index("notInDeck < self.c.DECK_SIZE - 9")
+        # Factored out into a shared helper once Legendary Ronald needed the
+        # same byte-identical gate (called twice in its own translation).
+        block = self._block("function AI:_tryToPlayMoltresLv37Directly")
+        self.assertIn("self:_tryToPlayMoltresLv37Directly()", self._block("function AI:doTurnLegendaryMoltres"))
+        bench_pos = block.index("playAreaCount >= self.c.MAX_PLAY_AREA_POKEMON")
+        deck_pos = block.index("notInDeck >= self.c.DECK_SIZE - 9")
         muk_pos = block.index("countPokemonWithActivePkmnPowerInBothPlayAreas(self.c.MUK)")
         hand_pos = block.index("self:_findCardIDInHand(self.c.MOLTRES_LV37)")
         play_pos = block.index("self.playerActions:playBasic(self.c.MOLTRES_LV37)")

@@ -148,10 +148,9 @@
       "target": "src/tcg/duel/AI.lua",
       "state": "partial",
       "remaining": [
-        "Legendary Ronald's bespoke AIDoTurn_LegendaryRonald turn logic -- its own tracked pending entry (Zapdos's, Moltres's, Dragonite's, and Articuno's are now native)",
-        "any future/unverified AIActionTable_* label outside the 19 confirmed against DeckAIPointerTable"
+        "any future/unverified AIActionTable_* label outside the 19 confirmed against DeckAIPointerTable (3 general + 16 boss)"
       ],
-      "notes": "GeneralDecks and GeneralNoRetreat enter the native common turn core with common retreat/switch scoring, common active Pokemon Power AI, and the cartridge random action-skip gate. Of the sixteen boss/special decks, eleven route .do_turn straight to the same native AIMainTurnLogic core (verified directly against each engine/duel/ai/decks/*.asm file); .forced_switch/.ko_switch/.take_prize are native for all sixteen. Unresolved specialized decisions still fail closed."
+      "notes": "GeneralDecks, GeneralNoRetreat, SamPractice, all eleven generic boss/special decks' .do_turn (== AIMainTurnLogic), and all five Legendary bosses' own bespoke AIDoTurn_<Deck> (Zapdos/Moltres/Dragonite/Articuno/Ronald) are native; unresolved/unverified labels still fail closed via turnSpecial."
     },
     {
       "source": "src/engine/duel/core.asm",
@@ -343,18 +342,6 @@
         "Pokemon Trader's ten deck-specific card-search routines (Legendary Moltres/Articuno/Dragonite/Ronald, Blistering Pokemon, Sound of the Waves, Power Generator, Flower Garden, Strange Power, Flamethrower); the source has no general path, and every other deck's no-op is already exact"
       ],
       "notes": "These high-frequency Trainer families now make native source-shaped decisions and execute through the translated player-side Trainer effect engine; unsupported cases fail closed."
-    },
-    {
-      "source": "src/engine/duel/ai/decks/legendary_ronald.asm",
-      "labels": [
-        "AIActionTable_LegendaryRonald"
-      ],
-      "target": "src/tcg/duel/AI.lua",
-      "state": "partial",
-      "remaining": [
-        "AIDoTurn_LegendaryRonald's bespoke turn logic"
-      ],
-      "notes": ".start_duel/.forced_switch/.ko_switch/.take_prize are native (identical to every other verified boss table); only .do_turn's own bespoke routine remains, behind the turnSpecial adapter."
     }
   ]
 }
