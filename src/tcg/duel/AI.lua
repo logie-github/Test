@@ -3810,6 +3810,21 @@ function AI:_playGamblerWithRNGCheat(cardId, selection)
   return ok, reason
 end
 
+-- AIDecide_ClefairyDollOrMysteriousFossil:: shared by both cards (played as
+-- a Basic Pokemon). Plays whenever the Active is Wigglytuff (regardless of
+-- how full the Bench already is, short of the hard max), otherwise only
+-- while the Play Area has fewer than 4 Pokemon.
+function AI:_decideClefairyDollOrMysteriousFossil()
+  local count = self.duelVars:get(self.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+  if count >= self.c.MAX_PLAY_AREA_POKEMON then return false end
+
+  local activeDeckIndex = self.duelVars:get(self.c.DUELVARS_ARENA_CARD)
+  local activeId = self.cardData:getCardIDFromDeckIndex(activeDeckIndex)
+  if activeId == self.c.WIGGLYTUFF then return true end
+
+  return count < 4
+end
+
 -- AICheckIfAttackIsHighRecoil:: despite the name, the source routine's final
 -- carry (after its `ccf`) means "there IS a usable attack AND it is NOT
 -- flagged High Recoil" -- i.e. a normal, safe attack is available. Every
@@ -4760,6 +4775,8 @@ function AI:_decideTrainer(constantName, phase, currentTrainerDeckIndex)
     return self:_decideImakuni()
   elseif constantName == "GAMBLER" then
     return self:_decideGambler()
+  elseif constantName == "CLEFAIRY_DOLL" or constantName == "MYSTERIOUS_FOSSIL" then
+    return self:_decideClefairyDollOrMysteriousFossil()
   end
   return nil, "untranslated_ai_trainer:" .. constantName
 end
@@ -4837,6 +4854,7 @@ function AI:processHandTrainerCards(phase)
         or constantName == "SUPER_POTION" or constantName == "POKEMON_BREEDER"
         or constantName == "IMPOSTER_PROFESSOR_OAK" or constantName == "SCOOP_UP"
         or constantName == "LASS" or constantName == "IMAKUNI_CARD" or constantName == "GAMBLER"
+        or constantName == "CLEFAIRY_DOLL" or constantName == "MYSTERIOUS_FOSSIL"
       if not supported then return nil, "untranslated_ai_trainer:" .. constantName end
       if self:_chooseRandomlyNotToDoAction() then break end
       local decision, selectionOrErr, parameter =

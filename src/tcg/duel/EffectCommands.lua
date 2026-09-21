@@ -1338,6 +1338,29 @@ function EffectCommands:_installSharedHandlers()
     return false
   end)
 
+  -- Clefairy Doll and Mysterious Fossil are Trainer cards played AS a Basic
+  -- Pokemon; both share identical bench-space-check/placement logic.
+  -- putHandPokemonCardInPlayArea already applies the Trainer-to-Pokemon data
+  -- conversion via CardData's own loadBuffer2FromDeckIndex path.
+  local function trainerAsPokemonBenchCheck(s, context)
+    local a = context.playerActions
+    if not a then return nil, "effect_context_missing_player_actions" end
+    return a.duelVars:get(s.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA) >= s.c.MAX_PLAY_AREA_POKEMON
+  end
+  local function trainerAsPokemonPlaceInPlayAreaEffect(s, context)
+    local a = context.playerActions
+    if not a then return nil, "effect_context_missing_player_actions" end
+    local deckIndex = a.memory:readSymbol8("hTempCardIndex_ff9f")
+    local slot, carry = a.duelOps:putHandPokemonCardInPlayArea(deckIndex)
+    if carry then return nil, "bench_full" end
+    s:_event("place_trainer_as_pokemon", { deckIndex = deckIndex, slot = slot })
+    return false
+  end
+  self:register("MysteriousFossil_BenchCheck", trainerAsPokemonBenchCheck)
+  self:register("MysteriousFossil_PlaceInPlayAreaEffect", trainerAsPokemonPlaceInPlayAreaEffect)
+  self:register("ClefairyDoll_BenchCheck", trainerAsPokemonBenchCheck)
+  self:register("ClefairyDoll_PlaceInPlayAreaEffect", trainerAsPokemonPlaceInPlayAreaEffect)
+
   self:register("Potion_DamageCheck", function(s, context)
     local a = context.playerActions
     if not a then return nil, "effect_context_missing_player_actions" end
