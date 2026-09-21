@@ -42,7 +42,7 @@ class FriendshipSongEffectSourceTests(unittest.TestCase):
             ">= s.c.MAX_PLAY_AREA_POKEMON", block)
 
     def test_pick_random_basic_card_shuffles_then_scans(self):
-        start = self.src.index("local function pickRandomBasicCardFromDeck(s, a)")
+        start = self.src.index("local function pickRandomBasicCardFromDeck(s, a, excludeCardId)")
         end = self.src.index("\n  end", start)
         block = self.src[start:end]
         self.assertIn("a.duelOps:createDeckCardList()", block)

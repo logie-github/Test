@@ -3853,7 +3853,7 @@ function EffectCommands:_installSharedHandlers()
     if not actor then return nil, "effect_context_missing_actor" end
     return actor.duelVars:get(s.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA) >= s.c.MAX_PLAY_AREA_POKEMON
   end)
-  local function pickRandomBasicCardFromDeck(s, a)
+  local function pickRandomBasicCardFromDeck(s, a, excludeCardId)
     local deck, empty = a.duelOps:createDeckCardList()
     if empty then return nil end
     local base, bank = a.memory:address("wDuelTempList")
@@ -3862,7 +3862,8 @@ function EffectCommands:_installSharedHandlers()
       local deckIndex = a.memory:read8("wram", base + i, bank)
       local cardId = a.cardData:getCardIDFromDeckIndex(deckIndex)
       local row = a.cardData:get(cardId)
-      if row and row.type < s.c.TYPE_ENERGY and row.stage == s.c.BASIC then
+      if row and row.type < s.c.TYPE_ENERGY and row.stage == s.c.BASIC
+          and cardId ~= excludeCardId then
         return deckIndex
       end
     end
@@ -3885,6 +3886,43 @@ function EffectCommands:_installSharedHandlers()
     actor.duelOps:addCardToHand(deckIndex)
     actor.duelOps:putHandPokemonCardInPlayArea(deckIndex)
     actor.duelOps:shuffleDeck()
+    return false
+  end)
+
+  -- Ditto's Morph: shuffles the attacker's own Deck (excluding other
+  -- Dittos) for a random Basic Pokemon, then transforms the Attacking
+  -- Pokemon into it -- unlike Devolution Beam's slot-content swap, this
+  -- permanently overwrites the arena's OWN deck slot's card-identity
+  -- entry via the new CardData:setCardIDForDeckIndex, leaving the picked
+  -- deck card itself untouched and still in the deck. If the Attacking
+  -- Pokemon isn't already Basic (e.g. when copied via Metronome from an
+  -- evolved Pokemon), first discards its pre-evolution card and resets
+  -- its own stage to Basic, reusing the Devolution Spray/Beam family's
+  -- cardOneStageBelow helper.
+  self:register("MorphEffect", function(s, context)
+    local actor = s:_actor(context)
+    if not actor then return nil, "effect_context_missing_actor" end
+
+    local pickedDeckIndex = pickRandomBasicCardFromDeck(s, actor, s.c.DITTO)
+    if pickedDeckIndex == nil then return false end
+
+    local ownStage = actor.duelVars:get(s.c.DUELVARS_ARENA_CARD_STAGE)
+    if ownStage ~= s.c.BASIC then
+      local lower, lowerErr = cardOneStageBelow(s, actor, s.c.PLAY_AREA_ARENA)
+      if lower == nil then return nil, lowerErr end
+      actor.duelOps:putCardInDiscardPile(lower)
+      actor.duelVars:set(s.c.DUELVARS_ARENA_CARD_STAGE, s.c.BASIC)
+    end
+
+    local newCardId = actor.cardData:getCardIDFromDeckIndex(pickedDeckIndex)
+    local newRow = actor.cardData:get(newCardId)
+    if not newRow then return nil, "missing_card_data" end
+
+    local ownDeckIndex = actor.duelVars:get(s.c.DUELVARS_ARENA_CARD)
+    actor.cardData:setCardIDForDeckIndex(ownDeckIndex, newCardId)
+    actor.duelVars:set(s.c.DUELVARS_ARENA_CARD_HP, newRow.hp)
+    actor.duelVars:set(s.c.DUELVARS_ARENA_CARD_CHANGED_TYPE, 0)
+    actor.duelOps:clearAllStatusConditions()
     return false
   end)
 

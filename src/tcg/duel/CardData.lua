@@ -163,6 +163,18 @@ function CardData:getCardIDFromDeckIndex(deckIndex)
   return self.memory:read8("wram", base + (deckIndex % 0x100), bank)
 end
 
+-- Write-side counterpart of getCardIDFromDeckIndex, used only by Ditto's
+-- Morph to permanently overwrite a deck slot's card identity in place
+-- (the deck position itself is untouched; only what card that position
+-- reports as changes for the rest of the duel).
+function CardData:setCardIDForDeckIndex(deckIndex, cardId)
+  local deckSymbol = self.duelVars:turn() == self.c.PLAYER_TURN
+    and "wPlayerDeck" or "wOpponentDeck"
+  local base, bank = self.memory:address(deckSymbol)
+  assert(bank == 0, deckSymbol .. " unexpectedly moved out of WRAM0")
+  self.memory:write8("wram", base + (deckIndex % 0x100), cardId, bank)
+end
+
 -- GetCardInDuelTempList_OnlyDeckIndex::
 function CardData:getCardInDuelTempListOnlyDeckIndex(index)
   local base, bank = self.memory:address("wDuelTempList")
