@@ -47,7 +47,7 @@ class LegendaryZapdosTurnSourceTests(unittest.TestCase):
         return self.ai_src[start:end]
 
     def test_anti_mill_check_runs_before_any_phase(self):
-        block = self._block("function AI:doTurnLegendaryZapdos", "\n-- AIDoAction_Turn")
+        block = self._block("function AI:doTurnLegendaryZapdos", "\n-- AIDoTurn_LegendaryMoltres")
         init_pos = block.index("self:initTurnVars()")
         anti_mill_pos = block.index("self:handleAIAntiMewtwoDeckStrategy()")
         phase1_pos = block.index("AI_TRAINER_CARD_PHASE_01")
@@ -55,7 +55,7 @@ class LegendaryZapdosTurnSourceTests(unittest.TestCase):
         self.assertLess(anti_mill_pos, phase1_pos)
 
     def test_phase_list_is_1_4_7_10_13_not_the_general_deck_list(self):
-        block = self._block("function AI:doTurnLegendaryZapdos", "\n-- AIDoAction_Turn")
+        block = self._block("function AI:doTurnLegendaryZapdos", "\n-- AIDoTurn_LegendaryMoltres")
         self.assertIn("AI_TRAINER_CARD_PHASE_01, self.c.AI_TRAINER_CARD_PHASE_04", block)
         self.assertIn("AI_TRAINER_CARD_PHASE_07", block)
         self.assertIn("AI_TRAINER_CARD_PHASE_10", block)
@@ -66,7 +66,7 @@ class LegendaryZapdosTurnSourceTests(unittest.TestCase):
             self.assertNotIn(absent, block)
 
     def test_voltorb_electabuzz_branch_checks_arena_then_hand_then_attached_count(self):
-        block = self._block("function AI:doTurnLegendaryZapdos", "\n-- AIDoAction_Turn")
+        block = self._block("function AI:doTurnLegendaryZapdos", "\n-- AIDoTurn_LegendaryMoltres")
         self.assertIn("self.c.VOLTORB", block)
         self.assertIn("self:_findCardIDInHand(self.c.ELECTRODE_LV35)", block)
         self.assertIn("self.c.ELECTABUZZ_LV35", block)

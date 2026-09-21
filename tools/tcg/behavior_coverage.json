@@ -1296,6 +1296,15 @@
       ],
       "target": "src/tcg/duel/AI.lua",
       "state": "translated"
+    },
+    {
+      "source": "src/engine/duel/ai/decks/legendary_moltres.asm",
+      "labels": [
+        "AIActionTable_LegendaryMoltres",
+        "AIDoTurn_LegendaryMoltres"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated"
     }
   ]
 }

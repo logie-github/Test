@@ -5786,6 +5786,83 @@ function AI:doTurnLegendaryZapdos()
   return true, "finish_no_attack"
 end
 
+-- AIDoTurn_LegendaryMoltres:: bespoke turn logic for the Legendary Moltres
+-- boss deck (engine/duel/ai/decks/legendary_moltres.asm). Like Zapdos's, the
+-- anti-Mewtwo-mill check runs immediately after InitAITurnVars, before any
+-- phase. Two bespoke branches: (1) after phases 2 and 4, if the Bench isn't
+-- full, the deck has more than 9 cards left, no Muk is in play on either
+-- side, and MoltresLv37 is in hand, play it directly as a Basic Pokemon
+-- (bypassing the normal scoring in decidePlayPokemonCard entirely); (2) the
+-- Energy-attach step force-attaches directly to the Arena when it's
+-- MagmarLv31 with no Energy attached yet, same shape as Zapdos's
+-- Voltorb/Electabuzz branch but gated on a single card ID.
+function AI:doTurnLegendaryMoltres()
+  self:initTurnVars()
+  local antiMillOk, antiMillErr = self:handleAIAntiMewtwoDeckStrategy()
+  if antiMillOk == nil then return nil, antiMillErr end
+  if antiMillOk then
+    for _, phase in ipairs({self.c.AI_TRAINER_CARD_PHASE_02, self.c.AI_TRAINER_CARD_PHASE_04}) do
+      local ok, err = self:processHandTrainerCards(phase)
+      if ok == nil then return nil, err end
+    end
+
+    local playAreaCount = self.duelVars:get(self.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+    if playAreaCount < self.c.MAX_PLAY_AREA_POKEMON then
+      local notInDeck = self.duelVars:get(self.c.DUELVARS_NUMBER_OF_CARDS_NOT_IN_DECK)
+      if notInDeck < self.c.DECK_SIZE - 9 then
+        local _, muk = self.combat.status:countPokemonWithActivePkmnPowerInBothPlayAreas(self.c.MUK)
+        if not muk and self:_findCardIDInHand(self.c.MOLTRES_LV37) then
+          local playOk0, reason0 = self.playerActions:playBasic(self.c.MOLTRES_LV37)
+          if not playOk0 and reason0 ~= "bench_full" then return nil, reason0 end
+        end
+      end
+    end
+
+    local playOk, playErr = self:decidePlayPokemonCard()
+    if playOk == nil then return nil, playErr end
+    local ok5, err5 = self:processHandTrainerCards(self.c.AI_TRAINER_CARD_PHASE_05)
+    if ok5 == nil then return nil, err5 end
+    local retreatOk, retreatErr = self:processRetreat()
+    if retreatOk == nil then return nil, retreatErr end
+    for _, phase in ipairs({self.c.AI_TRAINER_CARD_PHASE_10, self.c.AI_TRAINER_CARD_PHASE_11}) do
+      local a, b = self:processHandTrainerCards(phase)
+      if a == nil then return nil, b end
+    end
+
+    if self.memory:readSymbol8("wAlreadyPlayedEnergy") == 0 then
+      local arenaIndex = self.duelVars:get(self.c.DUELVARS_ARENA_CARD)
+      local arenaCardId = self.cardData:getCardIDFromDeckIndex(arenaIndex)
+      if arenaCardId == self.c.MAGMAR_LV31 then
+        local handEnergy = self:_energyCardsInHand()
+        if #handEnergy > 0 then
+          if self.duelOps:countNumberOfEnergyCardsAttached(self.c.PLAY_AREA_ARENA) ~= 0 then
+            local energyOk, energyErr = self:processAndTryToPlayEnergy()
+            if energyOk == nil then return nil, energyErr end
+          else
+            local attachOk, attachErr = self:_tryToPlayEnergyCard(self.c.PLAY_AREA_ARENA, handEnergy)
+            if attachOk == nil then return nil, attachErr end
+          end
+        end
+      else
+        local energyOk, energyErr = self:processAndTryToPlayEnergy()
+        if energyOk == nil then return nil, energyErr end
+      end
+    end
+
+    local playOk2, playErr2 = self:decidePlayPokemonCard()
+    if playOk2 == nil then return nil, playErr2 end
+    local ok13, err13 = self:processHandTrainerCards(self.c.AI_TRAINER_CARD_PHASE_13)
+    if ok13 == nil then return nil, err13 end
+  end
+
+  local attacked2, attackResult2 = self:processAndTryToUseAttack()
+  if attacked2 == nil then return nil, attackResult2 end
+  if attacked2 then return true, attackResult2 end
+  self.combat.core:clearNonTurnTemporaryDuelvars()
+  self.memory:writeSymbol8("wOpponentTurnEnded", 1)
+  return true, "finish_no_attack"
+end
+
 -- AIDoAction_Turn:: dispatches through the source DeckAIPointerTable. Generic
 -- tables now use the native common core; special/boss tables remain adapters.
 function AI:doTurn()
@@ -5806,6 +5883,8 @@ function AI:doTurn()
     return self:mainTurnLogic(false)
   elseif label == "AIActionTable_LegendaryZapdos" then
     return self:doTurnLegendaryZapdos()
+  elseif label == "AIActionTable_LegendaryMoltres" then
+    return self:doTurnLegendaryMoltres()
   end
   return self:_required("turnSpecial")(label, self.memory:readSymbol8("wOpponentDeckID"))
 end
