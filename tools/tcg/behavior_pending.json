@@ -769,7 +769,9 @@
         "StepIn_SwitchEffect",
         "LeekSlap_OncePerDuelCheck",
         "LeekSlap_SetUsedThisDuelFlag",
-        "FetchEffect"
+        "FetchEffect",
+        "MysteryAttack_RandomEffect",
+        "MysteryAttack_RecoverEffect"
       ],
       "target": "src/tcg/duel/EffectCommands.lua",
       "state": "partial",
@@ -778,7 +780,7 @@
         "Gale_LoadAnimation/_SwitchEffect, Wail_BenchCheck/_FillBenchEffect",
         "SpacingOut_CheckDamage/_HealEffect/_Success50PercentEffect, SolarPower_CheckUse/_RemoveStatusEffect",
         "FriendshipSong_AddToBench50PercentEffect/_BenchCheck",
-        "IceBreath_RandomPokemonDamageEffect/_ZeroDamage, MysteryAttack_RandomEffect/_RecoverEffect",
+        "IceBreath_RandomPokemonDamageEffect/_ZeroDamage",
         "Remaining standalone attack effects: BigThunderEffect, BoyfriendsEffect, CatPunchEffect, ChainLightningEffect, ClairvoyanceEffect, ClampEffect, DreamEaterEffect, EarthquakeEffect, FirstAid_DamageCheck, FoulOdorEffect, HeadacheEffect, HurricaneEffect, InvisibleWallEffect, KabutoArmorEffect, MagneticStormEffect, MixUpEffect, MorphEffect, NeutralizingShieldEffect, PayDayEffect, PrehistoricPowerEffect, PsywaveEffect, RetreatAidEffect, SingEffect, SleepingGasEffect, SlicingWindEffect, StrikesBackEffect, TantrumEffect, ThickSkinnedEffect, ThunderstormEffect, ToxicGasEffect, TransparencyEffect"
       ]
     }

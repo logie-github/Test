@@ -761,6 +761,36 @@ function EffectCommands:_installSharedHandlers()
     return s.status:queueStatusCondition(s.c.PSN_DBLPSN, s.c.ASLEEP)
   end)
 
+  -- Porygon: Mystery Attack. An 8-way RNG pick (UpdateRNGSources & %111, not
+  -- a coin flip), reusing the four unconditional status handlers above
+  -- directly by name for options 0-3. Option 4 (recover) does nothing here
+  -- -- MysteryAttack_RecoverEffect (a separate, later phase) checks the
+  -- relayed roll itself and heals only then.
+  self:register("MysteryAttack_RandomEffect", function(s, context)
+    local actor = s:_actor(context)
+    if not actor then return nil, "effect_context_missing_actor" end
+    s:_setDefiniteDamage(10)
+    local roll = bit.band(s.setup.rng:updateSources(), 7)
+    s.memory:writeSymbol8("hTemp_ffa0", roll)
+    if roll == 0 then return s.handlers["ParalysisEffect"](s, context)
+    elseif roll == 1 then return s.handlers["PoisonEffect"](s, context)
+    elseif roll == 2 then return s.handlers["SleepEffect"](s, context)
+    elseif roll == 3 then return s.handlers["ConfusionEffect"](s, context)
+    elseif roll == 4 or roll == 5 then return false -- .recover / .no_effect
+    elseif roll == 6 then
+      s:_setDefiniteDamage(20)
+      return false
+    else -- roll == 7: .no_damage
+      s:_setDefiniteDamage(0)
+      s.memory:writeSymbol8("wLoadedAttackAnimation", s.c.ATK_ANIM_GLOW_EFFECT)
+      return s:_setNoEffectFromStatus()
+    end
+  end)
+  self:register("MysteryAttack_RecoverEffect", function(s, context)
+    if s.memory:readSymbol8("hTemp_ffa0") ~= 4 then return false end
+    return s:_healAttackingArena(context, 10)
+  end)
+
   self:register("Poison50PercentEffect", function(s)
     return s:_tossThen(s.c.CNF_SLP_PRZ, s.c.POISONED)
   end)
