@@ -1072,6 +1072,28 @@ function EffectCommands:_installSharedHandlers()
     return false
   end)
 
+  -- Meowth: Pay Day. Coin heads only: same draw-1-card shape as Fetch.
+  self:register("PayDayEffect", function(s, context)
+    local result, err = s.setup:tossCoin()
+    if result == nil then return nil, err end
+    if result == s.c.TAILS then return false end
+    local actor = s:_actor(context)
+    if not actor then return nil, "effect_context_missing_actor" end
+    local deckIndex, carry = actor.duelOps:drawCardFromDeck()
+    if carry then return false end
+    actor.duelOps:addCardToHand(deckIndex)
+    return false
+  end)
+
+  -- Snorlax: Dream Eater -- usable only while the Defending Pokemon is
+  -- Asleep.
+  self:register("DreamEaterEffect", function(s, context)
+    local actor = s:_actor(context)
+    if not actor then return nil, "effect_context_missing_actor" end
+    local status = actor.duelVars:getNonTurn(s.c.DUELVARS_ARENA_CARD_STATUS)
+    return bit.band(status, s.c.CNF_SLP_PRZ) ~= s.c.ASLEEP
+  end)
+
   -- Drain/healing families. ApplyAndAnimateHPRecovery caps recovery at max HP;
   -- presentation is surfaced as an event while RAM state follows the source.
   local function dealtDamage(s) return s:_readWord("wDealtDamage") end
@@ -3499,6 +3521,17 @@ function EffectCommands:_installSharedHandlers()
   registerSelfdestruct("MagnetonLv28SelfdestructEffect", 80, 20)
   registerSelfdestruct("MagnetonLv35SelfdestructEffect", 100, 20)
 
+  -- Dugtrio/Onix: Earthquake -- 10 damage to every one of the ATTACKER's
+  -- own Benched Pokemon only (no recoil, no opponent's bench, unlike the
+  -- Selfdestruct family above which shares the same underlying primitive).
+  self:register("EarthquakeEffect", function(s, context)
+    local combat = context.combat
+    if not combat then return nil, "effect_context_missing_combat" end
+    local ok, err = combat:dealDamageToAllBenchedPokemon(10, false, { isDamageToSelf = true })
+    if ok == nil then return nil, err end
+    return false
+  end)
+
   -- Triggered Power primitives. INITIAL_EFFECT_1 stubs intentionally carry so
   -- the powers cannot be used as ordinary attacks, while the trigger phase is
   -- independently executable by the generic dispatcher.
@@ -3507,6 +3540,8 @@ function EffectCommands:_installSharedHandlers()
   self:register("Firegiver_InitialEffect", triggeredOnly)
   self:register("HealingWind_InitialEffect", triggeredOnly)
   self:register("PealOfThunder_InitialEffect", triggeredOnly)
+  self:register("TransparencyEffect", triggeredOnly)
+  self:register("PrehistoricPowerEffect", triggeredOnly)
   self:register("Quickfreeze_Paralysis50PercentEffect", function(s)
     local result, err = s.setup:tossCoin()
     if result == nil then return nil, err end
