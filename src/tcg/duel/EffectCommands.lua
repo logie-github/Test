@@ -3580,6 +3580,21 @@ function EffectCommands:_installSharedHandlers()
   self:register("SlicingWindEffect",
     damageRandomOpponentPlayAreaPokemon(30, self.c.ATK_ANIM_BENCH_HIT))
 
+  -- Mew/Voltorb's Psywave: damage is 10x however many Energy cards are
+  -- attached to the Defending Pokemon's Arena card. GetEnergyAttachedMulti
+  -- plierDamage swaps to the defender, counts, swaps back, and writes wDamage
+  -- directly -- unlike SetDefiniteDamage, it does not touch the AI damage
+  -- hint fields (the real command list has no separate AI_EFFECT entry).
+  self:register("PsywaveEffect", function(s, context)
+    local actor = s:_actor(context)
+    if not actor then return nil, "effect_context_missing_actor" end
+    actor.duelVars:swapTurn()
+    local count = actor.duelOps:countNumberOfEnergyCardsAttached(s.c.PLAY_AREA_ARENA)
+    actor.duelVars:swapTurn()
+    s:_writeWord("wDamage", count * 10)
+    return false
+  end)
+
   self:register("Blizzard_BenchDamage50PercentEffect", function(s)
     local result, err = s.setup:tossCoin()
     if result == nil then return nil, err end
