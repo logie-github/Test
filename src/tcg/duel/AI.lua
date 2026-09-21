@@ -3825,6 +3825,24 @@ function AI:_decideClefairyDollOrMysteriousFossil()
   return count < 4
 end
 
+-- AIDecide_ComputerSearch:: the hand-count>=3 gate is the ONLY deck-agnostic
+-- part of this decision -- every deck that can play it at all (Rock
+-- Crusher, Wonders of Science, Fire Charge, Anger) has its own dedicated,
+-- multi-branch card-search routine with no shared/general fallback; every
+-- other deck never plays it. Those four specialized routines remain their
+-- own tracked pending gap rather than being approximated.
+function AI:_decideComputerSearch()
+  local handCount = self.duelVars:get(self.c.DUELVARS_NUMBER_OF_CARDS_IN_HAND)
+  if handCount < 3 then return false end
+
+  local deckId = self.memory:readSymbol8("wOpponentDeckID")
+  if deckId == self.c.ROCK_CRUSHER_DECK_ID or deckId == self.c.WONDERS_OF_SCIENCE_DECK_ID
+      or deckId == self.c.FIRE_CHARGE_DECK_ID or deckId == self.c.ANGER_DECK_ID then
+    return nil, "untranslated_ai_computer_search_special_deck"
+  end
+  return false
+end
+
 -- AICheckIfAttackIsHighRecoil:: despite the name, the source routine's final
 -- carry (after its `ccf`) means "there IS a usable attack AND it is NOT
 -- flagged High Recoil" -- i.e. a normal, safe attack is available. Every
@@ -4777,6 +4795,8 @@ function AI:_decideTrainer(constantName, phase, currentTrainerDeckIndex)
     return self:_decideGambler()
   elseif constantName == "CLEFAIRY_DOLL" or constantName == "MYSTERIOUS_FOSSIL" then
     return self:_decideClefairyDollOrMysteriousFossil()
+  elseif constantName == "COMPUTER_SEARCH" then
+    return self:_decideComputerSearch()
   end
   return nil, "untranslated_ai_trainer:" .. constantName
 end
@@ -4802,7 +4822,7 @@ function AI:_playTrainerForAI(constantName, selection, parameter)
   end
   if constantName == "MAINTENANCE" or constantName == "ITEM_FINDER"
       or constantName == "ENERGY_RETRIEVAL" or constantName == "SUPER_ENERGY_RETRIEVAL"
-      or constantName == "LASS" or constantName == "GAMBLER" then
+      or constantName == "LASS" or constantName == "GAMBLER" or constantName == "COMPUTER_SEARCH" then
     self:_setPreviousAIFlag(self.c.AI_FLAG_MODIFIED_HAND)
   end
   return true
@@ -4855,6 +4875,7 @@ function AI:processHandTrainerCards(phase)
         or constantName == "IMPOSTER_PROFESSOR_OAK" or constantName == "SCOOP_UP"
         or constantName == "LASS" or constantName == "IMAKUNI_CARD" or constantName == "GAMBLER"
         or constantName == "CLEFAIRY_DOLL" or constantName == "MYSTERIOUS_FOSSIL"
+        or constantName == "COMPUTER_SEARCH"
       if not supported then return nil, "untranslated_ai_trainer:" .. constantName end
       if self:_chooseRandomlyNotToDoAction() then break end
       local decision, selectionOrErr, parameter =

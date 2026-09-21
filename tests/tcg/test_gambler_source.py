@@ -55,7 +55,11 @@ class GamblerSourceTests(unittest.TestCase):
                              self.ai_src.index("local AI_TRAINER_PHASES")]
         self.assertIn('if constantName == "GAMBLER" then', block)
         self.assertIn("self:_playGamblerWithRNGCheat(cardId, selection)", block)
-        self.assertIn('or constantName == "GAMBLER" then', block)  # MODIFIED_HAND flag group
+        # MODIFIED_HAND flag group: GAMBLER may not be the last name on its
+        # line once later cards are appended, so check membership loosely.
+        flag_group_start = block.index('if constantName == "MAINTENANCE"')
+        flag_group_end = block.index("then", flag_group_start)
+        self.assertIn('constantName == "GAMBLER"', block[flag_group_start:flag_group_end])
 
     def test_rng_cheat_pokes_and_restores_all_three_bytes(self):
         block = self.ai_src[self.ai_src.index("function AI:_playGamblerWithRNGCheat"):
