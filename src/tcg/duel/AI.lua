@@ -3890,20 +3890,35 @@ function AI:_decideImposterProfessorOak()
   return handCount < 6
 end
 
--- AIDecide_ScoopUp:: general path only (the LegendaryArticuno/LegendaryRonald
--- deck branches remain untranslated fail-closed, matching _decideProfessorOak's
--- own Articuno/Excavation/WondersOfScience boundary). Scoops the Active card
--- exactly when it can neither attack for lethal nor retreat away from danger
--- AND it has already taken at least 70% of its max HP in damage -- otherwise
--- ordinary attacking/retreating is preferred over spending the Trainer card.
+-- .decide_switch shared tail from AIDecide_ScoopUp: scoop the Arena card,
+-- replacing it from the Bench via the common switch-target scorer.
+function AI:_decideScoopUpArenaSwitch()
+  local slot, reason = self:decideBenchPokemonToSwitchTo()
+  if not slot then return false, reason end
+  return true, { playArea = self.c.PLAY_AREA_ARENA, replacement = slot }
+end
+
+-- .check_attached_energy / .no_energy shared tail from AIDecide_ScoopUp's
+-- LegendaryArticuno/LegendaryRonald handlers: scoop a found Bench card only
+-- if it has no Energy attached (stripping a card that has Energy invested
+-- in it is never worth it for these decks). No replacement Bench slot is
+-- needed -- the Arena stays as-is.
+function AI:_scoopBenchSlotIfNoEnergy(slot)
+  if self.duelOps:countNumberOfEnergyCardsAttached(slot) ~= 0 then return false end
+  return true, { playArea = slot }
+end
+
+-- AIDecide_ScoopUp:: general path. Scoops the Active card exactly when it
+-- can neither attack for lethal nor retreat away from danger AND it has
+-- already taken at least 70% of its max HP in damage -- otherwise ordinary
+-- attacking/retreating is preferred over spending the Trainer card.
 function AI:_decideScoopUp()
   local count = self.duelVars:get(self.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
   if count < 2 then return false end
 
   local deckId = self.memory:readSymbol8("wOpponentDeckID")
-  if deckId == self.c.LEGENDARY_ARTICUNO_DECK_ID or deckId == self.c.LEGENDARY_RONALD_DECK_ID then
-    return nil, "untranslated_ai_scoop_up_special_deck"
-  end
+  if deckId == self.c.LEGENDARY_ARTICUNO_DECK_ID then return self:_decideScoopUpLegendaryArticuno() end
+  if deckId == self.c.LEGENDARY_RONALD_DECK_ID then return self:_decideScoopUpLegendaryRonald() end
 
   local canKO, attackIndex = self:checkIfAnyAttackKnocksOutDefendingCard(self.c.PLAY_AREA_ARENA)
   if canKO == nil then return nil, attackIndex end
@@ -3926,9 +3941,79 @@ function AI:_decideScoopUp()
   local maxHPCounters = math.floor(maxHP / 10)
   if math.floor(damage / maxHPCounters) < 7 then return false end
 
-  local slot, reason = self:decideBenchPokemonToSwitchTo()
-  if not slot then return false, reason end
-  return true, { playArea = self.c.PLAY_AREA_ARENA, replacement = slot }
+  return self:_decideScoopUpArenaSwitch()
+end
+
+-- AIDecide_ScoopUp's .HandleLegendaryArticuno: will use Scoop Up on a
+-- benched ArticunoLv37 (skipping this if the Player's Active is Snorlax --
+-- source comment notes it interestingly does not check for Muk in play
+-- here), or on an Arena ArticunoLv37/Chansey if it will be KO'd by the
+-- Player and the AI itself has no lethal this turn.
+function AI:_decideScoopUpLegendaryArticuno()
+  local count = self.duelVars:get(self.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+  if count < 3 then return false end
+
+  local benchSlot = self:_findCardIDInPlayArea(self.c.ARTICUNO_LV37, self.c.PLAY_AREA_BENCH_1)
+  if benchSlot ~= 0xff then
+    local playerArenaIndex = self.duelVars:getNonTurn(self.c.DUELVARS_ARENA_CARD)
+    self.duelVars:swapTurn()
+    local playerArenaId = self.cardData:getCardIDFromDeckIndex(playerArenaIndex)
+    self.duelVars:swapTurn()
+    if playerArenaId == self.c.SNORLAX then return false end
+    return self:_scoopBenchSlotIfNoEnergy(benchSlot)
+  end
+
+  local arenaIndex = self.duelVars:get(self.c.DUELVARS_ARENA_CARD)
+  local arenaId = self.cardData:getCardIDFromDeckIndex(arenaIndex)
+  if arenaId ~= self.c.ARTICUNO_LV37 and arenaId ~= self.c.CHANSEY then return false end
+
+  local canKO, attackIndex = self:checkIfAnyAttackKnocksOutDefendingCard(self.c.PLAY_AREA_ARENA)
+  if canKO == nil then return nil, attackIndex end
+  local threatened = true
+  if canKO then
+    local usable, reason = self:_checkAttackUsableForAI(attackIndex)
+    if usable then
+      threatened = false
+    elseif reason and reason:match("^untranslated_effect:") then
+      return nil, reason
+    elseif self:_lookForEnergyNeededInHand(self.c.PLAY_AREA_ARENA, attackIndex) then
+      threatened = false
+    end
+  end
+  if threatened then
+    local playerCanKO, koErr = self:checkIfDefendingPokemonCanKnockOut()
+    if playerCanKO == nil then return nil, koErr end
+    threatened = playerCanKO
+  end
+  if not threatened then return false end
+  return self:_decideScoopUpArenaSwitch()
+end
+
+-- AIDecide_ScoopUp's .HandleLegendaryRonald: will use Scoop Up on a benched
+-- ArticunoLv37, ZapdosLv68, or MoltresLv37 -- source comment notes it
+-- interestingly does not check for Muk in either Play Area. Unlike
+-- Articuno's own handler, this one has no Arena-card branch at all.
+function AI:_decideScoopUpLegendaryRonald()
+  local count = self.duelVars:get(self.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+  if count < 3 then return false end
+
+  local articunoSlot = self:_findCardIDInPlayArea(self.c.ARTICUNO_LV37, self.c.PLAY_AREA_BENCH_1)
+  if articunoSlot ~= 0xff then
+    local playerArenaIndex = self.duelVars:getNonTurn(self.c.DUELVARS_ARENA_CARD)
+    self.duelVars:swapTurn()
+    local playerArenaId = self.cardData:getCardIDFromDeckIndex(playerArenaIndex)
+    self.duelVars:swapTurn()
+    if playerArenaId == self.c.SNORLAX then return false end
+    return self:_scoopBenchSlotIfNoEnergy(articunoSlot)
+  end
+
+  local zapdosSlot = self:_findCardIDInPlayArea(self.c.ZAPDOS_LV68, self.c.PLAY_AREA_BENCH_1)
+  if zapdosSlot ~= 0xff then return self:_scoopBenchSlotIfNoEnergy(zapdosSlot) end
+
+  local moltresSlot = self:_findCardIDInPlayArea(self.c.MOLTRES_LV37, self.c.PLAY_AREA_BENCH_1)
+  if moltresSlot ~= 0xff then return self:_scoopBenchSlotIfNoEnergy(moltresSlot) end
+
+  return false
 end
 
 -- AIDecide_Lass:: only worth using against a well-stocked opponent hand

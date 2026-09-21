@@ -7,9 +7,10 @@ status/retreat-cost gate, and the 70%-max-HP damage threshold computed via
 the source's own integer floor(rawDamage / floor(maxHP/10)) division rather
 than a floating-point approximation) is exercised for real by
 lua_fixtures/scoop_up_smoke.lua under LuaJIT -- see test_lua_execution_smoke
-below. These source-shape checks only confirm the pieces are wired together
-and that the Legendary Articuno/Ronald deck branches fail closed rather than
-being approximated by the general path.
+below. These source-shape checks confirm the pieces are wired together,
+including the general path's dispatch to the Legendary Articuno/Ronald
+deck-specific handlers (AI:_decideScoopUpLegendaryArticuno/Ronald) rather
+than the earlier fail-closed boundary.
 """
 
 import pathlib
@@ -40,16 +41,54 @@ class ScoopUpSourceTests(unittest.TestCase):
         self.assertIn('[10] = { "POTION", "GUST_OF_WIND", "ENERGY_RETRIEVAL", "MR_FUJI", "SCOOP_UP" },',
                        self.ai_src)
 
-    def test_decide_fails_closed_on_specialized_decks(self):
-        block = self.ai_src[self.ai_src.index("function AI:_decideScoopUp"):
-                             self.ai_src.index("-- AICheckIfAttackIsHighRecoil")]
+    def _block(self, start_marker):
+        start = self.ai_src.index(start_marker)
+        candidates = []
+        for marker in ("\nfunction AI:", "\nlocal function", "\nreturn AI"):
+            try:
+                candidates.append(self.ai_src.index(marker, start + 1))
+            except ValueError:
+                pass
+        return self.ai_src[start:min(candidates)]
+
+    def test_decide_dispatches_to_legendary_deck_handlers(self):
+        block = self._block("function AI:_decideScoopUp()")
         self.assertIn("LEGENDARY_ARTICUNO_DECK_ID", block)
+        self.assertIn("self:_decideScoopUpLegendaryArticuno()", block)
         self.assertIn("LEGENDARY_RONALD_DECK_ID", block)
-        self.assertIn('"untranslated_ai_scoop_up_special_deck"', block)
+        self.assertIn("self:_decideScoopUpLegendaryRonald()", block)
         self.assertIn("checkIfAnyAttackKnocksOutDefendingCard", block)
         self.assertIn("_lookForEnergyNeededInHand", block)
         self.assertIn("countNumberOfEnergyCardsAttached", block)
-        self.assertIn("decideBenchPokemonToSwitchTo", block)
+        self.assertIn("self:_decideScoopUpArenaSwitch()", block)
+
+    def test_legendary_articuno_checks_snorlax_before_scooping_bench(self):
+        block = self._block("function AI:_decideScoopUpLegendaryArticuno")
+        self.assertIn("self.c.ARTICUNO_LV37, self.c.PLAY_AREA_BENCH_1", block)
+        snorlax_pos = block.index("self.c.SNORLAX")
+        scoop_pos = block.index("self:_scoopBenchSlotIfNoEnergy(benchSlot)")
+        self.assertLess(snorlax_pos, scoop_pos)
+        self.assertIn("self.c.CHANSEY", block)
+        self.assertIn("self:checkIfDefendingPokemonCanKnockOut()", block)
+        self.assertIn("self:_decideScoopUpArenaSwitch()", block)
+
+    def test_legendary_ronald_checks_articuno_then_zapdos_then_moltres(self):
+        block = self._block("function AI:_decideScoopUpLegendaryRonald")
+        articuno_pos = block.index("self.c.ARTICUNO_LV37")
+        zapdos_pos = block.index("self.c.ZAPDOS_LV68")
+        moltres_pos = block.index("self.c.MOLTRES_LV37")
+        self.assertLess(articuno_pos, zapdos_pos)
+        self.assertLess(zapdos_pos, moltres_pos)
+        # Only the Articuno case re-checks Snorlax; Zapdos/Moltres go
+        # straight to the no-energy-attached check.
+        self.assertEqual(block.count("self.c.SNORLAX"), 1)
+        self.assertEqual(block.count("self:_scoopBenchSlotIfNoEnergy"), 3)
+
+    def test_scoop_bench_helper_checks_energy_and_omits_replacement(self):
+        block = self._block("function AI:_scoopBenchSlotIfNoEnergy")
+        self.assertIn("countNumberOfEnergyCardsAttached(slot) ~= 0", block)
+        self.assertIn("{ playArea = slot }", block)
+        self.assertNotIn("replacement", block)
 
     def test_effects_are_registered(self):
         for label in ("ScoopUp_BenchCheck", "ScoopUp_PlayerSelection", "ScoopUp_ReturnToHandEffect"):

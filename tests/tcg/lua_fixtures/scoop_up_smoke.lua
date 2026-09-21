@@ -1,15 +1,17 @@
 -- Behavioral smoke test for Scoop Up's AI decision (AIDecide_ScoopUp,
--- trainer_cards.asm, general path), run under real LuaJIT rather than only
--- checked as source text: the KO/usability short-circuit, the
+-- trainer_cards.asm), run under real LuaJIT rather than only checked as
+-- source text: the general path's KO/usability short-circuit, the
 -- status/retreat-cost gate, the 70%-max-HP damage threshold (computed via
 -- the source's own floor(rawDamage / floor(maxHP/10)) integer division, not
--- a floating-point approximation), and the specialized-deck fail-closed veto.
+-- a floating-point approximation), and the Legendary Articuno/Ronald deck-
+-- specific Bench-scoop handlers (Snorlax check, no-energy-attached gate,
+-- and Articuno's own Arena-card KO-danger branch).
 
 package.path = package.path .. ";./?.lua"
 local AI = require("src.tcg.duel.AI")
 
 local C = {
-  PLAY_AREA_ARENA = 0, PLAY_AREA_BENCH_1 = 1, MAX_PLAY_AREA_POKEMON = 3,
+  PLAY_AREA_ARENA = 0, PLAY_AREA_BENCH_1 = 1, MAX_PLAY_AREA_POKEMON = 6,
   FIRST_ATTACK_OR_PKMN_POWER = 0, SECOND_ATTACK = 1,
   DUELVARS_ARENA_CARD = 0x10, DUELVARS_ARENA_CARD_HP = 0x20,
   DUELVARS_ARENA_CARD_STATUS = 0x30,
@@ -19,6 +21,8 @@ local C = {
   CNF_SLP_PRZ = 0x07, PARALYZED = 0x02, ASLEEP = 0x04, NO_STATUS = 0,
   LEGENDARY_ARTICUNO_DECK_ID = 900, LEGENDARY_RONALD_DECK_ID = 901,
   BULBASAUR = 30,
+  ARTICUNO_LV37 = 40, CHANSEY = 41, SNORLAX = 42, ZAPDOS_LV68 = 43, MOLTRES_LV37 = 44,
+  EEVEE = 45,
 }
 
 local failures = 0
@@ -62,7 +66,24 @@ local function newAI(opts)
     loadAttack = function(_, deckIndex, attackIndex) return nil, (opts.attacks or {})[attackIndex] end,
     status = { handleEnergyBurn = function() end },
   })
+  if opts.playerCanKO ~= nil then
+    ai.checkIfDefendingPokemonCanKnockOut = function() return opts.playerCanKO end
+  end
   return ai
+end
+
+-- Fills DUELVARS_ARENA_CARD+slot for slots 0..count-1 with distinct fake
+-- deck indices mapped to the given card IDs (nil = Basic filler card), and
+-- terminates the Play Area with 0xff at slot count (required by
+-- _findCardIDInPlayArea's scan, which stops at the first 0xff).
+local function playArea(turn, deckIndexToCardId, cardIds)
+  for i, cardId in ipairs(cardIds) do
+    local slot = i - 1
+    local deckIndex = 1000 + slot
+    turn[C.DUELVARS_ARENA_CARD + slot] = deckIndex
+    deckIndexToCardId[deckIndex] = cardId or C.BULBASAUR
+  end
+  turn[C.DUELVARS_ARENA_CARD + #cardIds] = 0xff
 end
 
 -- ---------------------------------------------------------------------
@@ -74,19 +95,137 @@ do
 end
 
 -- ---------------------------------------------------------------------
--- Specialized decks fail closed rather than approximating the general path.
+-- Legendary Articuno/Ronald: fewer than 3 Play Area Pokemon -> never scoop.
 -- ---------------------------------------------------------------------
 do
   local ai = newAI({ turn = { [C.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA] = 2 },
     symbols = { wOpponentDeckID = C.LEGENDARY_ARTICUNO_DECK_ID } })
-  local decided, err = ai:_decideScoopUp()
-  check("Legendary Articuno deck fails closed", decided, nil)
-  check("Legendary Articuno deck error reason", err, "untranslated_ai_scoop_up_special_deck")
+  check("Legendary Articuno, <3 in Play Area: no scoop", ai:_decideScoopUp(), false)
 end
 do
   local ai = newAI({ turn = { [C.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA] = 2 },
     symbols = { wOpponentDeckID = C.LEGENDARY_RONALD_DECK_ID } })
-  check("Legendary Ronald deck fails closed", (ai:_decideScoopUp()), nil)
+  check("Legendary Ronald, <3 in Play Area: no scoop", ai:_decideScoopUp(), false)
+end
+
+-- ---------------------------------------------------------------------
+-- Legendary Articuno: ArticunoLv37 on Bench, Player's Active is Snorlax ->
+-- skipped (the source's own noted quirk: no Muk check here at all).
+-- ---------------------------------------------------------------------
+do
+  local turn, deckIndexToCardId = { [C.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA] = 3 }, {}
+  playArea(turn, deckIndexToCardId, { C.BULBASAUR, C.EEVEE, C.ARTICUNO_LV37 })
+  local nonTurn = { [C.DUELVARS_ARENA_CARD] = 5000 }
+  deckIndexToCardId[5000] = C.SNORLAX
+  local ai = newAI({ turn = turn, nonTurn = nonTurn, deckIndexToCardId = deckIndexToCardId,
+    symbols = { wOpponentDeckID = C.LEGENDARY_ARTICUNO_DECK_ID } })
+  check("Legendary Articuno, ArticunoLv37 on Bench, Player has Snorlax: no scoop",
+    ai:_decideScoopUp(), false)
+end
+
+-- ---------------------------------------------------------------------
+-- Legendary Articuno: ArticunoLv37 on Bench, Player's Active is NOT
+-- Snorlax -> scoop it exactly when it has no Energy attached.
+-- ---------------------------------------------------------------------
+do
+  local turn, deckIndexToCardId = { [C.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA] = 3 }, {}
+  playArea(turn, deckIndexToCardId, { C.BULBASAUR, C.EEVEE, C.ARTICUNO_LV37 })
+  local nonTurn = { [C.DUELVARS_ARENA_CARD] = 5000 }
+  deckIndexToCardId[5000] = C.EEVEE
+  local ai = newAI({ turn = turn, nonTurn = nonTurn, deckIndexToCardId = deckIndexToCardId,
+    symbols = { wOpponentDeckID = C.LEGENDARY_ARTICUNO_DECK_ID }, energyCardsAttached = 0 })
+  local ok, selection = ai:_decideScoopUp()
+  check("Legendary Articuno, ArticunoLv37 on Bench, no Energy attached: scoops", ok, true)
+  check("Legendary Articuno bench scoop: targets the found slot (2)", selection.playArea, 2)
+  check("Legendary Articuno bench scoop: no replacement needed", selection.replacement, nil)
+end
+do
+  local turn, deckIndexToCardId = { [C.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA] = 3 }, {}
+  playArea(turn, deckIndexToCardId, { C.BULBASAUR, C.EEVEE, C.ARTICUNO_LV37 })
+  local nonTurn = { [C.DUELVARS_ARENA_CARD] = 5000 }
+  deckIndexToCardId[5000] = C.EEVEE
+  local ai = newAI({ turn = turn, nonTurn = nonTurn, deckIndexToCardId = deckIndexToCardId,
+    symbols = { wOpponentDeckID = C.LEGENDARY_ARTICUNO_DECK_ID }, energyCardsAttached = 1 })
+  check("Legendary Articuno, ArticunoLv37 on Bench, HAS Energy attached: no scoop",
+    ai:_decideScoopUp(), false)
+end
+
+-- ---------------------------------------------------------------------
+-- Legendary Articuno: no ArticunoLv37 on Bench, Arena is Chansey, no
+-- lethal available this turn, and the Player threatens a KO -> scoop the
+-- Arena with a Bench replacement.
+-- ---------------------------------------------------------------------
+do
+  local turn, deckIndexToCardId = { [C.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA] = 3 }, {}
+  playArea(turn, deckIndexToCardId, { C.CHANSEY, C.EEVEE, C.BULBASAUR })
+  local ai = newAI({ turn = turn, nonTurn = { [C.DUELVARS_ARENA_CARD_HP] = 100 },
+    deckIndexToCardId = deckIndexToCardId,
+    symbols = { wOpponentDeckID = C.LEGENDARY_ARTICUNO_DECK_ID },
+    attacks = { [0] = { nameTextId = 0 }, [1] = { nameTextId = 0 } }, playerCanKO = true })
+  ai.decideBenchPokemonToSwitchTo = function() return 1 end
+  local ok, selection = ai:_decideScoopUp()
+  check("Legendary Articuno, Arena=Chansey, no lethal, Player threatens KO: scoops", ok, true)
+  check("Legendary Articuno Arena scoop: targets the Arena", selection.playArea, C.PLAY_AREA_ARENA)
+  check("Legendary Articuno Arena scoop: carries the switch target", selection.replacement, 1)
+end
+do
+  local turn, deckIndexToCardId = { [C.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA] = 3 }, {}
+  playArea(turn, deckIndexToCardId, { C.CHANSEY, C.EEVEE, C.BULBASAUR })
+  local ai = newAI({ turn = turn, nonTurn = { [C.DUELVARS_ARENA_CARD_HP] = 100 },
+    deckIndexToCardId = deckIndexToCardId,
+    symbols = { wOpponentDeckID = C.LEGENDARY_ARTICUNO_DECK_ID },
+    attacks = { [0] = { nameTextId = 0 }, [1] = { nameTextId = 0 } }, playerCanKO = false })
+  check("Legendary Articuno, Arena=Chansey, Player does NOT threaten a KO: no scoop",
+    ai:_decideScoopUp(), false)
+end
+do
+  -- Arena is neither ArticunoLv37 nor Chansey -> no scoop, regardless of
+  -- anything else.
+  local turn, deckIndexToCardId = { [C.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA] = 3 }, {}
+  playArea(turn, deckIndexToCardId, { C.EEVEE, C.EEVEE, C.BULBASAUR })
+  local ai = newAI({ turn = turn, deckIndexToCardId = deckIndexToCardId,
+    symbols = { wOpponentDeckID = C.LEGENDARY_ARTICUNO_DECK_ID } })
+  check("Legendary Articuno, Arena is neither Articuno nor Chansey: no scoop",
+    ai:_decideScoopUp(), false)
+end
+
+-- ---------------------------------------------------------------------
+-- Legendary Ronald: checks ArticunoLv37, then ZapdosLv68, then MoltresLv37
+-- on the Bench, in that order; no Arena-card branch at all.
+-- ---------------------------------------------------------------------
+do
+  local turn, deckIndexToCardId = { [C.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA] = 3 }, {}
+  playArea(turn, deckIndexToCardId, { C.BULBASAUR, C.ZAPDOS_LV68, C.EEVEE })
+  local ai = newAI({ turn = turn, deckIndexToCardId = deckIndexToCardId,
+    symbols = { wOpponentDeckID = C.LEGENDARY_RONALD_DECK_ID }, energyCardsAttached = 0 })
+  local ok, selection = ai:_decideScoopUp()
+  check("Legendary Ronald, ZapdosLv68 on Bench, no Energy: scoops it", ok, true)
+  check("Legendary Ronald: targets the Zapdos slot (1)", selection.playArea, 1)
+end
+do
+  local turn, deckIndexToCardId = { [C.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA] = 3 }, {}
+  playArea(turn, deckIndexToCardId, { C.BULBASAUR, C.EEVEE, C.MOLTRES_LV37 })
+  local ai = newAI({ turn = turn, deckIndexToCardId = deckIndexToCardId,
+    symbols = { wOpponentDeckID = C.LEGENDARY_RONALD_DECK_ID }, energyCardsAttached = 0 })
+  local ok, selection = ai:_decideScoopUp()
+  check("Legendary Ronald, MoltresLv37 on Bench, no Energy: scoops it", ok, true)
+  check("Legendary Ronald: targets the Moltres slot (2)", selection.playArea, 2)
+end
+do
+  -- Zapdos AND Moltres both present -> Zapdos wins (checked first).
+  local turn, deckIndexToCardId = { [C.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA] = 3 }, {}
+  playArea(turn, deckIndexToCardId, { C.BULBASAUR, C.ZAPDOS_LV68, C.MOLTRES_LV37 })
+  local ai = newAI({ turn = turn, deckIndexToCardId = deckIndexToCardId,
+    symbols = { wOpponentDeckID = C.LEGENDARY_RONALD_DECK_ID }, energyCardsAttached = 0 })
+  local ok, selection = ai:_decideScoopUp()
+  check("Legendary Ronald, both Zapdos and Moltres present: Zapdos wins", selection.playArea, 1)
+end
+do
+  local turn, deckIndexToCardId = { [C.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA] = 3 }, {}
+  playArea(turn, deckIndexToCardId, { C.BULBASAUR, C.EEVEE, C.EEVEE })
+  local ai = newAI({ turn = turn, deckIndexToCardId = deckIndexToCardId,
+    symbols = { wOpponentDeckID = C.LEGENDARY_RONALD_DECK_ID } })
+  check("Legendary Ronald, none of the three found: no scoop", ai:_decideScoopUp(), false)
 end
 
 -- ---------------------------------------------------------------------
