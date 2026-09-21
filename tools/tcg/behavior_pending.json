@@ -782,7 +782,15 @@
         "NeutralizingShieldEffect",
         "KabutoArmorEffect",
         "ThickSkinnedEffect",
-        "ClampEffect"
+        "ClampEffect",
+        "ToxicGasEffect",
+        "StrikesBackEffect",
+        "RetreatAidEffect",
+        "SingEffect",
+        "SleepingGasEffect",
+        "HeadacheEffect",
+        "FoulOdorEffect",
+        "TantrumEffect"
       ],
       "target": "src/tcg/duel/EffectCommands.lua",
       "state": "partial",
@@ -792,7 +800,7 @@
         "SpacingOut_CheckDamage/_HealEffect/_Success50PercentEffect, SolarPower_CheckUse/_RemoveStatusEffect",
         "FriendshipSong_AddToBench50PercentEffect/_BenchCheck",
         "IceBreath_RandomPokemonDamageEffect/_ZeroDamage",
-        "Remaining standalone attack effects: BigThunderEffect, BoyfriendsEffect, CatPunchEffect, ChainLightningEffect, FirstAid_DamageCheck, FoulOdorEffect, HeadacheEffect, HurricaneEffect, MagneticStormEffect, MixUpEffect, MorphEffect, PsywaveEffect, RetreatAidEffect, SingEffect, SleepingGasEffect, SlicingWindEffect, StrikesBackEffect, TantrumEffect, ThunderstormEffect, ToxicGasEffect"
+        "Remaining standalone attack effects: BigThunderEffect, BoyfriendsEffect, CatPunchEffect, ChainLightningEffect, FirstAid_DamageCheck, HurricaneEffect, MagneticStormEffect, MixUpEffect, MorphEffect, PsywaveEffect, SlicingWindEffect, ThunderstormEffect"
       ]
     }
   ]

@@ -867,6 +867,62 @@ function EffectCommands:_installSharedHandlers()
   self:register("ShellderSupersonicEffect", supersonic)
   self:register("TentacruelSupersonicEffect", supersonic)
 
+  -- Clefairy/Gastly: Sing/Sleeping Gas -- the exact same shape as Supersonic
+  -- above (coin heads inflicts the status, tails marks "no effect"), just
+  -- Sleep instead of Confused.
+  local function sleepOrNoEffect(s)
+    local result, err = s.setup:tossCoin()
+    if result == nil then return nil, err end
+    if result == s.c.HEADS then
+      return s.status:queueStatusCondition(s.c.PSN_DBLPSN, s.c.ASLEEP)
+    end
+    return s:_setNoEffectFromStatus()
+  end
+  self:register("SingEffect", sleepOrNoEffect)
+  self:register("SleepingGasEffect", sleepOrNoEffect)
+
+  -- Psyduck: Headache -- sets a SUBSTATUS3 flag on the Defending Pokemon,
+  -- unconditional, no coin.
+  self:register("HeadacheEffect", function(s, context)
+    local actor = s:_actor(context)
+    if not actor then return nil, "effect_context_missing_actor" end
+    local sub3 = actor.duelVars:getNonTurn(s.c.DUELVARS_ARENA_CARD_SUBSTATUS3)
+    actor.duelVars:setNonTurn(s.c.DUELVARS_ARENA_CARD_SUBSTATUS3,
+      bit.bor(sub3, bit.lshift(1, s.c.SUBSTATUS3_HEADACHE_F)))
+    return false
+  end)
+
+  -- Gloom: Foul Odor -- confuses BOTH active Pokemon unconditionally (no
+  -- coin), reusing the already-registered plain ConfusionEffect by name.
+  self:register("FoulOdorEffect", function(s, context)
+    local carry, err = s.handlers["ConfusionEffect"](s, context)
+    if carry == nil then return nil, err end
+    local actor = s:_actor(context)
+    if not actor then return nil, "effect_context_missing_actor" end
+    actor.duelVars:swapTurn()
+    local ownCarry, ownErr = s.handlers["ConfusionEffect"](s, context)
+    actor.duelVars:swapTurn()
+    if ownCarry == nil then return nil, ownErr end
+    return false
+  end)
+
+  -- Primeape: Tantrum -- heads does nothing; tails confuses PRIMEAPE'S OWN
+  -- side (SwapTurn before calling the plain ConfusionEffect, which always
+  -- targets whichever side is currently non-turn).
+  self:register("TantrumEffect", function(s, context)
+    local result, err = s.setup:tossCoin()
+    if result == nil then return nil, err end
+    if result == s.c.HEADS then return false end
+    s.memory:writeSymbol8("wLoadedAttackAnimation", s.c.ATK_ANIM_MULTIPLE_SLASH)
+    local actor = s:_actor(context)
+    if not actor then return nil, "effect_context_missing_actor" end
+    actor.duelVars:swapTurn()
+    local carry, confErr = s.handlers["ConfusionEffect"](s, context)
+    actor.duelVars:swapTurn()
+    if carry == nil then return nil, confErr end
+    return false
+  end)
+
   -- Common SUBSTATUS1 families. These are direct translations of the small
   -- wrappers in effect_functions.asm and feed the already-translated common
   -- damage/prevention engine.
@@ -3562,6 +3618,9 @@ function EffectCommands:_installSharedHandlers()
   self:register("NeutralizingShieldEffect", triggeredOnly)
   self:register("KabutoArmorEffect", triggeredOnly)
   self:register("ThickSkinnedEffect", triggeredOnly)
+  self:register("ToxicGasEffect", triggeredOnly)
+  self:register("StrikesBackEffect", triggeredOnly)
+  self:register("RetreatAidEffect", triggeredOnly)
   self:register("Quickfreeze_Paralysis50PercentEffect", function(s)
     local result, err = s.setup:tossCoin()
     if result == nil then return nil, err end
