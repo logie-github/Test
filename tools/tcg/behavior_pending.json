@@ -311,10 +311,10 @@
       "target": "src/tcg/duel/AI.lua",
       "state": "partial",
       "remaining": [
-        "remaining Trainer decision/play families (Lass, Imakuni, Gambler, Clefairy Doll, Mysterious Fossil, Computer Search and Pokemon Trader)",
+        "remaining Trainer decision/play families (Imakuni, Gambler, Clefairy Doll, Mysterious Fossil, Computer Search and Pokemon Trader)",
         "exact hand-snapshot/table scan order and generic modified-hand relist semantics outside the explicitly translated restart paths"
       ],
-      "notes": "Native decisions now cover Bill, Potion, Defender, PlusPower, Switch, Full Heal, Energy Search, general Professor Oak, Energy Removal, Pokemon Center, Pokedex, Mr Fuji, Maintenance, Recycle, Item Finder, Revive, Pokemon Flute, Energy Retrieval, Super Energy Retrieval, Super Energy Removal, Gust of Wind, Poke Ball, Super Potion, Pokemon Breeder (forced-priority Stage2 set plus the general fallback with its Dragonite Lv41 evolution gate), Imposter Professor Oak (targets the non-turn duelist's hand/deck, distinct from ordinary Professor Oak's discard-based effect) and Scoop Up's general KO/retreat/70%-damage path (its LegendaryArticuno/LegendaryRonald deck branches remain their own separate pending entry). AIChooseRandomlyNotToDoAction is native; unsupported entries still fail closed."
+      "notes": "Native decisions now cover Bill, Potion, Defender, PlusPower, Switch, Full Heal, Energy Search, general Professor Oak, Energy Removal, Pokemon Center, Pokedex, Mr Fuji, Maintenance, Recycle, Item Finder, Revive, Pokemon Flute, Energy Retrieval, Super Energy Retrieval, Super Energy Removal, Gust of Wind, Poke Ball, Super Potion, Pokemon Breeder (forced-priority Stage2 set plus the general fallback with its Dragonite Lv41 evolution gate), Imposter Professor Oak (targets the non-turn duelist's hand/deck, distinct from ordinary Professor Oak's discard-based effect), Scoop Up's general KO/retreat/70%-damage path (its LegendaryArticuno/LegendaryRonald deck branches remain their own separate pending entry) and Lass (both duelists' hands, own-hand-Trainer self-veto). AIChooseRandomlyNotToDoAction is native; unsupported entries still fail closed."
     },
     {
       "source": "src/engine/duel/ai/pkmn_powers.asm",

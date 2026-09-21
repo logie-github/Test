@@ -3729,6 +3729,28 @@ function AI:_decideScoopUp()
   return true, { playArea = self.c.PLAY_AREA_ARENA, replacement = slot }
 end
 
+-- AIDecide_Lass:: only worth using against a well-stocked opponent hand
+-- (>=7 cards), and only when the AI's OWN hand holds no other Trainer card
+-- (by card ID, not hand position -- other copies of Lass itself don't
+-- count), since Lass shuffles both duelists' remaining Trainer cards back
+-- into their own deck and the AI doesn't want to give up its own.
+function AI:_decideLass()
+  local oppHandCount = self.duelVars:getNonTurn(self.c.DUELVARS_NUMBER_OF_CARDS_IN_HAND)
+  if oppHandCount < 7 then return false end
+
+  local hand = self.duelOps:createHandCardList()
+  for _, deckIndex in ipairs(hand) do
+    local cardId = self.cardData:getCardIDFromDeckIndex(deckIndex)
+    if cardId ~= self.c.LASS then
+      local row = self.cardData:get(cardId)
+      if row and row.type == self.c.TYPE_TRAINER then
+        return false
+      end
+    end
+  end
+  return true
+end
+
 -- AICheckIfAttackIsHighRecoil:: despite the name, the source routine's final
 -- carry (after its `ccf`) means "there IS a usable attack AND it is NOT
 -- flagged High Recoil" -- i.e. a normal, safe attack is available. Every
@@ -4673,6 +4695,8 @@ function AI:_decideTrainer(constantName, phase, currentTrainerDeckIndex)
     return self:_decideImposterProfessorOak()
   elseif constantName == "SCOOP_UP" then
     return self:_decideScoopUp()
+  elseif constantName == "LASS" then
+    return self:_decideLass()
   end
   return nil, "untranslated_ai_trainer:" .. constantName
 end
@@ -4692,7 +4716,8 @@ function AI:_playTrainerForAI(constantName, selection, parameter)
       self.c.AI_FLAG_MODIFIED_HAND or 0))
   end
   if constantName == "MAINTENANCE" or constantName == "ITEM_FINDER"
-      or constantName == "ENERGY_RETRIEVAL" or constantName == "SUPER_ENERGY_RETRIEVAL" then
+      or constantName == "ENERGY_RETRIEVAL" or constantName == "SUPER_ENERGY_RETRIEVAL"
+      or constantName == "LASS" then
     self:_setPreviousAIFlag(self.c.AI_FLAG_MODIFIED_HAND)
   end
   return true
@@ -4743,6 +4768,7 @@ function AI:processHandTrainerCards(phase)
         or constantName == "GUST_OF_WIND" or constantName == "POKE_BALL"
         or constantName == "SUPER_POTION" or constantName == "POKEMON_BREEDER"
         or constantName == "IMPOSTER_PROFESSOR_OAK" or constantName == "SCOOP_UP"
+        or constantName == "LASS"
       if not supported then return nil, "untranslated_ai_trainer:" .. constantName end
       if self:_chooseRandomlyNotToDoAction() then break end
       local decision, selectionOrErr, parameter =

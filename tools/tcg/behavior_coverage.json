@@ -793,7 +793,8 @@
         "ImposterProfessorOakEffect",
         "ScoopUp_BenchCheck",
         "ScoopUp_PlayerSelection",
-        "ScoopUp_ReturnToHandEffect"
+        "ScoopUp_ReturnToHandEffect",
+        "LassEffect"
       ],
       "target": "src/tcg/duel/EffectCommands.lua",
       "state": "translated",
@@ -1090,6 +1091,15 @@
       "labels": [
         "AIPlay_ImposterProfessorOak",
         "AIDecide_ImposterProfessorOak"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/engine/duel/ai/trainer_cards.asm",
+      "labels": [
+        "AIPlay_Lass",
+        "AIDecide_Lass"
       ],
       "target": "src/tcg/duel/AI.lua",
       "state": "translated"

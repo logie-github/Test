@@ -1220,6 +1220,55 @@ function EffectCommands:_installSharedHandlers()
     return false
   end)
 
+  -- Lass discards itself FIRST (so its own hand-scan below never re-catches
+  -- it), then shuffles every remaining Trainer card in BOTH duelists' hands
+  -- back into their own deck -- non-turn duelist first (swapped), then the
+  -- turn duelist -- shuffling (with the source's own ExchangeRNG call) only
+  -- when that duelist actually had a Trainer card to return.
+  self:register("LassEffect", function(s, context)
+    local a = context.playerActions
+    if not a then return nil, "effect_context_missing_player_actions" end
+
+    local playedDeckIndex = a.memory:readSymbol8("hTempCardIndex_ff9f")
+    a.duelOps:removeCardFromHand(playedDeckIndex)
+    a.duelOps:putCardInDiscardPile(playedDeckIndex)
+
+    local function shuffleHandTrainersIntoDeck()
+      a.duelOps:createHandCardList()
+      a.duelOps:sortCardsInDuelTempListByID()
+      local base, bank = a.memory:address("wDuelTempList")
+      local pos, moved = 0, 0
+      while true do
+        local deckIndex = a.memory:read8("wram", base + pos, bank)
+        if deckIndex == 0xff then break end
+        local cardId = a.cardData:getCardIDFromDeckIndex(deckIndex)
+        local row = a.cardData:get(cardId)
+        if row and row.type == s.c.TYPE_TRAINER then
+          a.duelOps:removeCardFromHand(deckIndex)
+          a.duelOps:returnCardToDeck(deckIndex)
+          moved = moved + 1
+        end
+        pos = pos + 1
+      end
+      if moved > 0 then
+        local failed, exchangeErr = a.combat.setup:exchangeRNG()
+        if failed then return nil, exchangeErr end
+        a.duelOps:shuffleDeck()
+      end
+      return true
+    end
+
+    a.duelVars:swapTurn()
+    local ok, err = shuffleHandTrainersIntoDeck()
+    a.duelVars:swapTurn()
+    if not ok then return nil, err end
+
+    local ok2, err2 = shuffleHandTrainersIntoDeck()
+    if not ok2 then return nil, err2 end
+
+    return false
+  end)
+
   self:register("Potion_DamageCheck", function(s, context)
     local a = context.playerActions
     if not a then return nil, "effect_context_missing_player_actions" end

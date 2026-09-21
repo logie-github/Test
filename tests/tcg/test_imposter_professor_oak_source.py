@@ -49,8 +49,9 @@ class ImposterProfessorOakSourceTests(unittest.TestCase):
 
     def test_effect_is_registered_and_returns_to_deck_not_discard(self):
         self.assertIn('self:register("ImposterProfessorOakEffect"', self.effects_src)
-        block = self.effects_src[self.effects_src.index('self:register("ImposterProfessorOakEffect"'):
-                                  self.effects_src.index('self:register("Potion_DamageCheck"')]
+        start = self.effects_src.index('self:register("ImposterProfessorOakEffect"')
+        end = self.effects_src.index('self:register(', start + 1)
+        block = self.effects_src[start:end]
         self.assertIn("a.duelVars:swapTurn()", block)
         self.assertIn("a.duelOps:returnCardToDeck(deckIndex)", block)
         self.assertNotIn("putCardInDiscardPile", block)

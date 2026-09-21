@@ -56,8 +56,9 @@ class ScoopUpSourceTests(unittest.TestCase):
             self.assertIn(f'self:register("{label}"', self.effects_src)
 
     def test_return_to_hand_effect_only_scoops_a_basic_pokemon(self):
-        block = self.effects_src[self.effects_src.index('self:register("ScoopUp_ReturnToHandEffect"'):
-                                  self.effects_src.index('self:register("Potion_DamageCheck"')]
+        start = self.effects_src.index('self:register("ScoopUp_ReturnToHandEffect"')
+        end = self.effects_src.index('self:register(', start + 1)
+        block = self.effects_src[start:end]
         self.assertIn("row.stage == s.c.BASIC", block)
         self.assertIn("a.duelOps:movePlayAreaCardToDiscardPile(scoopSlot)", block)
         self.assertIn("a.duelOps:clearAllStatusConditions()", block)
