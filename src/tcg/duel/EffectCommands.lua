@@ -3714,6 +3714,55 @@ function EffectCommands:_installSharedHandlers()
     return false
   end)
 
+  -- Ninetales' Mix Up: sorts the opponent's Hand by card ID, moves every
+  -- Pokemon card found there back into the Deck, always reshuffles the
+  -- Deck and rebuilds the Deck list (RNG parity, matching the real ASM's
+  -- unconditional ShuffleCardsInDeck/CreateDeckCardList even when no cards
+  -- moved), then -- only if any cards did move -- draws back exactly that
+  -- many Pokemon cards from the freshly shuffled Deck.
+  self:register("MixUpEffect", function(s, context)
+    local actor = s:_actor(context)
+    if not actor then return nil, "effect_context_missing_actor" end
+    actor.duelVars:swapTurn()
+
+    local hand = actor.duelOps:createHandCardList()
+    actor.duelOps:sortCardsInDuelTempListByID()
+    local base, bank = actor.memory:address("wDuelTempList")
+
+    local movedToDeck = 0
+    for i = 0, #hand - 1 do
+      local deckIndex = actor.memory:read8("wram", base + i, bank)
+      local cardId = actor.cardData:getCardIDFromDeckIndex(deckIndex)
+      local row = actor.cardData:get(cardId)
+      if row and row.type < s.c.TYPE_ENERGY then
+        movedToDeck = movedToDeck + 1
+        actor.duelOps:removeCardFromHand(deckIndex)
+        actor.duelOps:returnCardToDeck(deckIndex)
+      end
+    end
+
+    actor.duelOps:shuffleDeck()
+    local deck = actor.duelOps:createDeckCardList()
+    if movedToDeck > 0 then
+      local remaining = movedToDeck
+      local i = 0
+      while remaining > 0 and i < #deck do
+        local deckIndex = actor.memory:read8("wram", base + i, bank)
+        i = i + 1
+        local cardId = actor.cardData:getCardIDFromDeckIndex(deckIndex)
+        local row = actor.cardData:get(cardId)
+        if row and row.type < s.c.TYPE_ENERGY then
+          remaining = remaining - 1
+          actor.duelOps:searchCardInDeckAndAddToHand(deckIndex)
+          actor.duelOps:addCardToHand(deckIndex)
+        end
+      end
+    end
+
+    actor.duelVars:swapTurn()
+    return false
+  end)
+
   -- Pidgeot's Gale: switches the Defending Pokemon to a random Bench slot
   -- (unless the attack was unaffected), then always switches the
   -- Attacking Pokemon to a random Bench slot too. Shares
