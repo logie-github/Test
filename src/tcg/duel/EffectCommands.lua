@@ -1014,6 +1014,34 @@ function EffectCommands:_installSharedHandlers()
     coinZeroDamage(self.c.ATK_ANIM_DIVE_BOMB, true))
   self:register("LeekSlap_NoDamage50PercentEffect", coinZeroDamage(nil, false))
 
+  -- Farfetch'd: Leek Slap can only ever be used once per duel (a duel-long
+  -- flag on the Arena card, distinct from the per-turn USED_PKMN_POWER_
+  -- THIS_TURN flags elsewhere in this file).
+  self:register("LeekSlap_OncePerDuelCheck", function(s, context)
+    local actor = s:_actor(context)
+    if not actor then return nil, "effect_context_missing_actor" end
+    local flags = actor.duelVars:get(s.c.DUELVARS_ARENA_CARD_FLAGS)
+    return bit.band(flags, bit.lshift(1, s.c.USED_LEEK_SLAP_THIS_DUEL_F)) ~= 0
+  end)
+  self:register("LeekSlap_SetUsedThisDuelFlag", function(s, context)
+    local actor = s:_actor(context)
+    if not actor then return nil, "effect_context_missing_actor" end
+    local flags = actor.duelVars:get(s.c.DUELVARS_ARENA_CARD_FLAGS)
+    actor.duelVars:set(s.c.DUELVARS_ARENA_CARD_FLAGS,
+      bit.bor(flags, bit.lshift(1, s.c.USED_LEEK_SLAP_THIS_DUEL_F)))
+    return false
+  end)
+
+  -- Fetch: draw 1 card from the deck; doing nothing when the deck is empty.
+  self:register("FetchEffect", function(s, context)
+    local actor = s:_actor(context)
+    if not actor then return nil, "effect_context_missing_actor" end
+    local deckIndex, carry = actor.duelOps:drawCardFromDeck()
+    if carry then return false end
+    actor.duelOps:addCardToHand(deckIndex)
+    return false
+  end)
+
   -- Drain/healing families. ApplyAndAnimateHPRecovery caps recovery at max HP;
   -- presentation is surfaced as an event while RAM state follows the source.
   local function dealtDamage(s) return s:_readWord("wDealtDamage") end
