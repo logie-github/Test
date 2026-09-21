@@ -3729,6 +3729,52 @@ function EffectCommands:_installSharedHandlers()
     return false
   end)
 
+  -- Jigglypuff's Friendship Song: fails if the attacker's own Bench is
+  -- already full; on heads, shuffles the attacker's own Deck and adds the
+  -- first Basic Pokemon found to the Bench (the same shuffle-then-scan
+  -- shape as Wail_FillBenchEffect's fillBench, just stopping at the first
+  -- match rather than filling to capacity). The animation plays either
+  -- way on heads, whether or not a Basic Pokemon turned up.
+  self:register("FriendshipSong_BenchCheck", function(s, context)
+    local actor = s:_actor(context)
+    if not actor then return nil, "effect_context_missing_actor" end
+    return actor.duelVars:get(s.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA) >= s.c.MAX_PLAY_AREA_POKEMON
+  end)
+  local function pickRandomBasicCardFromDeck(s, a)
+    local deck, empty = a.duelOps:createDeckCardList()
+    if empty then return nil end
+    local base, bank = a.memory:address("wDuelTempList")
+    a.duelOps.rng:shuffleCards(base, #deck)
+    for i = 0, #deck - 1 do
+      local deckIndex = a.memory:read8("wram", base + i, bank)
+      local cardId = a.cardData:getCardIDFromDeckIndex(deckIndex)
+      local row = a.cardData:get(cardId)
+      if row and row.type < s.c.TYPE_ENERGY and row.stage == s.c.BASIC then
+        return deckIndex
+      end
+    end
+    return nil
+  end
+  self:register("FriendshipSong_AddToBench50PercentEffect", function(s, context)
+    local actor = s:_actor(context)
+    if not actor then return nil, "effect_context_missing_actor" end
+    local result, err = s.setup:tossCoin()
+    if result == nil then return nil, err end
+    if result == s.c.TAILS then return false end
+
+    s.memory:writeSymbol8("wLoadedAttackAnimation", s.c.ATK_ANIM_FRIENDSHIP_SONG)
+    local deckIndex = pickRandomBasicCardFromDeck(s, actor)
+    if deckIndex == nil then
+      actor.duelOps:shuffleDeck()
+      return false
+    end
+    actor.duelOps:searchCardInDeckAndAddToHand(deckIndex)
+    actor.duelOps:addCardToHand(deckIndex)
+    actor.duelOps:putHandPokemonCardInPlayArea(deckIndex)
+    actor.duelOps:shuffleDeck()
+    return false
+  end)
+
   self:register("Blizzard_BenchDamage50PercentEffect", function(s)
     local result, err = s.setup:tossCoin()
     if result == nil then return nil, err end
