@@ -583,8 +583,10 @@ function AI:performSamScriptedTurn()
   return ok, result
 end
 
--- InitAITurnVars:: common state. The rare Mewtwo-mill deck identification
--- branch remains an adapter because it inspects hidden player deck composition.
+-- InitAITurnVars:: common state, including the Mewtwo-mill deck
+-- identification (if Player uses Barrier three turns in a row and its
+-- Arena Pokemon is MewtwoLv53, check whether the Player's whole deck is
+-- MewtwoLv53-only).
 function AI:initTurnVars()
   self.memory:writeSymbol8("wAIPokedexCounter",
     (self.memory:readSymbol8("wAIPokedexCounter") + 1) % 0x100)
@@ -610,8 +612,12 @@ function AI:initTurnVars()
       counter = counter + 1
       self.memory:writeSymbol8("wAIBarrierFlagCounter", counter)
       if counter >= 3 then
-        local fn = self.adapters.checkPlayerMewtwoMillDeck
-        if fn and fn() then
+        local arenaIndex = self.duelVars:getNonTurn(self.c.DUELVARS_ARENA_CARD)
+        self.duelVars:swapTurn()
+        local arenaCardId = self.cardData:getCardIDFromDeckIndex(arenaIndex)
+        self.duelVars:swapTurn()
+        if arenaCardId == self.c.MEWTWO_LV53
+            and not self:_checkIfPlayerHasPokemonOtherThanMewtwoLv53() then
           self.memory:writeSymbol8("wAIBarrierFlagCounter", self.c.AI_MEWTWO_MILL)
         else
           self.memory:writeSymbol8("wAIBarrierFlagCounter", 0)
@@ -623,6 +629,25 @@ function AI:initTurnVars()
   else
     self.memory:writeSymbol8("wAIBarrierFlagCounter", 0)
   end
+end
+
+-- CheckIfPlayerHasPokemonOtherThanMewtwoLv53:: scans the Player's full
+-- DECK_SIZE-card deck by physical deck index (not by current card location,
+-- and regardless of what has been drawn) for any non-Energy card other than
+-- MewtwoLv53.
+function AI:_checkIfPlayerHasPokemonOtherThanMewtwoLv53()
+  self.duelVars:swapTurn()
+  local found = false
+  for deckIndex = 0, self.c.DECK_SIZE - 1 do
+    local cardId = self.cardData:getCardIDFromDeckIndex(deckIndex)
+    local row = self.cardData:get(cardId)
+    if row and row.type < self.c.TYPE_ENERGY and cardId ~= self.c.MEWTWO_LV53 then
+      found = true
+      break
+    end
+  end
+  self.duelVars:swapTurn()
+  return found
 end
 
 function AI:_energyCardIdForColor(color)

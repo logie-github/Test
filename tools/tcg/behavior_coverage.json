@@ -1263,6 +1263,22 @@
       "target": "src/tcg/duel/AI.lua",
       "state": "translated",
       "notes": "Identical to every other verified boss table: .start_duel/.forced_switch/.ko_switch/.take_prize/.do_turn all dispatch to the shared boss-deck routines (bossStartDuel, decideBenchPokemonToSwitchTo, pickPrizeCards, mainTurnLogic); only this deck's own generated priority-list data differs."
+    },
+    {
+      "source": "src/engine/duel/ai/init.asm",
+      "labels": [
+        "InitAITurnVars"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/engine/duel/ai/common.asm",
+      "labels": [
+        "CheckIfPlayerHasPokemonOtherThanMewtwoLv53"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated"
     }
   ]
 }

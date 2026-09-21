@@ -251,18 +251,6 @@
       ]
     },
     {
-      "source": "src/engine/duel/ai/init.asm",
-      "labels": [
-        "InitAITurnVars"
-      ],
-      "target": "src/tcg/duel/AI.lua",
-      "state": "partial",
-      "remaining": [
-        "exact hidden-player-deck Mewtwo-mill identification branch when Barrier persists three turns"
-      ],
-      "notes": "Common turn scratch reset and Barrier counter state are native; the rare deck-composition probe is adapter-backed."
-    },
-    {
       "source": "src/engine/duel/ai/core.asm",
       "labels": [
         "CheckEnergyNeededForAttack",
