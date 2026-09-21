@@ -1,0 +1,23 @@
+TCG handoff validation — 2026-09-19
+====================================
+
+Fresh-extracted persisted checkpoint validation:
+
+- python -m unittest discover -s tests/tcg -p 'test_*.py'
+  => Ran 212 tests; OK
+- python -m py_compile tools/tcg/*.py tests/tcg/*.py
+  => PASS
+- find src/tcg -name '*.lua' -print0 | xargs -0 -n1 env TERM=xterm texluac -p
+  => 28/28 PASS
+
+Coverage/accounting from the included ledgers:
+- 662 translated labels
+- 62 partial labels across 27 pending entries
+- 54 explicit remaining items
+- 248/310 ordinary player-side nonempty effect-command lists
+- 81/81 generic AI-effect identities
+- 45/45 AI-selection identities
+- 5/5 AI-switch identities
+
+Environment limitation:
+No user ROM, matching poketcg.sym/generated cache, or LÖVE executable was available, so no fresh end-to-end extraction/live LÖVE run is claimed.

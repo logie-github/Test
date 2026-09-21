@@ -1,0 +1,379 @@
+{
+  "schema": 1,
+  "sourceRevision": "pret/poketcg matching tools/tcg_rom_manifest.json",
+  "entries": [
+    {
+      "source": "src/engine/duel/core.asm",
+      "labels": [
+        "HandleDuelSetup",
+        "ChooseInitialArenaAndBenchPokemon"
+      ],
+      "target": "src/tcg/duel/DuelSetup.lua",
+      "state": "partial",
+      "remaining": [
+        "DisplayPlaceInitialPokemonCardsScreen / initial-placement UI",
+        "specialized deck AIDoAction_StartDuel startup policy",
+        "DuelTransmissionError / serial transport presentation"
+      ]
+    },
+    {
+      "source": "src/home/ai.asm",
+      "labels": [
+        "AIDoAction_StartDuel"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "partial",
+      "remaining": [
+        "specialized deck turn tables outside Sam practice",
+        "remaining deck-specific Pokemon Power, Trainer and attack-policy decisions"
+      ],
+      "notes": "GeneralDecks and GeneralNoRetreat enter the native common turn core with common retreat/switch scoring, common active Pokemon Power AI, and the cartridge random action-skip gate; unresolved specialized decisions still fail closed."
+    },
+    {
+      "source": "src/engine/duel/core.asm",
+      "labels": [
+        "DoPracticeDuelAction"
+      ],
+      "target": "src/tcg/duel/Practice.lua",
+      "state": "partial",
+      "remaining": [
+        "practice instruction rendering/menu presentation",
+        "full duel-menu integration for wrong-action restart points"
+      ]
+    },
+    {
+      "source": "src/engine/duel/core.asm",
+      "labels": [
+        "_TossCoin"
+      ],
+      "target": "src/tcg/duel/DuelSetup.lua",
+      "state": "partial",
+      "remaining": [
+        "coin-toss UI/animation timing",
+        "link-opponent serial result synchronization"
+      ]
+    },
+    {
+      "source": "src/home/serial.asm",
+      "labels": [
+        "ExchangeRNG"
+      ],
+      "target": "src/tcg/duel/DuelSetup.lua",
+      "state": "partial",
+      "remaining": [
+        "SerialExchangeBytes hardware/transport implementation",
+        "DuelTransmissionError jump semantics"
+      ]
+    },
+    {
+      "source": "src/engine/duel/core.asm",
+      "labels": [
+        "HandleTurn"
+      ],
+      "target": "src/tcg/duel/TurnFlow.lua",
+      "state": "partial",
+      "remaining": [
+        "DisplayDrawOneCardScreen",
+        "DisplayPlayerDrawCardScreen",
+        "DuelMainInterface player/AI/link action engines"
+      ]
+    },
+    {
+      "source": "src/engine/duel/core.asm",
+      "labels": [
+        "HandleBetweenTurnsEvents"
+      ],
+      "target": "src/tcg/duel/Status.lua",
+      "state": "partial",
+      "remaining": [
+        "between-turn presentation/animation timing",
+        "completion of HandleBetweenTurnKnockOuts choice/policy boundaries"
+      ]
+    },
+    {
+      "source": "src/engine/duel/core.asm",
+      "labels": [
+        "HandleBetweenTurnKnockOuts",
+        "ReplaceKnockedOutPokemon"
+      ],
+      "target": "src/tcg/duel/KnockOuts.lua",
+      "state": "partial",
+      "remaining": [
+        "player replacement selection UI",
+        "specialized deck-specific KO-switch overrides beyond the common native bench scorer",
+        "link replacement transport/presentation"
+      ]
+    },
+    {
+      "source": "src/engine/duel/core.asm",
+      "labels": [
+        "TurnDuelistTakePrizes"
+      ],
+      "target": "src/tcg/duel/Prizes.lua",
+      "state": "partial",
+      "remaining": [
+        "player prize-selection UI presentation",
+        "link prize transport/presentation"
+      ]
+    },
+    {
+      "source": "src/engine/menus/duel.asm",
+      "labels": [
+        "_SelectPrizeCards"
+      ],
+      "target": "src/tcg/duel/Prizes.lua",
+      "state": "partial",
+      "remaining": [
+        "cursor/menu/card-page presentation and input implementation"
+      ]
+    },
+    {
+      "source": "src/engine/duel/core.asm",
+      "labels": [
+        "DuelMainInterface"
+      ],
+      "target": "src/tcg/duel/DuelInterface.lua",
+      "state": "partial",
+      "remaining": [
+        "DrawDuelMainScene cartridge rendering",
+        "PrintDuelMenuAndHandleInput cartridge menu/presentation",
+        "DoLinkOpponentTurn",
+        "per-deck AIDoAction_Turn policies outside Sam practice"
+      ]
+    },
+    {
+      "source": "src/home/ai.asm",
+      "labels": [
+        "AIDoAction_Turn"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "partial",
+      "remaining": [
+        "specialized deck turn tables outside Sam practice",
+        "remaining deck-specific Pokemon Power, Trainer and attack-policy decisions"
+      ],
+      "notes": "GeneralDecks and GeneralNoRetreat enter the native common turn core with common retreat/switch scoring, common active Pokemon Power AI, and the cartridge random action-skip gate; unresolved specialized decisions still fail closed."
+    },
+    {
+      "source": "src/engine/duel/core.asm",
+      "labels": [
+        "MainDuelLoop"
+      ],
+      "target": "src/tcg/duel/TurnFlow.lua",
+      "state": "partial",
+      "remaining": [
+        "DisplayDuelistTurnScreen presentation",
+        "DuelMainInterface action engine",
+        "duel-finished result/sudden-death presentation path"
+      ]
+    },
+    {
+      "source": "src/home/duel.asm",
+      "labels": [
+        "CheckIfEnoughEnergiesForGivenAttack",
+        "CopyAttackDataAndDamage_FromDeckIndex",
+        "UseAttackOrPokemonPower",
+        "PlayAttackAnimation_DealAttackDamage",
+        "CheckSelfConfusionDamage",
+        "HandleConfusionDamageToSelf",
+        "DealConfusionDamageToSelf",
+        "ApplyTransparencyIfApplicable"
+      ],
+      "target": "src/tcg/duel/Combat.lua",
+      "state": "partial",
+      "remaining": [
+        "card-specific effect functions beyond the translated status/heal/recoil/energy/search/switch/bench-damage families",
+        "remaining special damage, residual effects, and complex multi-target/card-movement paths",
+        "remaining manual Pokemon Power handlers beyond Damage Swap/Cowardice/Heal/Shift/Peek/Strange Behavior/Curse and Energy Trans, plus attack/power animation and link action transport"
+      ],
+      "notes": "Generic player-attack effect phase dispatch remains fail-closed per function identity. Search/retrieval, advanced Energy accounting, attached-Energy selection, forced switching, play-area damage, all four played-Pokemon trigger powers, and the common manual Power families now have native state paths."
+    },
+    {
+      "source": "src/engine/duel/core.asm",
+      "labels": [
+        "ApplyStatusConditionQueue"
+      ],
+      "target": "src/tcg/duel/Status.lua",
+      "state": "partial",
+      "remaining": [
+        "No Damage or Effect prevention text/menu presentation"
+      ]
+    },
+    {
+      "source": "src/engine/duel/core.asm",
+      "labels": [
+        "PlayPokemonCard",
+        "PlayTrainerCard"
+      ],
+      "target": "src/tcg/duel/PlayerActions.lua",
+      "state": "partial",
+      "remaining": [
+        "general hand/card-list UI and remaining arbitrary card/deck/discard selection presentation",
+        "remaining Trainer effects beyond the translated search/retrieval, Energy, switch, healing, and restoration families"
+      ],
+      "notes": "Basic placement/evolution and the complete state path for normal/Rain Dance Energy attachment are native; PlayPokemonCard/PlayTrainerCard still omit broad cartridge UI/link presentation and many individual effects."
+    },
+    {
+      "source": "src/engine/duel/ai/decks/sams_practice.asm",
+      "labels": [
+        "AIPerformScriptedTurn"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "partial",
+      "remaining": [
+        "cartridge OppAction/AIMakeDecision presentation and incidental UI state writes"
+      ],
+      "notes": "All seven scripted state/action branches and the source turn-5 comparison bug are implemented for the playable practice slice."
+    },
+    {
+      "source": "src/home/substatus.asm",
+      "labels": [
+        "HandleNoDamageOrEffectSubstatus",
+        "HandleTransparency",
+        "CheckNoDamageOrEffect"
+      ],
+      "target": "src/tcg/duel/Status.lua",
+      "state": "partial",
+      "remaining": [
+        "prevention/Transparency text, screen-state, and animation presentation paths"
+      ],
+      "notes": "State decisions and wNoDamageOrEffect mutation are translated; cartridge presentation remains open."
+    },
+    {
+      "source": "src/home/coin_toss.asm",
+      "labels": [
+        "TossCoinATimes"
+      ],
+      "target": "src/tcg/duel/DuelSetup.lua",
+      "state": "partial",
+      "remaining": [
+        "coin-toss screen/animation timing",
+        "link multi-coin serial synchronization adapter implementation"
+      ]
+    },
+    {
+      "source": "src/engine/duel/ai/init.asm",
+      "labels": [
+        "InitAITurnVars"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "partial",
+      "remaining": [
+        "exact hidden-player-deck Mewtwo-mill identification branch when Barrier persists three turns"
+      ],
+      "notes": "Common turn scratch reset and Barrier counter state are native; the rare deck-composition probe is adapter-backed."
+    },
+    {
+      "source": "src/engine/duel/ai/core.asm",
+      "labels": [
+        "CheckEnergyNeededForAttack",
+        "CheckIfSelectedAttackIsUnusable",
+        "CheckIfDefendingPokemonCanKnockOut"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "partial",
+      "remaining": [
+        "remaining unusual multi-color/custom attack edge cases and specialized AI-only usability checks"
+      ],
+      "notes": "Common attack usability/damage prediction is native; the source-specific AISelectSpecialAttackParameters dispatcher is now fully translated."
+    },
+    {
+      "source": "src/engine/duel/ai/decks/general.asm",
+      "labels": [
+        "AIMainTurnLogic"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "partial",
+      "remaining": [
+        "remaining Trainer AI decisions",
+        "specialized deck action-table overrides"
+      ],
+      "notes": "Source phase ordering, Professor Oak second pass, common retreat/switch, common attack/energy play, Energy Trans calls, common active Pokemon Power decisions, and the deck-dependent random action-skip gate are native."
+    },
+    {
+      "source": "src/engine/duel/ai/decks/general_no_retreat.asm",
+      "labels": [
+        "AIDoTurn_GeneralNoRetreat"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "partial",
+      "remaining": [
+        "remaining Trainer AI decisions",
+        "specialized attack/deck heuristics shared with GeneralDecks"
+      ],
+      "notes": "Source phase ordering, Professor Oak second pass, common active Pokemon Power decisions, and the deck-dependent random action-skip gate are native; the no-retreat variant intentionally skips common retreat processing as on cartridge."
+    },
+    {
+      "source": "src/engine/duel/ai/trainer_cards.asm",
+      "labels": [
+        "_AIProcessHandTrainerCards"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "partial",
+      "remaining": [
+        "remaining Trainer decision/play families (Super Potion, Pokemon Breeder, Imposter Professor Oak, Scoop Up, Lass, Imakuni, Gambler, Clefairy Doll, Mysterious Fossil, Computer Search and Pokemon Trader)",
+        "exact hand-snapshot/table scan order and generic modified-hand relist semantics outside the explicitly translated restart paths"
+      ],
+      "notes": "Native decisions now cover Bill, Potion, Defender, PlusPower, Switch, Full Heal, Energy Search, general Professor Oak, Energy Removal, Pokemon Center, Pokedex, Mr Fuji, Maintenance, Recycle, Item Finder, Revive, Pokemon Flute, Energy Retrieval, Super Energy Retrieval, Super Energy Removal, Gust of Wind and Poke Ball. AIChooseRandomlyNotToDoAction is native; unsupported entries still fail closed."
+    },
+    {
+      "source": "src/engine/duel/ai/retreat.asm",
+      "labels": [
+        "AIDecideWhetherToRetreat",
+        "AIDecideBenchPokemonToSwitchTo",
+        "AITryToRetreat"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "partial",
+      "remaining": [
+        "specialized energy-needed branches for every card effect"
+      ],
+      "notes": "Common retreat decision/execution now includes source boss/progression last-prize gates, fully-powered/setup-count scoring, Porygon weakness handling, generated retreat bonuses (including the cartridge missing-pointer bug), Switch substitution, source Energy-payment priority, confusion-after-discard behavior, and the Mysterious Fossil/Clefairy Doll trainer-as-Pokemon discard Power path. The remaining gap is the specialized potential-KO branch that reasons about attacks becoming usable after one Energy from hand."
+    },
+    {
+      "source": "src/engine/duel/ai/pkmn_powers.asm",
+      "labels": [
+        "HandleAIEnergyTrans",
+        "AIEnergyTransTransferEnergyToBench"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "partial",
+      "remaining": [
+        "presentation/delay/OppAction choreography"
+      ],
+      "notes": "Attack, retreat, and active-to-bench Grass Energy transfer modes use the native random action-skip gate and Venusaur/Muk power checks. Transfer-to-Bench now re-runs the cartridge AI_ENERGY_FLAG_DONT_PLAY|SKIP_EVOLUTION|SKIP_ARENA_CARD score preview before each moved Grass Energy, including score backup/restore and lower-Bench-slot tie behavior."
+    },
+    {
+      "source": "src/engine/duel/ai/trainer_cards.asm",
+      "labels": [
+        "AIDecide_Potion_Phase07",
+        "AIDecide_Potion_Phase10",
+        "AIPlay_Potion",
+        "AIDecide_Defender_Phase13",
+        "AIDecide_Defender_Phase14",
+        "AIPlay_Defender",
+        "AIDecide_PlusPower_Phase13",
+        "AIDecide_PlusPower_Phase14",
+        "AIPlay_PlusPower",
+        "AIDecide_Switch",
+        "AIPlay_Switch",
+        "AIDecide_FullHeal",
+        "AIPlay_FullHeal",
+        "AIDecide_EnergySearch",
+        "AIPlay_EnergySearch",
+        "AIDecide_ProfessorOak",
+        "AIPlay_ProfessorOak",
+        "AIDecide_EnergyRemoval",
+        "AIPlay_EnergyRemoval"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "partial",
+      "remaining": [
+        "rare deck/card-specific policy branches and exact random-skip cadence",
+        "Potion/Super-Potion high-recoil and BOOST_IF_TAKEN_DAMAGE interactions not yet complete",
+        "full Energy Removal target-priority and Professor Oak evolution/deck-special-case scoring"
+      ],
+      "notes": "These high-frequency Trainer families now make native source-shaped decisions and execute through the translated player-side Trainer effect engine; unsupported cases fail closed."
+    }
+  ]
+}

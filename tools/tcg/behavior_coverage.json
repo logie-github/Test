@@ -1,0 +1,1048 @@
+{
+  "schema": 1,
+  "sourceRevision": "pret/poketcg matching tools/tcg_rom_manifest.json",
+  "entries": [
+    {
+      "source": "src/home/random.asm",
+      "labels": [
+        "UpdateRNGSources",
+        "Random"
+      ],
+      "target": "src/tcg/duel/RNG.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/home/duel.asm",
+      "labels": [
+        "GetTurnDuelistVariable",
+        "GetNonTurnDuelistVariable",
+        "SwapTurn"
+      ],
+      "target": "src/tcg/duel/DuelVars.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/home/duel.asm",
+      "labels": [
+        "CopyDeckData",
+        "CountPrizes",
+        "ShuffleDeck",
+        "ShuffleCards",
+        "DrawCardFromDeck",
+        "ReturnCardToDeck",
+        "SearchCardInDeckAndAddToHand",
+        "AddCardToHand",
+        "RemoveCardFromHand",
+        "MoveHandCardToDiscardPile",
+        "PutCardInDiscardPile",
+        "MoveDiscardPileCardToHand",
+        "CheckPrizeTaken",
+        "CreateDiscardPileCardList",
+        "CreateDeckCardList",
+        "CountCardsInDuelTempList",
+        "CreateHandCardList",
+        "SortCardsInDuelTempListByID",
+        "SortHandCardsByID",
+        "RemoveCardFromDuelTempList",
+        "ClearAllStatusConditions",
+        "PutHandCardInPlayArea",
+        "PutHandPokemonCardInPlayArea"
+      ],
+      "target": "src/tcg/duel/DuelOps.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/home/duel.asm",
+      "labels": [
+        "GetCardInDuelTempList_OnlyDeckIndex",
+        "GetCardInDuelTempList",
+        "_GetCardIDFromDeckIndex",
+        "GetCardIDFromDeckIndex"
+      ],
+      "target": "src/tcg/duel/CardData.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/home/card_data.asm",
+      "labels": [
+        "LoadCardDataToBuffer1_FromName",
+        "GetCardPointer",
+        "GetCardType",
+        "GetCardName",
+        "GetCardTypeRarityAndSet",
+        "LoadCardDataToHL_FromCardID",
+        "LoadCardDataToBuffer1_FromCardID",
+        "LoadCardDataToBuffer2_FromCardID"
+      ],
+      "target": "src/tcg/duel/CardData.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/home/duel.asm",
+      "labels": [
+        "LoadCardDataToBuffer1_FromDeckIndex",
+        "LoadCardDataToBuffer2_FromDeckIndex"
+      ],
+      "target": "src/tcg/duel/CardData.lua",
+      "state": "translated",
+      "notes": "Depends on ConvertSpecialTrainerCardToPokemon, now translated from ROM-extracted local template."
+    },
+    {
+      "source": "src/engine/duel/core.asm",
+      "labels": [
+        "ConvertSpecialTrainerCardToPokemon",
+        "IsLoadedCard1BasicPokemon"
+      ],
+      "target": "src/tcg/duel/CardData.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/engine/duel/core.asm",
+      "labels": [
+        "InitVariablesToBeginDuel",
+        "InitVariablesToBeginTurn",
+        "SetAllPlayAreaPokemonCanEvolve",
+        "InitializeDuelVariables",
+        "InitTurnDuelistPrizes",
+        "TakeAPrizes",
+        "ClearNonTurnTemporaryDuelvars",
+        "ClearNonTurnTemporaryDuelvars_CopyStatus",
+        "UpdateArenaCardLastTurnDamage",
+        "ShuffleDeckAndDrawSevenCards"
+      ],
+      "target": "src/tcg/duel/Core.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/home/load_deck.asm",
+      "labels": [
+        "LoadDeck"
+      ],
+      "target": "src/tcg/duel/DeckLoader.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/home/ai.asm",
+      "labels": [
+        "LoadOpponentDeck"
+      ],
+      "target": "src/tcg/duel/DeckLoader.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/engine/duel/core.asm",
+      "labels": [
+        "LoadPlayerDeck"
+      ],
+      "target": "src/tcg/duel/DeckLoader.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/home/duel.asm",
+      "labels": [
+        "GetPlayAreaCardAttachedEnergies",
+        "EmptyPlayAreaSlot",
+        "MovePlayAreaCardToDiscardPile",
+        "SwapPlayAreaPokemon",
+        "SwapArenaWithBenchPokemon",
+        "ShiftTurnPokemonToFirstPlayAreaSlots",
+        "ShiftAllPokemonToFirstPlayAreaSlots",
+        "MoveCardToDiscardPileIfInPlayArea",
+        "HasAlivePokemonInBench",
+        "SubtractHP"
+      ],
+      "target": "src/tcg/duel/DuelOps.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/engine/duel/ai/init.asm",
+      "labels": [
+        "InitAIDuelVars"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/engine/duel/ai/core.asm",
+      "labels": [
+        "AIPlayInitialBasicCards",
+        "PickRandomBenchPokemon",
+        "AIPickPrizeCards"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/engine/duel/ai/decks/sams_practice.asm",
+      "labels": [
+        "SetSamsStartingPlayArea",
+        "GetPlayAreaLocationOfRaticateOrRattata",
+        "IsAIPracticeScriptedTurn"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/home/substatus.asm",
+      "labels": [
+        "ClearDamageReductionSubstatus2",
+        "UpdateSubstatusConditions_StartOfTurn",
+        "UpdateSubstatusConditions_EndOfTurn",
+        "CountTurnDuelistPokemonWithActivePkmnPower",
+        "CountPokemonWithActivePkmnPowerInBothPlayAreas",
+        "IsClairvoyanceActive",
+        "HandleDoubleDamageSubstatus",
+        "HandleDamageReduction",
+        "HandleDamageReductionExceptSubstatus2",
+        "IsRainDanceActive"
+      ],
+      "target": "src/tcg/duel/Status.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/engine/duel/core.asm",
+      "labels": [
+        "SaveDuelData",
+        "SaveDuelDataToDE",
+        "LoadSavedDuelDataFromDE",
+        "ValidateSavedDuelDataFromHL"
+      ],
+      "target": "src/tcg/duel/SaveData.lua",
+      "state": "translated",
+      "notes": "SRAM enable/bank hardware is represented by explicit banked memory; payload/header/checksum semantics are source exact."
+    },
+    {
+      "source": "src/home/duel.asm",
+      "labels": [
+        "SaveDuelStateToSRAM"
+      ],
+      "target": "src/tcg/duel/SaveData.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/engine/duel/core.asm",
+      "labels": [
+        "CountKnockedOutPokemon",
+        "CheckIfTurnDuelistPlayAreaPokemonAreAllKnockedOut",
+        "MoveAllTurnHolderKnockedOutPokemonToDiscardPile"
+      ],
+      "target": "src/tcg/duel/KnockOuts.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/home/setup.asm",
+      "labels": [
+        "ZeroRAM"
+      ],
+      "target": "src/tcg/memory/Memory.lua",
+      "state": "translated",
+      "notes": "Standalone TCG entry reproduces the source WRAM0/HRAM clear ranges."
+    },
+    {
+      "source": "src/home/duel.asm",
+      "labels": [
+        "CheckIfCanEvolveInto",
+        "EvolvePokemonCardIfPossible",
+        "EvolvePokemonCard"
+      ],
+      "target": "src/tcg/duel/DuelOps.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/home/substatus.asm",
+      "labels": [
+        "HandleCantAttackSubstatus",
+        "HandleAmnesiaSubstatus",
+        "CheckSandAttackOrSmokescreenSubstatus",
+        "HandleSandAttackOrSmokescreenSubstatus"
+      ],
+      "target": "src/tcg/duel/Status.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/engine/duel/effect_functions.asm",
+      "labels": [
+        "QueueStatusCondition"
+      ],
+      "target": "src/tcg/duel/Status.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/home/duel.asm",
+      "labels": [
+        "CountCardIDInLocation"
+      ],
+      "target": "src/tcg/duel/DuelOps.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/home/duel.asm",
+      "labels": [
+        "ApplyDamageModifiers_DamageToTarget",
+        "ApplyDamageModifiers_DamageToSelf",
+        "TranslateColorToWR",
+        "ApplyAttachedPlusPower",
+        "ApplyAttachedDefender"
+      ],
+      "target": "src/tcg/duel/Combat.lua",
+      "state": "translated",
+      "notes": "Common damage arithmetic/order is translated, including changed color/weakness/resistance, double-damage substatus, PlusPower/Defender, reduction substatuses, Invisible Wall/Kabuto Armor and source 16-bit underflow behavior."
+    },
+    {
+      "source": "src/home/effect_commands.asm",
+      "labels": [
+        "TryExecuteEffectCommandFunction",
+        "CheckMatchingCommand"
+      ],
+      "target": "src/tcg/duel/EffectCommands.lua",
+      "state": "translated",
+      "notes": "Generic phase lookup/dispatch is driven by ROM-verified effect-command lists; untranslated function identities fail closed."
+    },
+    {
+      "source": "src/engine/duel/effect_functions.asm",
+      "labels": [
+        "Poison50PercentEffect",
+        "PoisonEffect",
+        "DoublePoisonEffect",
+        "Paralysis50PercentEffect",
+        "ParalysisEffect",
+        "Confusion50PercentEffect",
+        "ConfusionEffect",
+        "Sleep50PercentEffect",
+        "SleepEffect",
+        "SpitPoison_Poison50PercentEffect",
+        "FoulGas_PoisonOrConfusionEffect",
+        "KakunaStiffenEffect",
+        "MetapodStiffenEffect",
+        "SwordsDanceEffect",
+        "AcidEffect",
+        "ZubatSupersonicEffect",
+        "NidorinaSupersonicEffect",
+        "ApplySubstatus1ToAttackingCard",
+        "ApplySubstatus2ToDefendingCard",
+        "SetNoEffectFromStatus",
+        "SetWasUnsuccessful",
+        "GrimerMinimizeEffect",
+        "ClefableMinimizeEffect",
+        "ExpandEffect",
+        "DestinyBond_DestinyBondEffect",
+        "Barrier_BarrierEffect",
+        "OnixHardenEffect",
+        "GravelerHardenEffect",
+        "LightScreenEffect",
+        "FocusEnergyEffect",
+        "WartortleWithdrawEffect",
+        "SquirtleWithdrawEffect",
+        "HideInShellEffect",
+        "ScrunchEffect",
+        "SeadraAgilityEffect",
+        "RapidashAgilityEffect",
+        "RaichuAgilityEffect",
+        "FearowAgilityEffect",
+        "HorseaSmokescreenEffect",
+        "MagmarSmokescreenEffect",
+        "SnivelEffect",
+        "SandAttackEffect",
+        "PikachuLv16GrowlEffect",
+        "PikachuAltLv16GrowlEffect",
+        "PounceEffect",
+        "LeerEffect",
+        "BoneAttackEffect",
+        "TailWagEffect",
+        "SetDefiniteDamage",
+        "Twineedle_MultiplierEffect",
+        "NidoranFFurySwipes_MultiplierEffect",
+        "NidorinaDoubleKick_MultiplierEffect",
+        "NidorinoDoubleKick_MultiplierEffect",
+        "OmastarSpikeCannon_MultiplierEffect",
+        "PsyduckFurySwipes_MultiplierEffect",
+        "PoliwhirlDoubleslap_MultiplierEffect",
+        "CloysterSpikeCannon_MultiplierEffect",
+        "JynxDoubleslap_MultiplierEffect",
+        "PrimeapeFurySwipes_MultiplierEffect",
+        "Bonemerang_MultiplierEffect",
+        "SandslashFurySwipes_MultiplierEffect",
+        "PinMissile_MultiplierEffect",
+        "JolteonDoubleKick_MultiplierEffect",
+        "DragoniteLv45Slam_MultiplierEffect",
+        "CometPunch_MultiplierEffect",
+        "FuryAttack_MultiplierEffect",
+        "DragonairSlam_MultiplierEffect",
+        "DragoniteLv41Slam_MultiplierEffect",
+        "DancingEmbers_MultiplierEffect",
+        "PetalDance_MultiplierEffect",
+        "StoneBarrage_MultiplierEffect",
+        "VaporeonQuickAttack_DamageBoostEffect",
+        "ArcanineQuickAttack_DamageBoostEffect",
+        "FlareonQuickAttack_DamageBoostEffect",
+        "ElectabuzzQuickAttack_DamageBoostEffect",
+        "JolteonQuickAttack_DamageBoostEffect",
+        "EeveeQuickAttack_DamageBoostEffect",
+        "RapidashStomp_DamageBoostEffect",
+        "TaurosStomp_DamageBoostEffect",
+        "HornHazard_NoDamage50PercentEffect",
+        "MoltresLv35DiveBomb_Success50PercentEffect",
+        "MoltresLv37DiveBomb_Success50PercentEffect",
+        "LeekSlap_NoDamage50PercentEffect",
+        "GolbatLeechLifeEffect",
+        "VenonatLeechLifeEffect",
+        "ZubatLeechLifeEffect",
+        "ExeggcuteLeechSeedEffect",
+        "BulbasaurLeechSeedEffect",
+        "ButterfreeMegaDrainEffect",
+        "VenusaurMegaDrainEffect",
+        "AbsorbEffect",
+        "FirstAid_HealEffect",
+        "TakeDownEffect",
+        "SubmissionEffect",
+        "JigglypuffDoubleEdgeEffect",
+        "ChanseyDoubleEdgeEffect",
+        "Thrash_ModifierEffect",
+        "Thunderpunch_ModifierEffect",
+        "ZapdosThunder_Recoil50PercentEffect",
+        "ThunderJolt_Recoil50PercentEffect",
+        "RaichuThunder_Recoil50PercentEffect",
+        "Thrash_RecoilEffect",
+        "Thunderpunch_RecoilEffect",
+        "ZapdosThunder_RecoilEffect",
+        "ThunderJolt_RecoilEffect",
+        "RaichuThunder_RecoilEffect",
+        "BillEffect",
+        "ProfessorOakEffect",
+        "Potion_DamageCheck",
+        "Potion_PlayerSelection",
+        "Potion_HealEffect",
+        "Quickfreeze_InitialEffect",
+        "Firegiver_InitialEffect",
+        "HealingWind_InitialEffect",
+        "PealOfThunder_InitialEffect",
+        "Quickfreeze_Paralysis50PercentEffect",
+        "ArcanineFlamethrower_CheckEnergy",
+        "ArcanineFlamethrower_PlayerSelectEffect",
+        "ArcanineFlamethrower_DiscardEffect",
+        "FlareonFlamethrower_CheckEnergy",
+        "FlareonFlamethrower_PlayerSelectEffect",
+        "FlareonFlamethrower_DiscardEffect",
+        "MagmarFlamethrower_CheckEnergy",
+        "MagmarFlamethrower_PlayerSelectEffect",
+        "MagmarFlamethrower_DiscardEffect",
+        "CharmeleonFlamethrower_CheckEnergy",
+        "CharmeleonFlamethrower_PlayerSelectEffect",
+        "CharmeleonFlamethrower_DiscardEffect",
+        "FireBlast_CheckEnergy",
+        "FireBlast_PlayerSelectEffect",
+        "FireBlast_DiscardEffect",
+        "Ember_CheckEnergy",
+        "Ember_PlayerSelectEffect",
+        "Ember_DiscardEffect",
+        "ThunderboltEffect",
+        "GolduckHyperBeam_PlayerSelectEffect",
+        "GolduckHyperBeam_DiscardEffect",
+        "Whirlpool_PlayerSelectEffect",
+        "Whirlpool_DiscardEffect",
+        "DragonairHyperBeam_PlayerSelectEffect",
+        "DragonairHyperBeam_DiscardEffect",
+        "Switch_BenchCheck",
+        "Switch_PlayerSelection",
+        "Switch_SwitchEffect",
+        "GustOfWind_BenchCheck",
+        "GustOfWind_PlayerSelection",
+        "GustOfWind_SwitchEffect",
+        "ButterfreeWhirlwind_CheckBench",
+        "ButterfreeWhirlwind_SwitchEffect",
+        "PidgeottoWhirlwind_SelectEffect",
+        "PidgeottoWhirlwind_SwitchEffect",
+        "PidgeyWhirlwind_SelectEffect",
+        "PidgeyWhirlwind_SwitchEffect",
+        "EnergyRemoval_EnergyCheck",
+        "EnergyRemoval_PlayerSelection",
+        "EnergyRemoval_DiscardEffect",
+        "StretchKick_CheckBench",
+        "StretchKick_PlayerSelectEffect",
+        "StretchKick_BenchDamageEffect",
+        "Spark_PlayerSelectEffect",
+        "Spark_BenchDamageEffect",
+        "GengarDarkMind_PlayerSelectEffect",
+        "GengarDarkMind_DamageBenchEffect",
+        "HypnoDarkMind_PlayerSelectEffect",
+        "HypnoDarkMind_DamageBenchEffect",
+        "Blizzard_BenchDamage50PercentEffect",
+        "Blizzard_BenchDamageEffect",
+        "Firegiver_AddToHandEffect",
+        "HealingWind_PlayAreaHealEffect",
+        "PealOfThunder_RandomlyDamageEffect",
+        "RainDanceEffect",
+        "EnergyBurnEffect",
+        "EnergySearch_DeckCheck",
+        "EnergySearch_PlayerSelection",
+        "EnergySearch_AddToHandEffect",
+        "EnergyRetrieval_HandEnergyCheck",
+        "EnergyRetrieval_PlayerHandSelection",
+        "EnergyRetrieval_PlayerDiscardPileSelection",
+        "EnergyRetrieval_DiscardAndAddToHandEffect",
+        "ComputerSearch_HandDeckCheck",
+        "ComputerSearch_PlayerDiscardHandSelection",
+        "ComputerSearch_PlayerDeckSelection",
+        "ComputerSearch_DiscardAddToHandEffect",
+        "ItemFinder_HandDiscardPileCheck",
+        "ItemFinder_PlayerSelection",
+        "ItemFinder_DiscardAddToHandEffect",
+        "SuperEnergyRetrieval_HandEnergyCheck",
+        "SuperEnergyRetrieval_PlayerHandSelection",
+        "SuperEnergyRetrieval_PlayerDiscardPileSelection",
+        "SuperEnergyRetrieval_DiscardAndAddToHandEffect",
+        "SuperEnergyRemoval_EnergyCheck",
+        "SuperEnergyRemoval_PlayerSelection",
+        "SuperEnergyRemoval_DiscardEffect",
+        "EnergyTrans_CheckPlayArea",
+        "EnergyTrans_PrintProcedure",
+        "EnergyTrans_TransferEffect",
+        "PokemonTrader_HandDeckCheck",
+        "PokemonTrader_PlayerHandSelection",
+        "PokemonTrader_PlayerDeckSelection",
+        "PokemonTrader_TradeCardsEffect",
+        "Pokedex_DeckCheck",
+        "Pokedex_PlayerSelection",
+        "Pokedex_OrderDeckCardsEffect",
+        "Maintenance_HandCheck",
+        "Maintenance_PlayerSelection",
+        "Maintenance_ReturnToDeckAndDrawEffect",
+        "Recycle_DiscardPileCheck",
+        "Recycle_PlayerSelection",
+        "Recycle_AddToHandEffect",
+        "FullHeal_StatusCheck",
+        "FullHeal_ClearStatusEffect",
+        "PokeBall_DeckCheck",
+        "PokeBall_PlayerSelection",
+        "PokeBall_AddToHandEffect",
+        "PlusPowerEffect",
+        "Defender_PlayerSelection",
+        "Defender_AttachDefenderEffect",
+        "MrFuji_BenchCheck",
+        "MrFuji_PlayerSelection",
+        "MrFuji_ReturnToDeckEffect",
+        "PokemonCenter_DamageCheck",
+        "PokemonCenter_HealDiscardEnergyEffect",
+        "Revive_BenchCheck",
+        "Revive_PlayerSelection",
+        "Revive_PlaceInPlayAreaEffect",
+        "PokemonFlute_BenchCheck",
+        "PokemonFlute_PlayerSelection",
+        "PokemonFlute_PlaceInPlayAreaText",
+        "EnergyTrans_AIEffect",
+        "SetExpectedAIDamage",
+        "UpdateExpectedAIDamage",
+        "UpdateExpectedAIDamage_AccountForPoison",
+        "ApplyExtraWaterEnergyDamageBonus",
+        "SpitPoison_AIEffect",
+        "Twineedle_AIEffect",
+        "Thrash_AIEffect",
+        "NidoranFFurySwipes_AIEffect",
+        "HornHazard_AIEffect",
+        "NidorinaDoubleKick_AIEffect",
+        "NidorinoDoubleKick_AIEffect",
+        "PetalDance_AIEffect",
+        "OmastarSpikeCannon_AIEffect",
+        "PsyduckFurySwipes_AIEffect",
+        "VaporeonQuickAttack_AIEffect",
+        "PoliwhirlDoubleslap_AIEffect",
+        "CloysterSpikeCannon_AIEffect",
+        "ArcanineQuickAttack_AIEffect",
+        "RapidashStomp_AIEffect",
+        "MoltresLv35DiveBomb_AIEffect",
+        "FlareonQuickAttack_AIEffect",
+        "DancingEmbers_AIEffect",
+        "MoltresLv37DiveBomb_AIEffect",
+        "JynxDoubleslap_AIEffect",
+        "MysteryAttack_AIEffect",
+        "StoneBarrage_AIEffect",
+        "PrimeapeFurySwipes_AIEffect",
+        "Bonemerang_AIEffect",
+        "SandslashFurySwipes_AIEffect",
+        "Thunderpunch_AIEffect",
+        "ElectabuzzQuickAttack_AIEffect",
+        "JolteonQuickAttack_AIEffect",
+        "PinMissile_AIEffect",
+        "Fly_AIEffect",
+        "JolteonDoubleKick_AIEffect",
+        "EeveeQuickAttack_AIEffect",
+        "DragoniteLv45Slam_AIEffect",
+        "LeekSlap_AIEffect",
+        "CometPunch_AIEffect",
+        "TaurosStomp_AIEffect",
+        "FuryAttack_AIEffect",
+        "DragonairSlam_AIEffect",
+        "DragoniteLv41Slam_AIEffect",
+        "PoisonFang_AIEffect",
+        "WeepinbellPoisonPowder_AIEffect",
+        "GloomPoisonPowder_AIEffect",
+        "KakunaPoisonPowder_AIEffect",
+        "BeedrillPoisonSting_AIEffect",
+        "WeedlePoisonSting_AIEffect",
+        "IvysaurPoisonPowder_AIEffect",
+        "Sludge_AIEffect",
+        "WeezingSmog_AIEffect",
+        "TangelaPoisonPowder_AIEffect",
+        "PoisonWhip_AIEffect",
+        "JellyfishSting_AIEffect",
+        "MagmarSmog_AIEffect",
+        "OmastarWaterGunEffect",
+        "OmanyteWaterGunEffect",
+        "HydroPumpEffect",
+        "SeadraWaterGunEffect",
+        "VaporeonWaterGunEffect",
+        "PoliwrathWaterGunEffect",
+        "PoliwagWaterGunEffect",
+        "LaprasWaterGunEffect",
+        "SetDefiniteAIDamage",
+        "BigEggsplosion_AIEffect",
+        "CuboneRage_AIEffect",
+        "DoTheWaveEffect",
+        "DodrioRage_AIEffect",
+        "ElectrodeSonicboom_UnaffectedByColorEffect",
+        "FlamesOfRage_AIEffect",
+        "FlareonRage_AIEffect",
+        "FoulGas_AIEffect",
+        "JynxMeditate_AIEffect",
+        "KarateChop_AIEffect",
+        "KinglerFlail_AIEffect",
+        "MagikarpFlail_AIEffect",
+        "MagnetonSonicboom_UnaffectedByColorEffect",
+        "MrMimeMeditate_AIEffect",
+        "PidgeottoMirrorMove_AIEffect",
+        "Psychic_AIEffect",
+        "Rampage_AIEffect",
+        "SpearowMirrorMove_AIEffect",
+        "SuperFang_AIEffect",
+        "Toxic_AIEffect",
+        "VenomPowder_AIEffect",
+        "CuboneRage_DamageBoostEffect",
+        "DodrioRage_DamageBoostEffect",
+        "FlamesOfRage_DamageBoostEffect",
+        "FlareonRage_DamageBoostEffect",
+        "JynxMeditate_DamageBoostEffect",
+        "MrMimeMeditate_DamageBoostEffect",
+        "KinglerFlail_HPCheck",
+        "MagikarpFlail_HPCheck",
+        "KarateChop_DamageSubtractionEffect",
+        "Psychic_DamageBoostEffect",
+        "SuperFang_HalfHPEffect",
+        "BigEggsplosion_MultiplierEffect",
+        "Toxic_DoublePoisonEffect",
+        "VenomPowder_PoisonConfusion50PercentEffect",
+        "Rampage_Confusion50PercentEffect",
+        "MagnetonSonicboom_NullEffect",
+        "ElectrodeSonicboom_NullEffect",
+        "ArcanineFlamethrower_AISelectEffect",
+        "FireBlast_AISelectEffect",
+        "Ember_AISelectEffect",
+        "FlareonFlamethrower_AISelectEffect",
+        "MagmarFlamethrower_AISelectEffect",
+        "CharmeleonFlamethrower_AISelectEffect",
+        "FlamesOfRage_CheckEnergy",
+        "FlamesOfRage_PlayerSelectEffect",
+        "FlamesOfRage_AISelectEffect",
+        "FlamesOfRage_DiscardEffect",
+        "FireSpin_CheckEnergy",
+        "FireSpin_PlayerSelectEffect",
+        "FireSpin_AISelectEffect",
+        "FireSpin_DiscardEffect",
+        "GolduckHyperBeam_AISelectEffect",
+        "Whirlpool_AISelectEffect",
+        "DragonairHyperBeam_AISelectEffect",
+        "EnergyRemoval_AISelection",
+        "Spark_AISelectEffect",
+        "GengarDarkMind_AISelectEffect",
+        "HypnoDarkMind_AISelectEffect",
+        "StretchKick_AISelectEffect",
+        "Gigashock_AISelectEffect",
+        "Gigashock_PlayerSelectEffect",
+        "Gigashock_BenchDamageEffect",
+        "NinetalesLure_CheckBench",
+        "NinetalesLure_PlayerSelectEffect",
+        "NinetalesLure_AISelectEffect",
+        "NinetalesLure_SwitchEffect",
+        "VictreebelLure_AssertPokemonInBench",
+        "VictreebelLure_SelectSwitchPokemon",
+        "VictreebelLure_GetBenchPokemonWithLowestHP",
+        "VictreebelLure_SwitchDefendingPokemon",
+        "Ram_SelectSwitchEffect",
+        "Ram_RecoilSwitchEffect",
+        "TerrorStrike_50PercentSelectSwitchPokemon",
+        "TerrorStrike_SwitchDefendingPokemon",
+        "StarmieRecover_CheckEnergyHP",
+        "StarmieRecover_PlayerSelectEffect",
+        "StarmieRecover_AISelectEffect",
+        "StarmieRecover_DiscardEffect",
+        "StarmieRecover_HealEffect",
+        "KadabraRecover_CheckEnergyHP",
+        "KadabraRecover_PlayerSelectEffect",
+        "KadabraRecover_AISelectEffect",
+        "KadabraRecover_DiscardEffect",
+        "KadabraRecover_HealEffect",
+        "DestinyBond_CheckEnergy",
+        "DestinyBond_PlayerSelectEffect",
+        "DestinyBond_AISelectEffect",
+        "DestinyBond_DiscardEffect",
+        "EnergyConversion_CheckEnergy",
+        "EnergyConversion_PlayerSelectEffect",
+        "EnergyConversion_AISelectEffect",
+        "EnergyConversion_AddToHandEffect",
+        "MewtwoAltEnergyAbsorption_CheckDiscardPile",
+        "MewtwoAltEnergyAbsorption_PlayerSelectEffect",
+        "MewtwoAltEnergyAbsorption_AISelectEffect",
+        "MewtwoAltEnergyAbsorption_AddToHandEffect",
+        "MewtwoEnergyAbsorption_CheckDiscardPile",
+        "MewtwoEnergyAbsorption_PlayerSelectEffect",
+        "MewtwoEnergyAbsorption_AISelectEffect",
+        "MewtwoEnergyAbsorption_AddToHandEffect",
+        "EnergySpike_DeckCheck",
+        "EnergySpike_PlayerSelectEffect",
+        "EnergySpike_AISelectEffect",
+        "EnergySpike_AttachEnergyEffect",
+        "Barrier_CheckEnergy",
+        "Barrier_PlayerSelectEffect",
+        "Barrier_AISelectEffect",
+        "Barrier_DiscardEffect",
+        "PoliwhirlAmnesia_CheckAttacks",
+        "PoliwhirlAmnesia_PlayerSelectEffect",
+        "PoliwhirlAmnesia_AISelectEffect",
+        "PoliwhirlAmnesia_DisableEffect",
+        "SlowpokeAmnesia_CheckAttacks",
+        "SlowpokeAmnesia_PlayerSelectEffect",
+        "SlowpokeAmnesia_AISelectEffect",
+        "SlowpokeAmnesia_DisableEffect",
+        "Sprout_CheckDeckAndPlayArea",
+        "Sprout_PlayerSelectEffect",
+        "Sprout_AISelectEffect",
+        "Sprout_PutInPlayAreaEffect",
+        "BellsproutCallForFamily_CheckDeckAndPlayArea",
+        "BellsproutCallForFamily_PlayerSelectEffect",
+        "BellsproutCallForFamily_AISelectEffect",
+        "BellsproutCallForFamily_PutInPlayAreaEffect",
+        "KrabbyCallForFamily_CheckDeckAndPlayArea",
+        "KrabbyCallForFamily_PlayerSelectEffect",
+        "KrabbyCallForFamily_AISelectEffect",
+        "KrabbyCallForFamily_PutInPlayAreaEffect",
+        "NidoranFCallForFamily_CheckDeckAndPlayArea",
+        "NidoranFCallForFamily_PlayerSelectEffect",
+        "NidoranFCallForFamily_AISelectEffect",
+        "NidoranFCallForFamily_PutInPlayAreaEffect",
+        "MarowakCallForFamily_CheckDeckAndPlayArea",
+        "MarowakCallForFamily_PlayerSelectEffect",
+        "MarowakCallForFamily_AISelectEffect",
+        "MarowakCallForFamily_PutInPlayAreaEffect",
+        "Teleport_CheckBench",
+        "Teleport_PlayerSelectEffect",
+        "Teleport_AISelectEffect",
+        "Teleport_SwitchEffect",
+        "DevolutionBeam_CheckPlayArea",
+        "DevolutionBeam_PlayerSelectEffect",
+        "DevolutionBeam_AISelectEffect",
+        "DevolutionBeam_LoadAnimation",
+        "DevolutionBeam_DevolveEffect",
+        "ClefableMetronome_CheckAttacks",
+        "ClefableMetronome_AISelectEffect",
+        "ClefairyMetronome_CheckAttacks",
+        "ClefairyMetronome_AISelectEffect",
+        "SpearowMirrorMove_InitialEffect1",
+        "SpearowMirrorMove_InitialEffect2",
+        "SpearowMirrorMove_PlayerSelection",
+        "SpearowMirrorMove_AISelection",
+        "SpearowMirrorMove_BeforeDamage",
+        "SpearowMirrorMove_AfterDamage",
+        "PidgeottoMirrorMove_InitialEffect1",
+        "PidgeottoMirrorMove_InitialEffect2",
+        "PidgeottoMirrorMove_PlayerSelection",
+        "PidgeottoMirrorMove_AISelection",
+        "PidgeottoMirrorMove_BeforeDamage",
+        "PidgeottoMirrorMove_AfterDamage",
+        "Conversion1_WeaknessCheck",
+        "Conversion1_PlayerSelectEffect",
+        "Conversion1_AISelectEffect",
+        "Conversion1_ChangeWeaknessEffect",
+        "Conversion2_ResistanceCheck",
+        "Conversion2_PlayerSelectEffect",
+        "Conversion2_AISelectEffect",
+        "Conversion2_ChangeResistanceEffect",
+        "Prophecy_CheckDeck",
+        "Prophecy_PlayerSelectEffect",
+        "Prophecy_AISelectEffect",
+        "Prophecy_ReorderDeckEffect",
+        "Scavenge_CheckDiscardPile",
+        "Scavenge_PlayerSelectEnergyEffect",
+        "Scavenge_AISelectEffect",
+        "Scavenge_DiscardEffect",
+        "Scavenge_PlayerSelectTrainerEffect",
+        "Scavenge_AddToHandEffect",
+        "Wildfire_CheckEnergy",
+        "Wildfire_PlayerSelectEffect",
+        "Wildfire_AISelectEffect",
+        "Wildfire_DiscardEnergyEffect",
+        "Wildfire_DiscardDeckEffect",
+        "HandlePlayerMetronomeEffect",
+        "ClefableMetronome_UseAttackEffect",
+        "ClefairyMetronome_UseAttackEffect"
+      ],
+      "target": "src/tcg/duel/EffectCommands.lua",
+      "state": "translated",
+      "notes": "Generic effect families include all 81/81 unique EFFECTCMDTYPE_AI identities, all 45/45 unique EFFECTCMDTYPE_AI_SELECTION identities, and all 5/5 unique EFFECTCMDTYPE_AI_SWITCH_DEFENDING_PKMN identities. Metronome player execution now selects a non-Power defending attack, rejects recursive Metronome, runs copied INITIAL_EFFECT_1/2 through the normal dispatcher, preserves nested copied-attack selection state, and leaves the copied attack loaded for the outer discard/selection/damage/after-damage pipeline. Unknown function identities still fail closed."
+    },
+    {
+      "source": "src/home/damage.asm",
+      "labels": [
+        "AddToDamage"
+      ],
+      "target": "src/tcg/duel/EffectCommands.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/home/duel.asm",
+      "labels": [
+        "LoadNonPokemonCardEffectCommands"
+      ],
+      "target": "src/tcg/duel/EffectCommands.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/home/substatus.asm",
+      "labels": [
+        "CheckCantUseTrainerDueToEffect"
+      ],
+      "target": "src/tcg/duel/Status.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/home/duel.asm",
+      "labels": [
+        "CreateArenaOrBenchEnergyCardList"
+      ],
+      "target": "src/tcg/duel/DuelOps.lua",
+      "state": "translated",
+      "notes": "State/arithmetic paths translated; cartridge menu/animation presentation remains adapter-owned."
+    },
+    {
+      "source": "src/home/duel.asm",
+      "labels": [
+        "DealDamageToPlayAreaPokemon"
+      ],
+      "target": "src/tcg/duel/Combat.lua",
+      "state": "translated",
+      "notes": "State/arithmetic paths translated; cartridge menu/animation presentation remains adapter-owned."
+    },
+    {
+      "source": "src/home/substatus.asm",
+      "labels": [
+        "HandleDestinyBondSubstatus",
+        "HandleDamageReductionOrNoDamageFromPkmnPowerEffects"
+      ],
+      "target": "src/tcg/duel/Status.lua",
+      "state": "translated",
+      "notes": "State behavior translated, including play-area Pokemon Power damage prevention/reduction; presentation text/animation remains outside this layer."
+    },
+    {
+      "source": "src/home/card_color.asm",
+      "labels": [
+        "GetPlayAreaCardColor",
+        "HandleEnergyBurn"
+      ],
+      "target": "src/tcg/duel/Status.lua",
+      "state": "translated",
+      "notes": "State/color accounting used by Rain Dance and Charizard Energy Burn; presentation is not part of these routines."
+    },
+    {
+      "source": "src/engine/duel/core.asm",
+      "labels": [
+        "PlayEnergyCard"
+      ],
+      "target": "src/tcg/duel/PlayerActions.lua",
+      "state": "translated",
+      "notes": "State path includes ordinary once-per-turn attachment and the Blastoise Rain Dance Water-to-Water exception; menu/link presentation remains adapter-owned."
+    },
+    {
+      "source": "src/engine/duel/ai/core.asm",
+      "labels": [
+        "AIEncourage",
+        "AIDiscourage",
+        "ConvertColorToEnergyCardID"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/engine/duel/ai/special_attacks.asm",
+      "labels": [
+        "CheckWhetherToSwitchToFirstAttack",
+        "HandleSpecialAIAttacks"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "Includes the source card-ID dispatcher and cartridge quirks such as Earthquake pointer/prize-side bugs; unknown flagged cards fail closed."
+    },
+    {
+      "source": "src/engine/duel/ai/trainer_cards.asm",
+      "labels": [
+        "AIDecide_Bill",
+        "AIPlay_Bill"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/home/substatus.asm",
+      "labels": [
+        "GetLoadedCard1RetreatCost"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "Native AI retreat-cost calculation applies each benched Dodrio Retreat Aid and preserves Muk suppression/clamping."
+    },
+    {
+      "source": "src/engine/duel/ai/retreat.asm",
+      "labels": [
+        "SetAIRetreatFlags"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/engine/duel/ai/core.asm",
+      "labels": [
+        "AIChooseRandomlyNotToDoAction"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "Exact 0/25/50% source gate by progress state and opponent deck class; used by common Trainer processing and Energy Trans."
+    },
+    {
+      "source": "src/engine/duel/ai/trainer_cards.asm",
+      "labels": [
+        "AIDecide_PokemonCenter",
+        "AIDecide_Pokedex",
+        "AIDecide_MrFuji",
+        "AIDecide_Maintenance",
+        "AIDecide_Recycle",
+        "AIDecide_ItemFinder",
+        "AIDecide_Revive",
+        "AIDecide_PokemonFlute"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "Source decision rules and documented cartridge quirks are native; execution reuses the translated generic Trainer/effect-command path."
+    },
+    {
+      "source": "src/engine/duel/ai/trainer_cards.asm",
+      "labels": [
+        "AIDecide_EnergyRetrieval",
+        "AIDecide_SuperEnergyRetrieval",
+        "AIDecide_SuperEnergyRemoval",
+        "AIDecide_GustOfWind",
+        "AIDecide_Pokeball"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "Source decision priorities are native, including Rain Dance retrieval gating, Super Energy Removal target/energy ordering, Gust of Wind bench selection, and deck-specific Poke Ball branches. Trainer execution reuses the translated generic effect path."
+    },
+    {
+      "source": "src/engine/duel/ai/pkmn_powers.asm",
+      "labels": [
+        "HandleAIPkmnPowers",
+        "HandleAIHeal",
+        "HandleAIShift",
+        "HandleAIPeek",
+        "HandleAIStrangeBehavior",
+        "HandleAICurse",
+        "HandleAICowardice",
+        "HandleAIDamageSwap"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "Common active Pokemon Power AI is native, including source random cadence, once-per-turn/status gating, target selection, compacted-play-area Cowardice rescans, Damage Swap fallback-target quirk, and Curse KO targeting."
+    },
+    {
+      "source": "src/engine/duel/effect_functions.asm",
+      "labels": [
+        "DamageSwap_CheckDamage",
+        "DamageSwap_SelectAndSwapEffect",
+        "DamageSwap_SwapEffect",
+        "Cowardice_CheckUseAndBench",
+        "Cowardice_PlayerSelectEffect",
+        "Cowardice_ReturnToHandEffect",
+        "Heal_OncePerTurnCheck",
+        "Heal_RemoveDamageEffect",
+        "Shift_OncePerTurnCheck",
+        "Shift_PlayerSelectEffect",
+        "Shift_ChangeColorEffect",
+        "Peek_OncePerTurnCheck",
+        "Peek_SelectEffect",
+        "StrangeBehavior_CheckDamage",
+        "StrangeBehavior_SelectAndSwapEffect",
+        "StrangeBehavior_SwapEffect",
+        "Curse_CheckDamageAndBench",
+        "Curse_PlayerSelectEffect",
+        "Curse_TransferDamageEffect"
+      ],
+      "target": "src/tcg/duel/EffectCommands.lua",
+      "state": "translated",
+      "notes": "State semantics for the seven common manual Pokemon Power families are native; UI/presentation loops remain host-owned."
+    },
+    {
+      "source": "src/engine/duel/ai/core.asm",
+      "labels": [
+        "AISelectSpecialAttackParameters"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "All source card-ID branches are native: Mew Lv23 Devolution Beam, both Mewtwo Lv60 Energy Absorption variants, Exeggutor Teleport, and Electrode Lv35 Energy Spike."
+    },
+    {
+      "source": "src/engine/duel/ai/attacks.asm",
+      "labels": [
+        "GetAIScoreOfAttack"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "Source-ordered common scoring now includes KO/damage/status/discard/heal terms, defending-KO interaction, full LOW/HIGH_RECOIL policy, and SPECIAL_AI_HANDLING dispatch."
+    },
+    {
+      "source": "src/engine/duel/ai/damage_calculation.asm",
+      "labels": [
+        "EstimateDamage_VersusDefendingCard",
+        "EstimateDamage_FromDefendingPokemon"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "Active and Bench forward/reverse estimators are slot-aware, preserve switch-sensitive temporary-state clearing, attached PlusPower/Defender locations, active-only reduction, source poison windows, and exact-KO behavior."
+    },
+    {
+      "source": "src/engine/duel/ai/attacks.asm",
+      "labels": [
+        "AIProcessAndTryToUseAttack",
+        "AIProcessAttacks"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "Outer attack orchestration now preserves PlusPower override, second-attack ties, Barrier early exit, preview-with-score-restore behavior, phase-14 Trainer ordering, retreat-pressure updates, selection preparation and attack-attempt semantics."
+    },
+    {
+      "source": "src/engine/duel/ai/hand_pokemon.asm",
+      "labels": [
+        "AIDecidePlayPokemonCard",
+        "AIDecideEvolution"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/engine/duel/ai/energy.asm",
+      "labels": [
+        "AIProcessAndTryToPlayEnergy",
+        "AIProcessEnergyCards",
+        "AITryToPlayEnergyCard"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "Normal Energy placement and all source preview modes are native: evolution anticipation, Venusaur/Barrier/poison/KO/low-HP scoring, generated per-deck caps/bonuses, Legendary Articuno priorities, repeated-Bench scoring, attached-energy-boost/discard branches, special DCE anticipation, boss DCE avoidance, Energy Spike skip-evolution preview, and the Energy Trans skip-evolution/skip-Arena score-backup preview."
+    }
+  ]
+}

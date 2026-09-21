@@ -1,0 +1,25 @@
+Continue the Pokémon TCG GB -> Gen1Recomp Lua/LÖVE full-game port from this ZIP. The user's active directive is: COMPLETE THE AI SUBSYSTEM.
+
+First read START_HERE_HANDOFF.md, HANDOFF_RECORD.md, HANDOFF_CURRENT_WORK.md, LATEST_AI_RESEARCH.md, PROJECT_SCOPE.md, tools/tcg/behavior_pending.json, tools/tcg/behavior_coverage.json, then src/tcg/duel/AI.lua and the relevant tests.
+
+AUTHORITATIVE PERSISTED CHECKPOINT: ~56% whole game, ~95% AI, 662 translated labels, 62 partial labels across 27 pending entries, 54 explicit remaining items, 248/310 ordinary player-side effect lists, 81/81 generic AI effects, 45/45 AI-selection effects, 5/5 AI-switch effects, 212/212 tests, 28/28 Lua modules parsing.
+
+Important: later chat-side source research is captured in LATEST_AI_RESEARCH.md, but no new code from that research is merged in this ZIP. Earlier ephemeral chat claims of a higher test count are not authoritative because that source tree did not survive into the durable package.
+
+Exact next implementation order:
+1) close retreat potential-KO + one-Energy-from-hand behavior without globally weakening attack usability;
+2) finish Trainer AI/effects for Super Potion, Pokemon Breeder, Imposter Professor Oak, Scoop Up, Lass, Imakuni?, Gambler, Clefairy Doll/Mysterious Fossil, Computer Search and Pokemon Trader;
+3) reproduce exact _AIProcessHandTrainerCards hand-snapshot/relist order, especially Professor Oak replay phases;
+4) implement specialized deck StartDuel/Turn tables and boss opening setup/list-pointer quirks;
+5) implement exact Mewtwo Lv53 Barrier/mill detector and anti-mill branch;
+6) finish rare Professor Oak/Energy Removal, Pokemon Power and unusual attack-usability policy;
+7) recount coverage/pending ledgers and do an AI completion audit.
+
+Use pret/poketcg ref 7a75fe810e91dda43538b249c70ee5da14e38686 as source truth. Preserve cartridge ordering, quirks and bugs, including the boss avoid-prize bug and Pokemon Trader Power Generator fall-through bug. Unknown behavior must fail closed.
+
+Validation before promotion/package:
+python -m unittest discover -s tests/tcg -p 'test_*.py'
+python -m py_compile tools/tcg/*.py tests/tcg/*.py
+find src/tcg -name '*.lua' -print0 | xargs -0 -n1 env TERM=xterm texluac -p
+
+After AI completion, continue the full project; AI completion is not full-game completion.
