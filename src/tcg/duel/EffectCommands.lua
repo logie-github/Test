@@ -3864,6 +3864,86 @@ function EffectCommands:_installSharedHandlers()
     return false
   end)
 
+  -- Pokemon Breeder evolves a Basic Pokemon in the Play Area directly into a
+  -- Stage2 Pokemon chosen from hand, skipping Stage1. The evolved card is
+  -- marked STAGE2_WITHOUT_STAGE1 (rather than the printed STAGE2) so it still
+  -- devolves correctly under Devolution Spray, which only knows how to step
+  -- back one stage at a time. AIDecide_PokemonBreeder picks the Basic/Stage2
+  -- pair; this effect only applies whatever the decision/selection layer
+  -- already chose.
+  local function prehistoricPowerActive(s, actor)
+    local _, aero = actor.combat.status:countPokemonWithActivePkmnPowerInBothPlayAreas(s.c.AERODACTYL)
+    if not aero then return false end
+    local _, muk = actor.combat.status:countPokemonWithActivePkmnPowerInBothPlayAreas(s.c.MUK)
+    return not muk
+  end
+  local function playableStage2FromHand(s, actor)
+    local hand = actor.duelOps:createHandCardList()
+    local count = actor.duelVars:get(s.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+    local playable = {}
+    for _, deckIndex in ipairs(hand) do
+      local cardId = actor.cardData:getCardIDFromDeckIndex(deckIndex)
+      local row = actor.cardData:get(cardId)
+      if row and row.type < s.c.TYPE_ENERGY and row.stage == s.c.STAGE2 then
+        for slot = s.c.PLAY_AREA_ARENA, count - 1 do
+          if actor.duelOps:checkIfCanEvolveIntoBasicToStage2(deckIndex, slot) then
+            playable[#playable + 1] = deckIndex
+            break
+          end
+        end
+      end
+    end
+    return playable
+  end
+  self:register("PokemonBreeder_HandPlayAreaCheck", function(s, context)
+    local actor = actorForTrainer(context)
+    if not actor then return nil, "effect_context_missing_actor" end
+    if #playableStage2FromHand(s, actor) == 0 then return true end
+    return prehistoricPowerActive(s, actor)
+  end)
+  self:register("PokemonBreeder_PlayerSelection", function(s, context)
+    local actor = actorForTrainer(context)
+    if not actor then return nil, "effect_context_missing_actor" end
+    local playable = playableStage2FromHand(s, actor)
+    if #playable == 0 then return nil, "invalid_selection:no_playable_stage2" end
+
+    local stage2, err = s:_selection(context, "handStage2Pokemon", "selectHandCard",
+      { choices = playable, stage2Breeder = true })
+    if stage2 == nil then return nil, err end
+    local validChoice = false
+    for _, deckIndex in ipairs(playable) do
+      if deckIndex == stage2 then validChoice = true break end
+    end
+    if not validChoice then return nil, "invalid_selection:handStage2Pokemon" end
+
+    local slot, slotErr = s:_selectPlayArea(context)
+    if slot == nil then return nil, slotErr end
+    if not actor.duelOps:checkIfCanEvolveIntoBasicToStage2(stage2, slot) then
+      return nil, "invalid_selection:playArea"
+    end
+
+    actor.memory:writeSymbol8("hTempPlayAreaLocation_ffa1", slot)
+    actor.memory:writeSymbol8("hTemp_ffa0", stage2)
+    return false
+  end)
+  self:register("PokemonBreeder_EvolveEffect", function(s, context)
+    local actor = actorForTrainer(context)
+    if not actor then return nil, "effect_context_missing_actor" end
+    local slot = actor.memory:readSymbol8("hTempPlayAreaLocation_ffa1")
+    local stage2 = actor.memory:readSymbol8("hTemp_ffa0")
+
+    local ready, triggerErr = actor.combat:checkPlayedPokemonCardTrigger(stage2)
+    if not ready then return nil, triggerErr end
+
+    actor.duelOps:evolvePokemonCard(stage2, slot)
+    actor.duelVars:set(s.c.DUELVARS_ARENA_CARD_STAGE + slot, s.c.STAGE2_WITHOUT_STAGE1 or 3)
+
+    local triggered, triggerResult = actor.combat:processPlayedPokemonCard(stage2, slot)
+    if not triggered then return nil, triggerResult end
+    s:_event("evolve", { deckIndex = stage2, slot = slot, breeder = true })
+    return false
+  end)
+
   -- Revive places a chosen Basic Pokemon from the user's Discard Pile on the
   -- Bench with half HP rounded up to the nearest 10.
   self:register("Revive_BenchCheck", function(s, context)

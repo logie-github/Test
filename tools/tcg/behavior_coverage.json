@@ -243,7 +243,8 @@
       "labels": [
         "CheckIfCanEvolveInto",
         "EvolvePokemonCardIfPossible",
-        "EvolvePokemonCard"
+        "EvolvePokemonCard",
+        "CheckIfCanEvolveInto_BasicToStage2"
       ],
       "target": "src/tcg/duel/DuelOps.lua",
       "state": "translated"
@@ -782,7 +783,13 @@
         "Wildfire_DiscardDeckEffect",
         "HandlePlayerMetronomeEffect",
         "ClefableMetronome_UseAttackEffect",
-        "ClefairyMetronome_UseAttackEffect"
+        "ClefairyMetronome_UseAttackEffect",
+        "SuperPotion_DamageCheck",
+        "SuperPotion_PlayerSelection",
+        "SuperPotion_HealAndDiscardEffect",
+        "PokemonBreeder_HandPlayAreaCheck",
+        "PokemonBreeder_PlayerSelection",
+        "PokemonBreeder_EvolveEffect"
       ],
       "target": "src/tcg/duel/EffectCommands.lua",
       "state": "translated",
@@ -1055,6 +1062,23 @@
         "AIDecide_SuperPotion_Phase11"
       ],
       "target": "src/tcg/duel/AI.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/engine/duel/ai/trainer_cards.asm",
+      "labels": [
+        "AIPlay_PokemonBreeder",
+        "AIDecide_PokemonBreeder"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/engine/duel/ai/core.asm",
+      "labels": [
+        "CountNumberOfEnergyCardsAttached"
+      ],
+      "target": "src/tcg/duel/DuelOps.lua",
       "state": "translated"
     }
   ]

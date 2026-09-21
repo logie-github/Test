@@ -205,13 +205,49 @@ function DuelOps:checkIfCanEvolveInto(deckIndex, playAreaOffset)
   return true
 end
 
--- EvolvePokemonCardIfPossible:: / EvolvePokemonCard::. The old card remains
--- attached in the same location through PutHandCardInPlayArea semantics; HP is
--- increased only by the evolution's max-HP delta, preserving existing damage.
+-- CheckIfCanEvolveInto_BasicToStage2:: two-hop chain check used by Pokemon
+-- Breeder. The target Stage2 card's own preEvolutionTextId names its Stage1
+-- (e.g. Ivysaur), not the Basic (e.g. Bulbasaur), so compatibility requires
+-- loading that Stage1 by name and comparing ITS preEvolutionTextId against
+-- the candidate Basic's name -- a direct one-hop compare like
+-- checkIfCanEvolveInto would incorrectly reject every legal Breeder jump.
+function DuelOps:checkIfCanEvolveIntoBasicToStage2(deckIndex, playAreaOffset)
+  local flags = self:_read(self.c.DUELVARS_ARENA_CARD_FLAGS + playAreaOffset)
+  if bit.band(flags, self.c.CAN_EVOLVE_THIS_TURN) == 0 then
+    return false, "played_this_turn"
+  end
+
+  local currentDeckIndex = self:_read(self.c.DUELVARS_ARENA_CARD + playAreaOffset)
+  if currentDeckIndex == 0xff then return false, "empty_slot" end
+  local currentCardId = self.cardData:getCardIDFromDeckIndex(currentDeckIndex)
+  local current = assert(self.cardData:get(currentCardId))
+
+  local evolutionCardId = self.cardData:getCardIDFromDeckIndex(deckIndex)
+  local evolution = assert(self.cardData:get(evolutionCardId))
+
+  local stage1Id = self.cardData:loadBuffer1FromName(evolution.preEvolutionTextId)
+  if not stage1Id then return false, "incompatible" end
+  local stage1 = assert(self.cardData:get(stage1Id))
+  if stage1.preEvolutionTextId ~= current.nameTextId then
+    return false, "incompatible"
+  end
+  return true
+end
+
+-- EvolvePokemonCardIfPossible::. The old card remains attached in the same
+-- location through PutHandCardInPlayArea semantics; HP is increased only by
+-- the evolution's max-HP delta, preserving existing damage.
 function DuelOps:evolvePokemonCardIfPossible(deckIndex, playAreaOffset)
   local can, reason = self:checkIfCanEvolveInto(deckIndex, playAreaOffset)
   if not can then return false, reason end
+  return self:evolvePokemonCard(deckIndex, playAreaOffset)
+end
 
+-- EvolvePokemonCard:: the raw card-swap with no compatibility check --
+-- shared fallthrough target of EvolvePokemonCardIfPossible, and called
+-- directly by Pokemon Breeder's effect, which already validated the jump via
+-- checkIfCanEvolveIntoBasicToStage2 during its own selection phase.
+function DuelOps:evolvePokemonCard(deckIndex, playAreaOffset)
   local oldDeckIndex = self:_read(self.c.DUELVARS_ARENA_CARD + playAreaOffset)
   self.memory:writeSymbol8("wPreEvolutionPokemonCard", oldDeckIndex)
   local oldCardId = self.cardData:getCardIDFromDeckIndex(oldDeckIndex)
@@ -447,6 +483,25 @@ function DuelOps:getPlayAreaCardAttachedEnergies(playAreaOffset)
   end
   self.memory:writeSymbol8("wTotalAttachedEnergies", total)
   return total
+end
+
+-- CountNumberOfEnergyCardsAttached:: energy-CARD count rather than
+-- getPlayAreaCardAttachedEnergies' energy-POINT count. The Colorless slot is
+-- halved because Double Colorless Energy is this game's only source of
+-- Colorless-type attached energy, and each physical DCE card contributes 2
+-- points, matching the source's `srl b` before folding it into the sum.
+function DuelOps:countNumberOfEnergyCardsAttached(playAreaOffset)
+  local total = self:getPlayAreaCardAttachedEnergies(playAreaOffset)
+  if total == 0 then return 0 end
+
+  local attachedBase, attachedBank = self.memory:address("wAttachedEnergies")
+  assert(attachedBank == 0, "wAttachedEnergies unexpectedly moved out of WRAM0")
+  local sum = 0
+  for i = 0, self.c.NUM_COLORED_TYPES - 1 do
+    sum = sum + self.memory:read8("wram", attachedBase + i, attachedBank)
+  end
+  local colorless = self.memory:read8("wram", attachedBase + self.c.COLORLESS, attachedBank)
+  return sum + math.floor(colorless / 2)
 end
 
 

@@ -3569,6 +3569,113 @@ function AI:_decideMrFuji()
   return true, { bench = selected }
 end
 
+-- CalculateFitness (AIDecide_PokemonBreeder, trainer_cards.asm): 4 high bits
+-- of the returned byte are the candidate's remaining HP counters (via the
+-- source's `swap a` on floor(HP/10), replicated bit-for-bit including its
+-- unclamped overflow if HP counters ever exceed 15), 4 low bits are its
+-- attached-energy-card count capped at 15.
+function AI:_breederFitnessScore(slot)
+  local hp = self.duelVars:get(self.c.DUELVARS_ARENA_CARD_HP + slot)
+  local hpCounters = bit.band(math.floor(hp / 10), 0xff)
+  local swapped = bit.bor(bit.lshift(bit.band(hpCounters, 0x0f), 4), bit.rshift(hpCounters, 4))
+  local energyCount = self.duelOps:getPlayAreaCardAttachedEnergies(slot)
+  if energyCount > 15 then energyCount = 15 end
+  return bit.bor(swapped, energyCount)
+end
+
+-- HandleDragoniteLv41Evolution (AIDecide_PokemonBreeder, trainer_cards.asm):
+-- gates evolving into Dragonite Lv41 specifically -- bench candidates are
+-- blocked unless the WHOLE play area already carries >=8 damage counters;
+-- the Active candidate is blocked unless it individually has >=5 raw damage
+-- AND >=3 energy cards attached. Every other evolution target is unaffected.
+function AI:_dragoniteLv41Blocks(evolutionCardId, slot)
+  if evolutionCardId ~= self.c.DRAGONITE_LV41 then return false end
+  if slot == self.c.PLAY_AREA_ARENA then
+    local damage = select(1, self:_damageAt(slot))
+    if damage < 5 then return true end
+    return self.duelOps:countNumberOfEnergyCardsAttached(slot) < 3
+  end
+  local count = self.duelVars:get(self.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+  local totalCounters = 0
+  for s = self.c.PLAY_AREA_ARENA, count - 1 do
+    local damage = select(1, self:_damageAt(s))
+    totalCounters = totalCounters + math.floor(damage / 10)
+  end
+  return totalCounters < 8
+end
+
+-- AIDecide_PokemonBreeder (trainer_cards.asm). Two passes: first, only the
+-- hardcoded priority Stage2 set (Venusaur/Blastoise/Vileplume/Alakazam/Gengar)
+-- against any compatible Basic, picking the highest-fitness Play Area slot
+-- with no minimum-energy requirement; if none of those fit anywhere, fall
+-- back to any Stage2 card in hand (subject to the Dragonite Lv41 gate above)
+-- but only accept a candidate slot with >=2 Energy already attached. Per the
+-- source's storage-then-scan structure, ties keep the first (lowest-index)
+-- slot rather than the latest.
+function AI:_decidePokemonBreeder()
+  if self:_isPrehistoricPowerActive() then return false end
+
+  local count = self.duelVars:get(self.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+  local hand = self.duelOps:createHandCardList()
+
+  local forcedIds = {
+    [self.c.VENUSAUR_LV64] = true, [self.c.VENUSAUR_LV67] = true,
+    [self.c.BLASTOISE] = true, [self.c.VILEPLUME] = true,
+    [self.c.ALAKAZAM] = true, [self.c.GENGAR] = true,
+  }
+
+  local score, stage2ForSlot, found = {}, {}, 0
+  for _, deckIndex in ipairs(hand) do
+    local cardId = self.cardData:getCardIDFromDeckIndex(deckIndex)
+    if forcedIds[cardId] then
+      for slot = self.c.PLAY_AREA_ARENA, count - 1 do
+        if self.duelOps:checkIfCanEvolveIntoBasicToStage2(deckIndex, slot) then
+          score[slot] = self:_breederFitnessScore(slot)
+          stage2ForSlot[slot] = deckIndex
+          found = found + 1
+        end
+      end
+    end
+  end
+
+  if found > 0 then
+    local bestSlot, bestScore
+    for slot = self.c.PLAY_AREA_ARENA, count - 1 do
+      local s = score[slot] or 0
+      if bestScore == nil or s > bestScore then bestScore, bestSlot = s, slot end
+    end
+    return true, { playArea = bestSlot, handStage2Pokemon = stage2ForSlot[bestSlot] }
+  end
+
+  score, stage2ForSlot = {}, {}
+  local foundAny = false
+  for _, deckIndex in ipairs(hand) do
+    local cardId = self.cardData:getCardIDFromDeckIndex(deckIndex)
+    local row = self.cardData:get(cardId)
+    if row and row.type < self.c.TYPE_ENERGY and row.stage == self.c.STAGE2 then
+      for slot = self.c.PLAY_AREA_ARENA, count - 1 do
+        if self.duelOps:checkIfCanEvolveIntoBasicToStage2(deckIndex, slot)
+            and not self:_dragoniteLv41Blocks(cardId, slot) then
+          score[slot] = self:_breederFitnessScore(slot)
+          stage2ForSlot[slot] = deckIndex
+          foundAny = true
+        end
+      end
+    end
+  end
+  if not foundAny then return false end
+
+  local bestSlot, bestScore
+  for slot = self.c.PLAY_AREA_ARENA, count - 1 do
+    local s = score[slot]
+    if s ~= nil and bit.band(s, 0x0f) >= 2 and (bestScore == nil or s > bestScore) then
+      bestScore, bestSlot = s, slot
+    end
+  end
+  if bestSlot == nil then return false end
+  return true, { playArea = bestSlot, handStage2Pokemon = stage2ForSlot[bestSlot] }
+end
+
 -- AICheckIfAttackIsHighRecoil:: despite the name, the source routine's final
 -- carry (after its `ccf`) means "there IS a usable attack AND it is NOT
 -- flagged High Recoil" -- i.e. a normal, safe attack is available. Every
@@ -4507,6 +4614,8 @@ function AI:_decideTrainer(constantName, phase, currentTrainerDeckIndex)
     return self:_decidePokemonCenter()
   elseif constantName == "MR_FUJI" then
     return self:_decideMrFuji()
+  elseif constantName == "POKEMON_BREEDER" then
+    return self:_decidePokemonBreeder()
   end
   return nil, "untranslated_ai_trainer:" .. constantName
 end
@@ -4575,7 +4684,7 @@ function AI:processHandTrainerCards(phase)
         or constantName == "MR_FUJI" or constantName == "ENERGY_RETRIEVAL"
         or constantName == "SUPER_ENERGY_RETRIEVAL" or constantName == "SUPER_ENERGY_REMOVAL"
         or constantName == "GUST_OF_WIND" or constantName == "POKE_BALL"
-        or constantName == "SUPER_POTION"
+        or constantName == "SUPER_POTION" or constantName == "POKEMON_BREEDER"
       if not supported then return nil, "untranslated_ai_trainer:" .. constantName end
       if self:_chooseRandomlyNotToDoAction() then break end
       local decision, selectionOrErr, parameter =
