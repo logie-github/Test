@@ -9,6 +9,19 @@ test_lua_execution_smoke below, which is what actually caught two real bugs
 while this card was being written (a broken discard-unusability
 approximation, and an inverted Phase11 skip-vs-bail branch). These source-
 shape checks only confirm the pieces are wired together.
+
+The actual Trainer EFFECT (as opposed to the AI decision above) had two
+real bugs of its own, found while starting the broader card-effects sweep
+and closed in the same change as this file's registered-name assertions
+below: the three handlers were registered under invented names that don't
+match SuperPotionEffectCommands' real ROM-extracted function pointers
+(so EffectCommands:tryExecute would fail closed with
+"untranslated_effect:SuperPotion_DamageEnergyCheck" at runtime despite a
+handler existing under the wrong name), and the gate check required damage
+and an attached Energy card on the SAME Play Area slot, when the source's
+two checks are independent whole-play-area scans. Both are exercised for
+real by lua_fixtures/super_potion_effect_smoke.lua under LuaJIT (16
+checks) -- see test_lua_execution_smoke_effect below.
 """
 
 import pathlib
@@ -18,6 +31,7 @@ import unittest
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 FIXTURE = ROOT / "tests/tcg/lua_fixtures/super_potion_smoke.lua"
+EFFECT_FIXTURE = ROOT / "tests/tcg/lua_fixtures/super_potion_effect_smoke.lua"
 
 
 def read(path):
@@ -55,15 +69,21 @@ class SuperPotionSourceTests(unittest.TestCase):
         self.assertIn("return not self:_attackFlag(attack, 1, self.c.HIGH_RECOIL_F)", block)
 
     def test_energy_effects_are_registered(self):
+        # Names must match the real ASM's SuperPotionEffectCommands function
+        # pointers exactly (SuperPotion_DamageEnergyCheck/_PlayerSelectEffect/
+        # _HealEffect) -- these are the RomExtractor-generated dispatch keys,
+        # not free-form Lua identifiers, and a mismatch here silently fails
+        # closed (untranslated_effect:...) at runtime despite a handler
+        # existing under the wrong name.
         for label in (
-            "SuperPotion_DamageCheck", "SuperPotion_PlayerSelection",
-            "SuperPotion_HealAndDiscardEffect",
+            "SuperPotion_DamageEnergyCheck", "SuperPotion_PlayerSelectEffect",
+            "SuperPotion_HealEffect",
         ):
             self.assertIn(f'self:register("{label}"', self.effects_src)
 
     def test_effect_applies_heal_and_discards_exactly_the_chosen_card(self):
-        block = self.effects_src[self.effects_src.index("SuperPotion_HealAndDiscardEffect"):
-                                  self.effects_src.index("SuperPotion_HealAndDiscardEffect") + 700]
+        block = self.effects_src[self.effects_src.index('self:register("SuperPotion_HealEffect"'):
+                                  self.effects_src.index('self:register("SuperPotion_HealEffect"') + 700]
         self.assertIn("hTempRetreatCostCards", block)  # heal amount relay
         self.assertIn("hTemp_ffa0", block)              # discard relay
         self.assertIn("hTempPlayAreaLocation_ffa1", block)  # target slot relay
@@ -91,6 +111,16 @@ class SuperPotionExecutionTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0,
             msg=f"stdout:\n{result.stdout}\nstderr:\n{result.stderr}")
         self.assertIn("all Super Potion + Phase11 start-slot cases passed", result.stdout)
+        self.assertNotIn("FAIL", result.stdout)
+
+    def test_lua_execution_smoke_effect(self):
+        result = subprocess.run(
+            ["luajit", str(EFFECT_FIXTURE)], cwd=str(ROOT),
+            capture_output=True, text=True, timeout=30,
+        )
+        self.assertEqual(result.returncode, 0,
+            msg=f"stdout:\n{result.stdout}\nstderr:\n{result.stderr}")
+        self.assertIn("all Super Potion effect cases passed", result.stdout)
         self.assertNotIn("FAIL", result.stdout)
 
 

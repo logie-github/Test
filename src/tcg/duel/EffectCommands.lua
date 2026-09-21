@@ -4062,19 +4062,29 @@ function EffectCommands:_installSharedHandlers()
   -- and the Energy to discard; this effect only applies whatever the
   -- decision/selection layer already chose, matching Potion_HealEffect's
   -- split between selection and effect above.
-  self:register("SuperPotion_DamageCheck", function(s, context)
+  -- SuperPotion_DamageEnergyCheck:: CheckIfPlayAreaHasAnyDamage and
+  -- CheckIfThereAreAnyEnergyCardsAttached are independent whole-play-area
+  -- scans in the source (damage on one card, Energy on a different card,
+  -- still passes) -- NOT a same-slot requirement. The per-card pairing is
+  -- enforced later, during SuperPotion_PlayerSelectEffect's own selection.
+  self:register("SuperPotion_DamageEnergyCheck", function(s, context)
     local actor = actorForTrainer(context)
     if not actor then return nil, "effect_context_missing_actor" end
     local count = actor.duelVars:get(s.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+    local anyDamage = false
     for slot = 0, count - 1 do
       local damage = s:_playAreaDamage(actor, slot)
-      if damage and damage > 0 and actor.duelOps:createArenaOrBenchEnergyCardList(slot) > 0 then
-        return false
-      end
+      if damage and damage > 0 then anyDamage = true break end
     end
-    return true
+    if not anyDamage then return true end
+    local anyEnergy = false
+    for slot = 0, count - 1 do
+      if actor.duelOps:createArenaOrBenchEnergyCardList(slot) > 0 then anyEnergy = true break end
+    end
+    if not anyEnergy then return true end
+    return false
   end)
-  self:register("SuperPotion_PlayerSelection", function(s, context)
+  self:register("SuperPotion_PlayerSelectEffect", function(s, context)
     local actor = actorForTrainer(context)
     if not actor then return nil, "effect_context_missing_actor" end
     local slot, err = s:_selectPlayArea(context)
@@ -4091,7 +4101,7 @@ function EffectCommands:_installSharedHandlers()
     actor.memory:writeSymbol8("hTempRetreatCostCards", math.min(40, damage))
     return false
   end)
-  self:register("SuperPotion_HealAndDiscardEffect", function(s, context)
+  self:register("SuperPotion_HealEffect", function(s, context)
     local actor = actorForTrainer(context)
     if not actor then return nil, "effect_context_missing_actor" end
     local slot = actor.memory:readSymbol8("hTempPlayAreaLocation_ffa1")
