@@ -99,7 +99,6 @@
       "state": "partial",
       "remaining": [
         "player replacement selection UI",
-        "specialized deck-specific KO-switch overrides beyond the common native bench scorer",
         "link replacement transport/presentation"
       ]
     },
