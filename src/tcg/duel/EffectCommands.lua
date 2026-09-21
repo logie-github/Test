@@ -1156,6 +1156,70 @@ function EffectCommands:_installSharedHandlers()
     return false
   end)
 
+  -- Scoop Up returns a chosen Basic Pokemon from the Play Area to hand,
+  -- discarding everything attached/evolved on top of it (via
+  -- MovePlayAreaCardToDiscardPile). A Bench pick just shifts slots down; an
+  -- Active pick additionally requires a Bench replacement and swaps it in.
+  self:register("ScoopUp_BenchCheck", function(s, context)
+    local a = context.playerActions
+    if not a then return nil, "effect_context_missing_player_actions" end
+    return a.duelVars:get(s.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA) < 2
+  end)
+  self:register("ScoopUp_PlayerSelection", function(s, context)
+    local a = context.playerActions
+    if not a then return nil, "effect_context_missing_player_actions" end
+    local slot, err = s:_selectPlayArea(context)
+    if slot == nil then return nil, err end
+    local count = a.duelVars:get(s.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+    if type(slot) ~= "number" or slot < 0 or slot >= count
+        or a.duelVars:get(s.c.DUELVARS_ARENA_CARD + slot) == 0xff then
+      return nil, "invalid_selection:playArea"
+    end
+    a.memory:writeSymbol8("hTemp_ffa0", slot)
+    if slot ~= s.c.PLAY_AREA_ARENA then return false end
+
+    local replacement, replErr = s:_selection(context, "replacement", "selectBench",
+      { trainer = "scoop_up" })
+    if replacement == nil then return nil, replErr end
+    if type(replacement) ~= "number" or replacement < s.c.PLAY_AREA_BENCH_1
+        or replacement >= count then return nil, "invalid_selection:replacement" end
+    a.memory:writeSymbol8("hTempPlayAreaLocation_ffa1", replacement)
+    return false
+  end)
+  self:register("ScoopUp_ReturnToHandEffect", function(s, context)
+    local a = context.playerActions
+    if not a then return nil, "effect_context_missing_player_actions" end
+    local scoopSlot = a.memory:readSymbol8("hTemp_ffa0")
+    local location = bit.bor(s.c.CARD_LOCATION_PLAY_AREA, scoopSlot)
+
+    local found
+    for deckIndex = 0, s.c.DECK_SIZE - 1 do
+      if a.duelVars:get(deckIndex) == location then
+        local cardId = a.cardData:getCardIDFromDeckIndex(deckIndex)
+        local row = a.cardData:get(cardId)
+        if row and row.type < s.c.TYPE_ENERGY and row.stage == s.c.BASIC then
+          found = deckIndex
+          break
+        end
+      end
+    end
+    if found == nil then return nil, "invalid_selection:no_basic_pokemon_at_location" end
+
+    a.memory:writeSymbol8("hTempCardIndex_ff98", found)
+    a.duelOps:addCardToHand(found)
+    a.duelOps:movePlayAreaCardToDiscardPile(scoopSlot)
+
+    if scoopSlot == s.c.PLAY_AREA_ARENA then
+      a.duelOps:clearAllStatusConditions()
+      local benchSlot = a.memory:readSymbol8("hTempPlayAreaLocation_ffa1")
+      a.duelOps:swapPlayAreaPokemon(benchSlot, s.c.PLAY_AREA_ARENA)
+    else
+      a.duelOps:shiftAllPokemonToFirstPlayAreaSlots()
+    end
+    s:_event("scoop_up", { slot = scoopSlot, deckIndex = found })
+    return false
+  end)
+
   self:register("Potion_DamageCheck", function(s, context)
     local a = context.playerActions
     if not a then return nil, "effect_context_missing_player_actions" end

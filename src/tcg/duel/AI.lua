@@ -3688,6 +3688,47 @@ function AI:_decideImposterProfessorOak()
   return handCount < 6
 end
 
+-- AIDecide_ScoopUp:: general path only (the LegendaryArticuno/LegendaryRonald
+-- deck branches remain untranslated fail-closed, matching _decideProfessorOak's
+-- own Articuno/Excavation/WondersOfScience boundary). Scoops the Active card
+-- exactly when it can neither attack for lethal nor retreat away from danger
+-- AND it has already taken at least 70% of its max HP in damage -- otherwise
+-- ordinary attacking/retreating is preferred over spending the Trainer card.
+function AI:_decideScoopUp()
+  local count = self.duelVars:get(self.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+  if count < 2 then return false end
+
+  local deckId = self.memory:readSymbol8("wOpponentDeckID")
+  if deckId == self.c.LEGENDARY_ARTICUNO_DECK_ID or deckId == self.c.LEGENDARY_RONALD_DECK_ID then
+    return nil, "untranslated_ai_scoop_up_special_deck"
+  end
+
+  local canKO, attackIndex = self:checkIfAnyAttackKnocksOutDefendingCard(self.c.PLAY_AREA_ARENA)
+  if canKO == nil then return nil, attackIndex end
+  if canKO then
+    local usable, reason = self:_checkAttackUsableForAI(attackIndex)
+    if usable then return false end
+    if reason and reason:match("^untranslated_effect:") then return nil, reason end
+    if self:_lookForEnergyNeededInHand(self.c.PLAY_AREA_ARENA, attackIndex) then return false end
+  end
+
+  local status = bit.band(self.duelVars:get(self.c.DUELVARS_ARENA_CARD_STATUS), self.c.CNF_SLP_PRZ)
+  if status ~= self.c.PARALYZED and status ~= self.c.ASLEEP then
+    local retreatCost = self:getPlayAreaCardRetreatCost(self.c.PLAY_AREA_ARENA)
+    local energyCards = self.duelOps:countNumberOfEnergyCardsAttached(self.c.PLAY_AREA_ARENA)
+    if energyCards >= retreatCost then return false end
+  end
+
+  local damage, maxHP = self:_damageAt(self.c.PLAY_AREA_ARENA)
+  if damage == 0 then return false end
+  local maxHPCounters = math.floor(maxHP / 10)
+  if math.floor(damage / maxHPCounters) < 7 then return false end
+
+  local slot, reason = self:decideBenchPokemonToSwitchTo()
+  if not slot then return false, reason end
+  return true, { playArea = self.c.PLAY_AREA_ARENA, replacement = slot }
+end
+
 -- AICheckIfAttackIsHighRecoil:: despite the name, the source routine's final
 -- carry (after its `ccf`) means "there IS a usable attack AND it is NOT
 -- flagged High Recoil" -- i.e. a normal, safe attack is available. Every
@@ -4630,6 +4671,8 @@ function AI:_decideTrainer(constantName, phase, currentTrainerDeckIndex)
     return self:_decidePokemonBreeder()
   elseif constantName == "IMPOSTER_PROFESSOR_OAK" then
     return self:_decideImposterProfessorOak()
+  elseif constantName == "SCOOP_UP" then
+    return self:_decideScoopUp()
   end
   return nil, "untranslated_ai_trainer:" .. constantName
 end
@@ -4699,7 +4742,7 @@ function AI:processHandTrainerCards(phase)
         or constantName == "SUPER_ENERGY_RETRIEVAL" or constantName == "SUPER_ENERGY_REMOVAL"
         or constantName == "GUST_OF_WIND" or constantName == "POKE_BALL"
         or constantName == "SUPER_POTION" or constantName == "POKEMON_BREEDER"
-        or constantName == "IMPOSTER_PROFESSOR_OAK"
+        or constantName == "IMPOSTER_PROFESSOR_OAK" or constantName == "SCOOP_UP"
       if not supported then return nil, "untranslated_ai_trainer:" .. constantName end
       if self:_chooseRandomlyNotToDoAction() then break end
       local decision, selectionOrErr, parameter =

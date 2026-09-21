@@ -790,7 +790,10 @@
         "PokemonBreeder_HandPlayAreaCheck",
         "PokemonBreeder_PlayerSelection",
         "PokemonBreeder_EvolveEffect",
-        "ImposterProfessorOakEffect"
+        "ImposterProfessorOakEffect",
+        "ScoopUp_BenchCheck",
+        "ScoopUp_PlayerSelection",
+        "ScoopUp_ReturnToHandEffect"
       ],
       "target": "src/tcg/duel/EffectCommands.lua",
       "state": "translated",
