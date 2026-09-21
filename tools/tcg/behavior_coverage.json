@@ -1382,6 +1382,24 @@
       "target": "src/tcg/duel/AI.lua",
       "state": "translated",
       "notes": "Deck-agnostic gate, then a three-way deck-ID dispatch (LegendaryArticuno/Excavation/WondersOfScience) falling through to the shared general scoring path (AI:_decideProfessorOakGeneral), used directly by the default deck, WondersOfScience's own Grimer/Muk-miss fallthrough, and Excavation's Mysterious-Fossil-scored entry. Preserves the general path's documented hand-Basic-Pokemon type-check bug (skips real Pokemon cards, checks Trainer/Energy cards' raw stage byte instead) and LegendaryArticuno's PLAY_AREA_ARENA-flags-not-slot-specific CheckForEvolutionInList quirk, the latter reproduced as a pure read with no memory mutation."
+    },
+    {
+      "source": "src/engine/duel/ai/decks/general.asm",
+      "labels": [
+        "AIMainTurnLogic"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "Source phase ordering, Professor Oak second pass, common retreat/switch, common attack/energy play, Energy Trans calls, common active Pokemon Power decisions, and the deck-dependent random action-skip gate are native. Every Trainer AI decision this table can dispatch to is now native (AI_TRAINER_SUPPORTED covers all 33 names AI_TRAINER_PHASES references), and the source has no deck-ID branching of its own -- every deck-specific override happens at AI:doTurn()'s own dispatch level, already fully native there."
+    },
+    {
+      "source": "src/engine/duel/ai/decks/general_no_retreat.asm",
+      "labels": [
+        "AIDoTurn_GeneralNoRetreat"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "Source phase ordering, Professor Oak second pass, common active Pokemon Power decisions, and the deck-dependent random action-skip gate are native; the no-retreat variant intentionally skips common retreat processing as on cartridge. Every Trainer AI decision this table can dispatch to is now native, and the source has no deck-ID branching of its own beyond skipping common retreat processing."
     }
   ]
 }

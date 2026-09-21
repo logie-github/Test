@@ -264,32 +264,6 @@
       "notes": "Common attack usability/damage prediction is native; the source-specific AISelectSpecialAttackParameters dispatcher is now fully translated."
     },
     {
-      "source": "src/engine/duel/ai/decks/general.asm",
-      "labels": [
-        "AIMainTurnLogic"
-      ],
-      "target": "src/tcg/duel/AI.lua",
-      "state": "partial",
-      "remaining": [
-        "remaining Trainer AI decisions",
-        "specialized deck action-table overrides"
-      ],
-      "notes": "Source phase ordering, Professor Oak second pass, common retreat/switch, common attack/energy play, Energy Trans calls, common active Pokemon Power decisions, and the deck-dependent random action-skip gate are native."
-    },
-    {
-      "source": "src/engine/duel/ai/decks/general_no_retreat.asm",
-      "labels": [
-        "AIDoTurn_GeneralNoRetreat"
-      ],
-      "target": "src/tcg/duel/AI.lua",
-      "state": "partial",
-      "remaining": [
-        "remaining Trainer AI decisions",
-        "specialized attack/deck heuristics shared with GeneralDecks"
-      ],
-      "notes": "Source phase ordering, Professor Oak second pass, common active Pokemon Power decisions, and the deck-dependent random action-skip gate are native; the no-retreat variant intentionally skips common retreat processing as on cartridge."
-    },
-    {
       "source": "src/engine/duel/ai/pkmn_powers.asm",
       "labels": [
         "HandleAIEnergyTrans",
