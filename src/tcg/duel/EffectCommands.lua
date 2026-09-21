@@ -3613,6 +3613,16 @@ function EffectCommands:_installSharedHandlers()
     return s:_addToDamage(nidokingCount * 20)
   end)
 
+  -- Articuno's Ice Breath: 0 printed damage from the normal attack
+  -- pipeline, plus a separate 40 damage to a random opponent Play Area
+  -- Pokemon -- the exact same PickRandomPlayAreaCard/DealDamageToPlayArea
+  -- Pokemon_RegularAnim shape as CatPunch/SlicingWind above.
+  self:register("IceBreath_ZeroDamage", function(s)
+    return s:_setDefiniteDamage(0)
+  end)
+  self:register("IceBreath_RandomPokemonDamageEffect",
+    damageRandomOpponentPlayAreaPokemon(40, self.c.ATK_ANIM_BENCH_HIT))
+
   -- Electrode's Chain Lightning: fixed 10 damage, then an extra 10 to
   -- every Play Area Pokemon -- both sides, arena included -- that shares
   -- the Defending Pokemon's color (skipped entirely if the Defending
