@@ -249,20 +249,6 @@
       ]
     },
     {
-      "source": "src/engine/duel/ai/core.asm",
-      "labels": [
-        "CheckEnergyNeededForAttack",
-        "CheckIfSelectedAttackIsUnusable",
-        "CheckIfDefendingPokemonCanKnockOut"
-      ],
-      "target": "src/tcg/duel/AI.lua",
-      "state": "partial",
-      "remaining": [
-        "remaining unusual multi-color/custom attack edge cases and specialized AI-only usability checks"
-      ],
-      "notes": "Common attack usability/damage prediction is native; the source-specific AISelectSpecialAttackParameters dispatcher is now fully translated."
-    },
-    {
       "source": "src/engine/duel/ai/pkmn_powers.asm",
       "labels": [
         "HandleAIEnergyTrans",

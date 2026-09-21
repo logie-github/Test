@@ -1400,6 +1400,17 @@
       "target": "src/tcg/duel/AI.lua",
       "state": "translated",
       "notes": "Source phase ordering, Professor Oak second pass, common active Pokemon Power decisions, and the deck-dependent random action-skip gate are native; the no-retreat variant intentionally skips common retreat processing as on cartridge. Every Trainer AI decision this table can dispatch to is now native, and the source has no deck-ID branching of its own beyond skipping common retreat processing."
+    },
+    {
+      "source": "src/engine/duel/ai/core.asm",
+      "labels": [
+        "CheckEnergyNeededForAttack",
+        "CheckIfSelectedAttackIsUnusable",
+        "CheckIfDefendingPokemonCanKnockOut"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "Common attack usability/damage prediction is native; the source-specific AISelectSpecialAttackParameters dispatcher (Mew/Mewtwo x2/Exeggutor/Electrode) is fully translated. CheckEnergyNeededForAttack's documented back-to-back-overwrite quirk for a hypothetical dual-colored-energy attack (no real card in this game's pool needs one) is reproduced exactly: only a color with its OWN genuine shortfall overwrites the running result, so the highest-indexed SHORT color wins, not merely the highest-indexed color checked -- verified under real LuaJIT execution."
     }
   ]
 }
