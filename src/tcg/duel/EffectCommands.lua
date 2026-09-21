@@ -3334,6 +3334,29 @@ function EffectCommands:_installSharedHandlers()
     return false
   end)
 
+  -- Selfdestruct family (Weezing/Golem/Magnemite/Magneton x2): recoil to
+  -- self, then the same bench-damage amount to every Benched Pokemon on
+  -- BOTH sides -- own bench first (no swap), then the opponent's (source
+  -- brackets that half with SwapTurn/SwapTurn, matching targetNonTurn=true
+  -- here). Recoil/bench amounts read straight off each card's real body.
+  local function registerSelfdestruct(name, recoilAmount, benchAmount)
+    self:register(name, function(s, context)
+      local combat = context.combat
+      if not combat then return nil, "effect_context_missing_combat" end
+      combat:dealRecoilDamageToSelf(recoilAmount)
+      local ok, err = combat:dealDamageToAllBenchedPokemon(benchAmount, false, { isDamageToSelf = true })
+      if ok == nil then return nil, err end
+      ok, err = combat:dealDamageToAllBenchedPokemon(benchAmount, true, { isDamageToSelf = false })
+      if ok == nil then return nil, err end
+      return false
+    end)
+  end
+  registerSelfdestruct("WeezingSelfdestructEffect", 60, 10)
+  registerSelfdestruct("GolemSelfdestructEffect", 100, 20)
+  registerSelfdestruct("MagnemiteSelfdestructEffect", 40, 10)
+  registerSelfdestruct("MagnetonLv28SelfdestructEffect", 80, 20)
+  registerSelfdestruct("MagnetonLv35SelfdestructEffect", 100, 20)
+
   -- Triggered Power primitives. INITIAL_EFFECT_1 stubs intentionally carry so
   -- the powers cannot be used as ordinary attacks, while the trigger phase is
   -- independently executable by the generic dispatcher.
