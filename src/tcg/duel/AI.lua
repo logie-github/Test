@@ -3305,8 +3305,9 @@ function AI:_repeatedBenchEnergyDeltas(count)
 end
 
 
--- AITryToPlayEnergyCard:: source ordering for choosing the actual Energy card
--- after the target Play Area slot has already won the score comparison.
+-- AITryToPlayEnergyCard (choose step):: source ordering for choosing the
+-- actual Energy card after the target Play Area slot has already won the
+-- score comparison.
 function AI:_chooseEnergyCardForSlot(slot, handEnergy)
   for attackIndex = self.c.FIRST_ATTACK_OR_PKMN_POWER, self.c.SECOND_ATTACK do
     self.memory:writeSymbol8("wSelectedAttack", attackIndex)
@@ -3332,6 +3333,19 @@ function AI:_chooseEnergyCardForSlot(slot, handEnergy)
   local evolutionNeed = self:_evolutionNeedsSecondAttackEnergy(slot)
   if evolutionNeed then return self:_chooseEnergyForNeed(slot, evolutionNeed, handEnergy) end
   return nil
+end
+
+-- AITryToPlayEnergyCard:: choose and attach an Energy card for an
+-- already-decided target Play Area slot, skipping the score comparison
+-- across all slots that AIProcessAndTryToPlayEnergy does. Returns true on a
+-- successful attach, false if no Energy card could be chosen for the slot
+-- (source's "return carry": nothing attached).
+function AI:_tryToPlayEnergyCard(slot, handEnergy)
+  local cardId = self:_chooseEnergyCardForSlot(slot, handEnergy)
+  if cardId == nil then return false end
+  local ok, reason = self.playerActions:attachEnergy(cardId, slot)
+  if not ok then return nil, reason end
+  return true
 end
 
 -- AIProcessAndTryToPlayEnergy / AIProcessEnergyCards:: common scoring path.
@@ -3441,12 +3455,7 @@ function AI:processAndTryToPlayEnergy()
     ::continue_energy_slot::
   end
   if bestSlot == nil or bestScore < 0x85 then return false end
-
-  local cardId = self:_chooseEnergyCardForSlot(bestSlot, handEnergy)
-  if cardId == nil then return false end
-  local ok, reason = self.playerActions:attachEnergy(cardId, bestSlot)
-  if not ok then return nil, reason end
-  return true
+  return self:_tryToPlayEnergyCard(bestSlot, handEnergy)
 end
 
 
@@ -5709,6 +5718,74 @@ function AI:mainTurnLogic(noRetreat)
   return true, "finish_no_attack"
 end
 
+-- AIDoTurn_LegendaryZapdos:: bespoke turn logic for the Legendary Zapdos
+-- boss deck (engine/duel/ai/decks/legendary_zapdos.asm). Structurally a
+-- trimmed AIMainTurnLogic (no Pkmn Power/Cowardice/GoGoRainDance/EnergyTrans
+-- calls, no Professor-Oak repeat pass, and a shorter phase list) plus one
+-- bespoke branch: if the Arena Pokemon is Voltorb (with ElectrodeLv35 in
+-- hand) or Electabuzz, and the Arena has no Energy attached yet, force-
+-- attach an Energy card directly to the Arena; otherwise fall back to the
+-- normal scoring-based attach (AIProcessAndTryToPlayEnergy), which becomes a
+-- guaranteed no-op after a successful forced attach since that already set
+-- wAlreadyPlayedEnergy.
+function AI:doTurnLegendaryZapdos()
+  self:initTurnVars()
+  local antiMillOk, antiMillErr = self:handleAIAntiMewtwoDeckStrategy()
+  if antiMillOk == nil then return nil, antiMillErr end
+  if antiMillOk then
+    for _, phase in ipairs({self.c.AI_TRAINER_CARD_PHASE_01, self.c.AI_TRAINER_CARD_PHASE_04}) do
+      local ok, err = self:processHandTrainerCards(phase)
+      if ok == nil then return nil, err end
+    end
+    local playOk, playErr = self:decidePlayPokemonCard()
+    if playOk == nil then return nil, playErr end
+    local ok7, err7 = self:processHandTrainerCards(self.c.AI_TRAINER_CARD_PHASE_07)
+    if ok7 == nil then return nil, err7 end
+    local retreatOk, retreatErr = self:processRetreat()
+    if retreatOk == nil then return nil, retreatErr end
+    local ok10, err10 = self:processHandTrainerCards(self.c.AI_TRAINER_CARD_PHASE_10)
+    if ok10 == nil then return nil, err10 end
+
+    if self.memory:readSymbol8("wAlreadyPlayedEnergy") == 0 then
+      local arenaIndex = self.duelVars:get(self.c.DUELVARS_ARENA_CARD)
+      local arenaCardId = self.cardData:getCardIDFromDeckIndex(arenaIndex)
+      local isVoltorbOrElectabuzz = false
+      if arenaCardId == self.c.VOLTORB then
+        isVoltorbOrElectabuzz = self:_findCardIDInHand(self.c.ELECTRODE_LV35) ~= nil
+      elseif arenaCardId == self.c.ELECTABUZZ_LV35 then
+        isVoltorbOrElectabuzz = true
+      end
+      if isVoltorbOrElectabuzz then
+        local handEnergy = self:_energyCardsInHand()
+        if #handEnergy > 0 then
+          if self.duelOps:countNumberOfEnergyCardsAttached(self.c.PLAY_AREA_ARENA) ~= 0 then
+            local energyOk, energyErr = self:processAndTryToPlayEnergy()
+            if energyOk == nil then return nil, energyErr end
+          else
+            local attachOk, attachErr = self:_tryToPlayEnergyCard(self.c.PLAY_AREA_ARENA, handEnergy)
+            if attachOk == nil then return nil, attachErr end
+          end
+        end
+      else
+        local energyOk, energyErr = self:processAndTryToPlayEnergy()
+        if energyOk == nil then return nil, energyErr end
+      end
+    end
+
+    local playOk2, playErr2 = self:decidePlayPokemonCard()
+    if playOk2 == nil then return nil, playErr2 end
+    local ok13, err13 = self:processHandTrainerCards(self.c.AI_TRAINER_CARD_PHASE_13)
+    if ok13 == nil then return nil, err13 end
+  end
+
+  local attacked, attackResult = self:processAndTryToUseAttack()
+  if attacked == nil then return nil, attackResult end
+  if attacked then return true, attackResult end
+  self.combat.core:clearNonTurnTemporaryDuelvars()
+  self.memory:writeSymbol8("wOpponentTurnEnded", 1)
+  return true, "finish_no_attack"
+end
+
 -- AIDoAction_Turn:: dispatches through the source DeckAIPointerTable. Generic
 -- tables now use the native common core; special/boss tables remain adapters.
 function AI:doTurn()
@@ -5723,9 +5800,12 @@ function AI:doTurn()
   elseif AI_BOSS_GENERAL_TURN_TABLES[label] then
     -- Eleven of the sixteen boss/special tables route .do_turn straight to
     -- AIMainTurnLogic with no wrapper of their own (verified directly
-    -- against engine/duel/ai/decks/*.asm); the remaining five each have a
-    -- bespoke AIDoTurn_<Deck> and stay on the adapter path below.
+    -- against engine/duel/ai/decks/*.asm); the remaining four (of the five
+    -- Legendary bosses) each have a bespoke AIDoTurn_<Deck> and stay on the
+    -- adapter path below.
     return self:mainTurnLogic(false)
+  elseif label == "AIActionTable_LegendaryZapdos" then
+    return self:doTurnLegendaryZapdos()
   end
   return self:_required("turnSpecial")(label, self.memory:readSymbol8("wOpponentDeckID"))
 end

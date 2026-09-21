@@ -1287,6 +1287,15 @@
       ],
       "target": "src/tcg/duel/AI.lua",
       "state": "translated"
+    },
+    {
+      "source": "src/engine/duel/ai/decks/legendary_zapdos.asm",
+      "labels": [
+        "AIActionTable_LegendaryZapdos",
+        "AIDoTurn_LegendaryZapdos"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated"
     }
   ]
 }

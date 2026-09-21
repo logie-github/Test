@@ -148,7 +148,7 @@
       "target": "src/tcg/duel/AI.lua",
       "state": "partial",
       "remaining": [
-        "the five Legendary bosses' (Moltres/Zapdos/Articuno/Dragonite/Ronald) bespoke AIDoTurn_<Deck> turn logic -- each its own tracked pending entry",
+        "the four remaining Legendary bosses' (Moltres/Articuno/Dragonite/Ronald) bespoke AIDoTurn_<Deck> turn logic -- each its own tracked pending entry (Zapdos's own AIDoTurn_LegendaryZapdos is now native)",
         "any future/unverified AIActionTable_* label outside the 19 confirmed against DeckAIPointerTable"
       ],
       "notes": "GeneralDecks and GeneralNoRetreat enter the native common turn core with common retreat/switch scoring, common active Pokemon Power AI, and the cartridge random action-skip gate. Of the sixteen boss/special decks, eleven route .do_turn straight to the same native AIMainTurnLogic core (verified directly against each engine/duel/ai/decks/*.asm file); .forced_switch/.ko_switch/.take_prize are native for all sixteen. Unresolved specialized decisions still fail closed."
@@ -389,18 +389,6 @@
       "state": "partial",
       "remaining": [
         "AIDoTurn_LegendaryRonald's bespoke turn logic"
-      ],
-      "notes": ".start_duel/.forced_switch/.ko_switch/.take_prize are native (identical to every other verified boss table); only .do_turn's own bespoke routine remains, behind the turnSpecial adapter."
-    },
-    {
-      "source": "src/engine/duel/ai/decks/legendary_zapdos.asm",
-      "labels": [
-        "AIActionTable_LegendaryZapdos"
-      ],
-      "target": "src/tcg/duel/AI.lua",
-      "state": "partial",
-      "remaining": [
-        "AIDoTurn_LegendaryZapdos's bespoke turn logic"
       ],
       "notes": ".start_duel/.forced_switch/.ko_switch/.take_prize are native (identical to every other verified boss table); only .do_turn's own bespoke routine remains, behind the turnSpecial adapter."
     }

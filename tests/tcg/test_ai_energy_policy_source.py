@@ -50,7 +50,7 @@ class AIEnergyPolicySourceTests(unittest.TestCase):
         self.assertIn("articunoDeltas", block)
         self.assertIn("repeatedDeltas", block)
         self.assertIn("bestScore < 0x85", block)
-        self.assertIn("self:_chooseEnergyCardForSlot", block)
+        self.assertIn("self:_tryToPlayEnergyCard(bestSlot, handEnergy)", block)
 
     def test_energy_trans_uses_skip_evolution_skip_arena_preview_with_score_restore(self):
         src = read("src/tcg/duel/AI.lua")
