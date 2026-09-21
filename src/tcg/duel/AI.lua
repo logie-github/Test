@@ -5952,6 +5952,71 @@ function AI:doTurnLegendaryDragonite()
   return true, "finish_no_attack"
 end
 
+-- AIDoTurn_LegendaryArticuno:: bespoke turn logic for the Legendary
+-- Articuno boss deck (engine/duel/ai/decks/legendary_articuno.asm). Phase
+-- 01 runs before the anti-Mewtwo-mill check, same as Dragonite's. Unlike
+-- Zapdos/Moltres/Dragonite, this one has no bespoke Energy-attach branch of
+-- its own at all: Articuno's whole specialization
+-- (ScoreLegendaryArticunoCards -- prioritizing Lapras to 3 Energy, then
+-- Articuno, then Dewgong, then Seel, gated on the Player having 3+ prizes
+-- left) already lives inside the common energy-scoring pipeline via
+-- AI:_legendaryArticunoEnergyDeltas, so plain processAndTryToPlayEnergy is
+-- always used. It does have a Professor-Oak repeat pass (phases 01/02, play,
+-- retreat, 10, energy, play again -- no phase 13/15 on the repeat).
+function AI:doTurnLegendaryArticuno()
+  self:initTurnVars()
+  local ok1, err1 = self:processHandTrainerCards(self.c.AI_TRAINER_CARD_PHASE_01)
+  if ok1 == nil then return nil, err1 end
+  local antiMillOk, antiMillErr = self:handleAIAntiMewtwoDeckStrategy()
+  if antiMillOk == nil then return nil, antiMillErr end
+  if antiMillOk then
+    local ok2, err2 = self:processHandTrainerCards(self.c.AI_TRAINER_CARD_PHASE_02)
+    if ok2 == nil then return nil, err2 end
+    local playOk, playErr = self:decidePlayPokemonCard()
+    if playOk == nil then return nil, playErr end
+    local retreatOk, retreatErr = self:processRetreat()
+    if retreatOk == nil then return nil, retreatErr end
+    local ok10, err10 = self:processHandTrainerCards(self.c.AI_TRAINER_CARD_PHASE_10)
+    if ok10 == nil then return nil, err10 end
+    if self.memory:readSymbol8("wAlreadyPlayedEnergy") == 0 then
+      local energyOk, energyErr = self:processAndTryToPlayEnergy()
+      if energyOk == nil then return nil, energyErr end
+    end
+    local playOk2, playErr2 = self:decidePlayPokemonCard()
+    if playOk2 == nil then return nil, playErr2 end
+    local ok13, err13 = self:processHandTrainerCards(self.c.AI_TRAINER_CARD_PHASE_13)
+    if ok13 == nil then return nil, err13 end
+    local ok15, err15 = self:processHandTrainerCards(self.c.AI_TRAINER_CARD_PHASE_15)
+    if ok15 == nil then return nil, err15 end
+
+    if bit.band(self.memory:readSymbol8("wPreviousAIFlags"), self.c.AI_FLAG_USED_PROFESSOR_OAK) ~= 0 then
+      local rok1, rerr1 = self:processHandTrainerCards(self.c.AI_TRAINER_CARD_PHASE_01)
+      if rok1 == nil then return nil, rerr1 end
+      local rok2, rerr2 = self:processHandTrainerCards(self.c.AI_TRAINER_CARD_PHASE_02)
+      if rok2 == nil then return nil, rerr2 end
+      local rplayOk, rplayErr = self:decidePlayPokemonCard()
+      if rplayOk == nil then return nil, rplayErr end
+      local rretreatOk, rretreatErr = self:processRetreat()
+      if rretreatOk == nil then return nil, rretreatErr end
+      local rok10, rerr10 = self:processHandTrainerCards(self.c.AI_TRAINER_CARD_PHASE_10)
+      if rok10 == nil then return nil, rerr10 end
+      if self.memory:readSymbol8("wAlreadyPlayedEnergy") == 0 then
+        local renergyOk, renergyErr = self:processAndTryToPlayEnergy()
+        if renergyOk == nil then return nil, renergyErr end
+      end
+      local rplayOk2, rplayErr2 = self:decidePlayPokemonCard()
+      if rplayOk2 == nil then return nil, rplayErr2 end
+    end
+  end
+
+  local attacked4, attackResult4 = self:processAndTryToUseAttack()
+  if attacked4 == nil then return nil, attackResult4 end
+  if attacked4 then return true, attackResult4 end
+  self.combat.core:clearNonTurnTemporaryDuelvars()
+  self.memory:writeSymbol8("wOpponentTurnEnded", 1)
+  return true, "finish_no_attack"
+end
+
 -- AIDoAction_Turn:: dispatches through the source DeckAIPointerTable. Generic
 -- tables now use the native common core; special/boss tables remain adapters.
 function AI:doTurn()
@@ -5976,6 +6041,8 @@ function AI:doTurn()
     return self:doTurnLegendaryMoltres()
   elseif label == "AIActionTable_LegendaryDragonite" then
     return self:doTurnLegendaryDragonite()
+  elseif label == "AIActionTable_LegendaryArticuno" then
+    return self:doTurnLegendaryArticuno()
   end
   return self:_required("turnSpecial")(label, self.memory:readSymbol8("wOpponentDeckID"))
 end

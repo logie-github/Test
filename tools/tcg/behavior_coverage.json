@@ -1314,6 +1314,15 @@
       ],
       "target": "src/tcg/duel/AI.lua",
       "state": "translated"
+    },
+    {
+      "source": "src/engine/duel/ai/decks/legendary_articuno.asm",
+      "labels": [
+        "AIActionTable_LegendaryArticuno",
+        "AIDoTurn_LegendaryArticuno"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated"
     }
   ]
 }

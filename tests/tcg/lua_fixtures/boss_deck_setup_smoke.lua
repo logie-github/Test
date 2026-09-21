@@ -337,15 +337,16 @@ do
   check("boss deck (RockCrusher): doTurn routes to mainTurnLogic (general .do_turn)", called, true)
 end
 do
-  -- Zapdos and Moltres are now native (their own dedicated fixtures); of the
-  -- five Legendary bosses, Articuno/Dragonite/Ronald remain adapter-backed.
+  -- Zapdos/Moltres/Dragonite/Articuno are now native (their own dedicated
+  -- fixtures); of the five Legendary bosses, only Ronald remains
+  -- adapter-backed.
   local ai = newHarness({})
   ai.memory.readSymbol8 = function(_, name) return name == "wOpponentDeckID" and 6 or 0 end
-  ai.decks.aiByOpponentDeckId = { [6] = "AIActionTable_LegendaryArticuno" }
+  ai.decks.aiByOpponentDeckId = { [6] = "AIActionTable_LegendaryRonald" }
   local usedAdapter = false
   ai.adapters.turnSpecial = function() usedAdapter = true; return true end
   ai:doTurn()
-  check("boss deck with bespoke turn logic (Legendary Articuno): still uses the adapter",
+  check("boss deck with bespoke turn logic (Legendary Ronald): still uses the adapter",
     usedAdapter, true)
 end
 
