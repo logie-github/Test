@@ -650,6 +650,30 @@ function AI:_checkIfPlayerHasPokemonOtherThanMewtwoLv53()
   return found
 end
 
+-- HandleAIAntiMewtwoDeckStrategy:: returns true for the source's "return
+-- carry" (continue the turn normally: either the Player isn't running a
+-- confirmed mill deck, the mill counter-strategy went stale and was reset,
+-- or the Bench isn't set up enough yet); returns false, reason for "return
+-- no carry" (the Bench is ready, AI_TRAINER_CARD_PHASE_05 was processed, and
+-- the caller should skip straight to its to_bench Energy Trans + attack
+-- tail); returns nil, err on an untranslated failure from that phase.
+function AI:handleAIAntiMewtwoDeckStrategy()
+  local counter = self.memory:readSymbol8("wAIBarrierFlagCounter")
+  if not (self.c.AI_MEWTWO_MILL_F and hasFlag(counter, self.c.AI_MEWTWO_MILL_F)) then
+    return true
+  end
+  if counter >= self.c.AI_MEWTWO_MILL + 2 then
+    self.memory:writeSymbol8("wAIBarrierFlagCounter", 0)
+    return true
+  end
+  if self:_countNumberOfSetUpBenchPokemon() < 4 then
+    return true
+  end
+  local ok, err = self:processHandTrainerCards(self.c.AI_TRAINER_CARD_PHASE_05)
+  if ok == nil then return nil, err end
+  return false, "anti_mewtwo_mill_bench_ready"
+end
+
 function AI:_energyCardIdForColor(color)
   local ids = {
     [self.c.FIRE] = self.c.FIRE_ENERGY,
@@ -5626,42 +5650,54 @@ function AI:mainTurnLogic(noRetreat)
     return true
   end
   for _, phase in ipairs({1}) do local ok,err=trainer(phase); if not ok then return nil,err end end
-  local powerOk, powerErr = self:_checkActivePowerBoundary(true)
-  if powerOk == nil then return nil, powerErr end
-  if powerOk == false then return true, powerErr end
-  for _, phase in ipairs({2,3,4}) do local ok,err=trainer(phase); if not ok then return nil,err end end
-  local ok, err = self:decidePlayPokemonCard(); if ok == nil then return nil, err end
-  for _, phase in ipairs({5,6,7,8}) do local a,b=trainer(phase); if not a then return nil,b end end
-  if not noRetreat then
-    local r, e = self:processRetreat()
-    if r == nil then return nil, e end
-  end
-  for _, phase in ipairs({10,11,12}) do local a,b=trainer(phase); if not a then return nil,b end end
-  local energyOk, energyErr = self:processAndTryToPlayEnergy()
-  if energyOk == nil then return nil, energyErr end
-  ok, err = self:decidePlayPokemonCard(); if ok == nil then return nil, err end
-  powerOk, powerErr = self:_checkActivePowerBoundary(); if powerOk == nil then return nil,powerErr elseif powerOk == false then return true,powerErr end
-  local transOK, transErr = self:handleAIEnergyTrans("attack"); if transOK == nil then return nil,transErr end
-  for _, phase in ipairs({13,15}) do local a,b=trainer(phase); if not a then return nil,b end end
 
-  -- AIMainTurnLogic repeats the hand-processing sequence once when Professor
-  -- Oak was used, but deliberately skips phase 15 on the second pass.
-  if self.c.AI_FLAG_USED_PROFESSOR_OAK and bit.band(
-      self.memory:readSymbol8("wPreviousAIFlags"), self.c.AI_FLAG_USED_PROFESSOR_OAK) ~= 0 then
-    for _, phase in ipairs({1,2,3,4}) do local a,b=trainer(phase); if not a then return nil,b end end
+  -- HandleAIAntiMewtwoDeckStrategy:: if the Player is running a confirmed
+  -- MewtwoLv53 mill deck and the AI's Bench is already fully set up, the
+  -- source skips the rest of this turn's normal processing entirely (after
+  -- handling phase 05) and jumps straight to the to_bench Energy Trans +
+  -- attack tail below.
+  local antiMillOk, antiMillErr = self:handleAIAntiMewtwoDeckStrategy()
+  if antiMillOk == nil then return nil, antiMillErr end
+  local ok, err
+  local transOK, transErr
+  if antiMillOk then
+    local powerOk, powerErr = self:_checkActivePowerBoundary(true)
+    if powerOk == nil then return nil, powerErr end
+    if powerOk == false then return true, powerErr end
+    for _, phase in ipairs({2,3,4}) do local a,b=trainer(phase); if not a then return nil,b end end
     ok, err = self:decidePlayPokemonCard(); if ok == nil then return nil, err end
     for _, phase in ipairs({5,6,7,8}) do local a,b=trainer(phase); if not a then return nil,b end end
     if not noRetreat then
-      local r, e = self:processRetreat(); if r == nil then return nil, e end
+      local r, e = self:processRetreat()
+      if r == nil then return nil, e end
     end
     for _, phase in ipairs({10,11,12}) do local a,b=trainer(phase); if not a then return nil,b end end
-    if self.memory:readSymbol8("wAlreadyPlayedEnergy") == 0 then
-      local eok, eerr = self:processAndTryToPlayEnergy(); if eok == nil then return nil, eerr end
-    end
+    local energyOk, energyErr = self:processAndTryToPlayEnergy()
+    if energyOk == nil then return nil, energyErr end
     ok, err = self:decidePlayPokemonCard(); if ok == nil then return nil, err end
     powerOk, powerErr = self:_checkActivePowerBoundary(); if powerOk == nil then return nil,powerErr elseif powerOk == false then return true,powerErr end
     transOK, transErr = self:handleAIEnergyTrans("attack"); if transOK == nil then return nil,transErr end
-    local a,b=trainer(13); if not a then return nil,b end
+    for _, phase in ipairs({13,15}) do local a,b=trainer(phase); if not a then return nil,b end end
+
+    -- AIMainTurnLogic repeats the hand-processing sequence once when Professor
+    -- Oak was used, but deliberately skips phase 15 on the second pass.
+    if self.c.AI_FLAG_USED_PROFESSOR_OAK and bit.band(
+        self.memory:readSymbol8("wPreviousAIFlags"), self.c.AI_FLAG_USED_PROFESSOR_OAK) ~= 0 then
+      for _, phase in ipairs({1,2,3,4}) do local a,b=trainer(phase); if not a then return nil,b end end
+      ok, err = self:decidePlayPokemonCard(); if ok == nil then return nil, err end
+      for _, phase in ipairs({5,6,7,8}) do local a,b=trainer(phase); if not a then return nil,b end end
+      if not noRetreat then
+        local r, e = self:processRetreat(); if r == nil then return nil, e end
+      end
+      for _, phase in ipairs({10,11,12}) do local a,b=trainer(phase); if not a then return nil,b end end
+      if self.memory:readSymbol8("wAlreadyPlayedEnergy") == 0 then
+        local eok, eerr = self:processAndTryToPlayEnergy(); if eok == nil then return nil, eerr end
+      end
+      ok, err = self:decidePlayPokemonCard(); if ok == nil then return nil, err end
+      powerOk, powerErr = self:_checkActivePowerBoundary(); if powerOk == nil then return nil,powerErr elseif powerOk == false then return true,powerErr end
+      transOK, transErr = self:handleAIEnergyTrans("attack"); if transOK == nil then return nil,transErr end
+      local a,b=trainer(13); if not a then return nil,b end
+    end
   end
 
   transOK, transErr = self:handleAIEnergyTrans("to_bench"); if transOK == nil then return nil,transErr end

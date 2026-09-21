@@ -1279,6 +1279,14 @@
       ],
       "target": "src/tcg/duel/AI.lua",
       "state": "translated"
+    },
+    {
+      "source": "src/engine/duel/ai/common.asm",
+      "labels": [
+        "HandleAIAntiMewtwoDeckStrategy"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated"
     }
   ]
 }
