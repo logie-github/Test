@@ -1352,6 +1352,16 @@
       "target": "src/tcg/duel/AI.lua",
       "state": "translated",
       "notes": "General path plus both deck-specific handlers: LegendaryArticuno (ArticunoLv37-on-Bench Snorlax/no-energy gate, or Arena Articuno/Chansey KO-danger branch sharing the general path's own switch-target tail) and LegendaryRonald (Articuno/Zapdos/Moltres-on-Bench, no Arena branch)."
+    },
+    {
+      "source": "src/engine/duel/ai/trainer_cards.asm",
+      "labels": [
+        "AIDecide_ComputerSearch",
+        "AIPlay_ComputerSearch"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "All four decks that can ever play this card: RockCrusher (3-hand-card Professor Oak case, and the Geodude/Graveler-Golem-Dugtrio evolution chain), WondersOfScience (Oak, then Grimer, then Muk), FireCharge (Chansey/Tauros/JigglypuffLv12 priority), and Anger (reuses AIDecide_Pokeball's own LookForCardIDInDeck_GivenCardIDInHand[AndPlayArea] primitives). The real shuffle-then-first-match discard-pair search (RemoveFromListDifferentCardOfGivenType) runs against the actual RNG."
     }
   ]
 }

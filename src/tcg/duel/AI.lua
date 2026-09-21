@@ -4112,20 +4112,221 @@ function AI:_decideClefairyDollOrMysteriousFossil()
   return count < 4
 end
 
--- AIDecide_ComputerSearch:: the hand-count>=3 gate is the ONLY deck-agnostic
+-- RemoveFromListDifferentCardOfGivenType:: shuffles `list` (an array of
+-- deck indices) via the real RNG, then returns the first entry (in
+-- shuffled order) whose card type matches `cardType` (0=Trainer,
+-- 1=Pokemon, 2=Energy) and isn't `avoidDeckIndex`. Always returns the
+-- (possibly-unchanged) list as a second value so callers can chain further
+-- removals against the remainder, matching the source's own in-place list
+-- mutation across repeated calls.
+function AI:_removeFromListDifferentCardOfGivenType(list, cardType, avoidDeckIndex)
+  if #list == 0 then return nil, list end
+  local base, bank = self.memory:address("wDuelTempList")
+  for i, deckIndex in ipairs(list) do self.memory:write8("wram", base + i - 1, deckIndex, bank) end
+  self.rng:shuffleCards(base, #list)
+  local shuffled = {}
+  for i = 1, #list do shuffled[i] = self.memory:read8("wram", base + i - 1, bank) end
+
+  for i, deckIndex in ipairs(shuffled) do
+    if deckIndex ~= avoidDeckIndex then
+      local cardId = self.cardData:getCardIDFromDeckIndex(deckIndex)
+      local row = self.cardData:get(cardId)
+      local matches
+      if not row then matches = false
+      elseif row.type < self.c.TYPE_ENERGY then matches = (cardType == 1)
+      elseif row.type == self.c.TYPE_TRAINER then matches = (cardType == 0)
+      else matches = (cardType == 2) end
+      if matches then
+        table.remove(shuffled, i)
+        return deckIndex, shuffled
+      end
+    end
+  end
+  return nil, shuffled
+end
+
+-- Shared "only discard Trainer cards from hand; need exactly 2" tail used
+-- by ComputerSearch's WondersOfScience/FireCharge/Anger branches.
+function AI:_findTwoTrainerDiscardsExcept(avoidDeckIndex)
+  local list = self.duelOps:createHandCardList()
+  local first, remaining = self:_removeFromListDifferentCardOfGivenType(list, 0, avoidDeckIndex)
+  if not first then return nil end
+  local second = self:_removeFromListDifferentCardOfGivenType(remaining, 0, avoidDeckIndex)
+  if not second then return nil end
+  return { first, second }
+end
+
+-- ComputerSearch_RockCrusher's Graveler/Golem/Dugtrio tail: same shuffled
+-- per-type search, but advances Trainer -> Pokemon -> Energy on failure,
+-- and carries whatever type it last succeeded at into the second pick
+-- rather than resetting to Trainer.
+function AI:_findTwoDiscardsAdvancingType(list, avoidDeckIndex)
+  local cardType, first = 0, nil
+  while cardType <= 2 do
+    first, list = self:_removeFromListDifferentCardOfGivenType(list, cardType, avoidDeckIndex)
+    if first then break end
+    cardType = cardType + 1
+  end
+  if not first then return nil end
+  local second
+  while cardType <= 2 do
+    second, list = self:_removeFromListDifferentCardOfGivenType(list, cardType, avoidDeckIndex)
+    if second then break end
+    cardType = cardType + 1
+  end
+  if not second then return nil end
+  return { first, second }
+end
+
+-- ComputerSearch_RockCrusher's 3-hand-card/Professor-Oak branch: no
+-- shuffle at all, just the first 2 hand cards (in hand order) that aren't
+-- the played card and aren't in this fixed blocklist.
+local ROCK_CRUSHER_OAK_DISCARD_BLOCKLIST = {
+  "PROFESSOR_OAK", "FIGHTING_ENERGY", "DOUBLE_COLORLESS_ENERGY",
+  "DIGLETT", "GEODUDE", "ONIX", "RHYHORN",
+}
+function AI:_rockCrusherOakDiscards(avoidDeckIndex)
+  local found = {}
+  for _, deckIndex in ipairs(self.duelOps:createHandCardList()) do
+    if deckIndex ~= avoidDeckIndex then
+      local cardId = self.cardData:getCardIDFromDeckIndex(deckIndex)
+      local blocked = false
+      for _, name in ipairs(ROCK_CRUSHER_OAK_DISCARD_BLOCKLIST) do
+        if self.c[name] and cardId == self.c[name] then blocked = true break end
+      end
+      if not blocked then
+        found[#found + 1] = deckIndex
+        if #found == 2 then break end
+      end
+    end
+  end
+  if #found < 2 then return nil end
+  return found
+end
+
+-- AIDecide_ComputerSearch_RockCrusher:: at exactly 3 hand cards, target
+-- Professor Oak in deck (discarding any 2 hand cards outside the
+-- blocklist); with more, walk the Geodude/Graveler/Golem/Dugtrio evolution
+-- chain looking for the next evolution to fetch.
+function AI:_decideComputerSearchRockCrusher(avoidDeckIndex)
+  local handCount = self.duelVars:get(self.c.DUELVARS_NUMBER_OF_CARDS_IN_HAND)
+  if handCount == 3 then
+    local oakDeckIndex = self:_findCardIDInDeck(self.c.PROFESSOR_OAK)
+    if not oakDeckIndex then return false end
+    local discards = self:_rockCrusherOakDiscards(avoidDeckIndex)
+    if not discards then return false end
+    return true, { deckCard = oakDeckIndex, handDiscards = discards }
+  end
+
+  local list = self.duelOps:createHandCardList()
+  local target
+  local graverDeckIndex = self:_findCardIDInDeck(self.c.GRAVELER)
+  if graverDeckIndex and self:_cardIDInHandAndPlayArea(self.c.GEODUDE)
+      and not self:_cardIDInHand(self.c.GRAVELER) then
+    target = graverDeckIndex
+    list = self:_cardListWithout(list, self:_findCardIDInHand(self.c.GEODUDE))
+  else
+    local golemDeckIndex = self:_findCardIDInDeck(self.c.GOLEM)
+    if golemDeckIndex and self:_findCardIDInPlayArea(self.c.GRAVELER, self.c.PLAY_AREA_ARENA) ~= 0xff
+        and not self:_cardIDInHand(self.c.GOLEM) then
+      target = golemDeckIndex
+    else
+      local dugtrioDeckIndex = self:_findCardIDInDeck(self.c.DUGTRIO)
+      if dugtrioDeckIndex and self:_findCardIDInPlayArea(self.c.DIGLETT, self.c.PLAY_AREA_ARENA) ~= 0xff
+          and not self:_cardIDInHand(self.c.DUGTRIO) then
+        target = dugtrioDeckIndex
+      else
+        return false
+      end
+    end
+  end
+
+  local discards = self:_findTwoDiscardsAdvancingType(list, avoidDeckIndex)
+  if not discards then return false end
+  return true, { deckCard = target, handDiscards = discards }
+end
+
+-- AIDecide_ComputerSearch_WondersOfScience:: fewer than 5 hand cards
+-- targets Professor Oak; otherwise targets Grimer (or, failing that, Muk)
+-- only when the AI does NOT already have one in hand.
+function AI:_decideComputerSearchWondersOfScience(avoidDeckIndex)
+  local handCount = self.duelVars:get(self.c.DUELVARS_NUMBER_OF_CARDS_IN_HAND)
+  local target
+  if handCount < 5 then
+    target = self:_findCardIDInDeck(self.c.PROFESSOR_OAK)
+  end
+  if not target then
+    if not self:_cardIDInHand(self.c.GRIMER) then
+      target = self:_findCardIDInDeck(self.c.GRIMER)
+    end
+    if not target and not self:_cardIDInHand(self.c.MUK) then
+      target = self:_findCardIDInDeck(self.c.MUK)
+    end
+  end
+  if not target then return false end
+  local discards = self:_findTwoTrainerDiscardsExcept(avoidDeckIndex)
+  if not discards then return false end
+  return true, { deckCard = target, handDiscards = discards }
+end
+
+-- AIDecide_ComputerSearch_FireCharge:: priority target order Chansey,
+-- Tauros, JigglypuffLv12 -- first one not already in hand that's actually
+-- in the deck.
+function AI:_decideComputerSearchFireCharge(avoidDeckIndex)
+  local target
+  for _, cardId in ipairs({ self.c.CHANSEY, self.c.TAUROS, self.c.JIGGLYPUFF_LV12 }) do
+    if not self:_cardIDInHand(cardId) then
+      target = self:_findCardIDInDeck(cardId)
+      if target then break end
+    end
+  end
+  if not target then return false end
+  local discards = self:_findTwoTrainerDiscardsExcept(avoidDeckIndex)
+  if not discards then return false end
+  return true, { deckCard = target, handDiscards = discards }
+end
+
+-- AIDecide_ComputerSearch_Anger:: for each of Rattata/Raticate,
+-- Growlithe/ArcanineLv34, Doduo/Dodrio: prefer fetching the evolution
+-- (wanted) when the pre-evolution is already out (hand or Play Area);
+-- failing that, fetch the pre-evolution itself when the evolution is
+-- already in hand. Reuses the same LookForCardIDInDeck_GivenCardIDInHand
+-- [AndPlayArea] primitives as AIDecide_Pokeball.
+function AI:_decideComputerSearchAnger(avoidDeckIndex)
+  local target
+  for _, pair in ipairs({
+    { self.c.RATICATE, self.c.RATTATA }, { self.c.ARCANINE_LV34, self.c.GROWLITHE },
+    { self.c.DODRIO, self.c.DODUO },
+  }) do
+    local evolution, preEvolution = pair[1], pair[2]
+    target = self:_pokeBallGivenCardInHandAndPlayArea(evolution, preEvolution)
+    if not target then target = self:_pokeBallGivenCardInHand(preEvolution, evolution) end
+    if target then break end
+  end
+  if not target then return false end
+  local discards = self:_findTwoTrainerDiscardsExcept(avoidDeckIndex)
+  if not discards then return false end
+  return true, { deckCard = target, handDiscards = discards }
+end
+
+-- AIDecide_ComputerSearch:: the hand-count>=3 gate is the only deck-agnostic
 -- part of this decision -- every deck that can play it at all (Rock
 -- Crusher, Wonders of Science, Fire Charge, Anger) has its own dedicated,
 -- multi-branch card-search routine with no shared/general fallback; every
--- other deck never plays it. Those four specialized routines remain their
--- own tracked pending gap rather than being approximated.
-function AI:_decideComputerSearch()
+-- other deck never plays it.
+function AI:_decideComputerSearch(avoidDeckIndex)
   local handCount = self.duelVars:get(self.c.DUELVARS_NUMBER_OF_CARDS_IN_HAND)
   if handCount < 3 then return false end
 
   local deckId = self.memory:readSymbol8("wOpponentDeckID")
-  if deckId == self.c.ROCK_CRUSHER_DECK_ID or deckId == self.c.WONDERS_OF_SCIENCE_DECK_ID
-      or deckId == self.c.FIRE_CHARGE_DECK_ID or deckId == self.c.ANGER_DECK_ID then
-    return nil, "untranslated_ai_computer_search_special_deck"
+  if deckId == self.c.ROCK_CRUSHER_DECK_ID then
+    return self:_decideComputerSearchRockCrusher(avoidDeckIndex)
+  elseif deckId == self.c.WONDERS_OF_SCIENCE_DECK_ID then
+    return self:_decideComputerSearchWondersOfScience(avoidDeckIndex)
+  elseif deckId == self.c.FIRE_CHARGE_DECK_ID then
+    return self:_decideComputerSearchFireCharge(avoidDeckIndex)
+  elseif deckId == self.c.ANGER_DECK_ID then
+    return self:_decideComputerSearchAnger(avoidDeckIndex)
   end
   return false
 end
@@ -5190,7 +5391,7 @@ function AI:_decideTrainer(constantName, phase, currentTrainerDeckIndex)
   elseif constantName == "CLEFAIRY_DOLL" or constantName == "MYSTERIOUS_FOSSIL" then
     return self:_decideClefairyDollOrMysteriousFossil()
   elseif constantName == "COMPUTER_SEARCH" then
-    return self:_decideComputerSearch()
+    return self:_decideComputerSearch(currentTrainerDeckIndex)
   elseif constantName == "POKEMON_TRADER" then
     return self:_decidePokemonTrader()
   end

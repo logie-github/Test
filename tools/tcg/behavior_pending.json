@@ -322,8 +322,6 @@
         "AIPlay_EnergySearch",
         "AIDecide_ProfessorOak",
         "AIPlay_ProfessorOak",
-        "AIDecide_ComputerSearch",
-        "AIPlay_ComputerSearch",
         "AIDecide_PokemonTrader",
         "AIPlay_PokemonTrader"
       ],
@@ -333,7 +331,6 @@
         "rare deck/card-specific policy branches and exact random-skip cadence",
         "Potion/Super-Potion high-recoil and BOOST_IF_TAKEN_DAMAGE interactions are now complete for Super Potion (AIDecide_SuperPotion_Phase08/Phase11); Potion's own simpler heal path never required this branch",
         "Professor Oak evolution/deck-special-case scoring (Energy Removal's own target-priority cascade is now native)",
-        "Computer Search's RockCrusher/WondersOfScience/FireCharge/Anger deck-specific search routines; the hand-count>=3 gate is native and every other deck's no-op is already exact (the source has no general path)",
         "Pokemon Trader's ten deck-specific card-search routines (Legendary Moltres/Articuno/Dragonite/Ronald, Blistering Pokemon, Sound of the Waves, Power Generator, Flower Garden, Strange Power, Flamethrower); the source has no general path, and every other deck's no-op is already exact"
       ],
       "notes": "These high-frequency Trainer families now make native source-shaped decisions and execute through the translated player-side Trainer effect engine; unsupported cases fail closed."
