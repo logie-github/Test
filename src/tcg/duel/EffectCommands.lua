@@ -3685,6 +3685,50 @@ function EffectCommands:_installSharedHandlers()
     return false
   end)
 
+  -- Wail: fails only if BOTH players' Benches are already full; otherwise
+  -- fills each player's Bench, opponent first (matching the source's
+  -- SwapTurn/.FillBench/SwapTurn/.FillBench order for RNG parity), with
+  -- Basic Pokemon shuffled out of that player's own Deck.
+  self:register("Wail_BenchCheck", function(s, context)
+    local actor = s:_actor(context)
+    if not actor then return nil, "effect_context_missing_actor" end
+    if actor.duelVars:get(s.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA) < s.c.MAX_PLAY_AREA_POKEMON then
+      return false
+    end
+    return actor.duelVars:getNonTurn(s.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA) >= s.c.MAX_PLAY_AREA_POKEMON
+  end)
+  self:register("Wail_FillBenchEffect", function(s, context)
+    local actor = s:_actor(context)
+    if not actor then return nil, "effect_context_missing_actor" end
+
+    local function fillBench(a)
+      local deck, empty = a.duelOps:createDeckCardList()
+      if empty then return end
+      local base, bank = a.memory:address("wDuelTempList")
+      a.duelOps.rng:shuffleCards(base, #deck)
+      local count = a.duelVars:get(s.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+      for i = 0, #deck - 1 do
+        if count >= s.c.MAX_PLAY_AREA_POKEMON then break end
+        local deckIndex = a.memory:read8("wram", base + i, bank)
+        local cardId = a.cardData:getCardIDFromDeckIndex(deckIndex)
+        local row = a.cardData:get(cardId)
+        if row and row.type < s.c.TYPE_ENERGY and row.stage == s.c.BASIC then
+          a.duelOps:searchCardInDeckAndAddToHand(deckIndex)
+          a.duelOps:addCardToHand(deckIndex)
+          a.duelOps:putHandPokemonCardInPlayArea(deckIndex)
+          count = count + 1
+        end
+      end
+      a.duelOps:shuffleDeck()
+    end
+
+    actor.duelVars:swapTurn()
+    fillBench(actor)
+    actor.duelVars:swapTurn()
+    fillBench(actor)
+    return false
+  end)
+
   self:register("Blizzard_BenchDamage50PercentEffect", function(s)
     local result, err = s.setup:tossCoin()
     if result == nil then return nil, err end
