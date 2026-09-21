@@ -3690,6 +3690,30 @@ function EffectCommands:_installSharedHandlers()
     return false
   end)
 
+  -- Pidgeotto's Hurricane: unless the attack was unaffected or the
+  -- Defending Pokemon was already KO'd, returns the Defending Pokemon and
+  -- every card attached to it (Energy, Trainers) to the opponent's hand,
+  -- then clears the Arena slot outright -- deliberately not shifting the
+  -- Bench or touching the play area count, matching the real ASM, which
+  -- leaves that to whatever forced-switch flow follows.
+  self:register("HurricaneEffect", function(s, context)
+    local actor = s:_actor(context)
+    if not actor then return nil, "effect_context_missing_actor" end
+    if s.status:checkNoDamageOrEffect() then return false end
+    if actor.duelVars:getNonTurn(s.c.DUELVARS_ARENA_CARD_HP) == 0 then return false end
+
+    actor.duelVars:swapTurn()
+    for deckIndex = 0, s.c.DECK_SIZE - 1 do
+      if actor.duelVars:get(deckIndex) == s.c.CARD_LOCATION_ARENA then
+        actor.duelOps:addCardToHand(deckIndex)
+      end
+    end
+    actor.duelVars:set(s.c.DUELVARS_ARENA_CARD, 0xff)
+    actor.duelVars:set(s.c.DUELVARS_ARENA_CARD_HP, 0)
+    actor.duelVars:swapTurn()
+    return false
+  end)
+
   -- Pidgeot's Gale: switches the Defending Pokemon to a random Bench slot
   -- (unless the attack was unaffected), then always switches the
   -- Attacking Pokemon to a random Bench slot too. Shares
