@@ -1046,6 +1046,16 @@
       ],
       "target": "src/tcg/duel/AI.lua",
       "state": "translated"
+    },
+    {
+      "source": "src/engine/duel/ai/trainer_cards.asm",
+      "labels": [
+        "AIPlay_SuperPotion",
+        "AIDecide_SuperPotion_Phase08",
+        "AIDecide_SuperPotion_Phase11"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated"
     }
   ]
 }

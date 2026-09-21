@@ -3815,6 +3815,55 @@ function EffectCommands:_installSharedHandlers()
     return false
   end)
 
+  -- Super Potion heals up to 40 damage counters on one chosen Play Area
+  -- Pokemon (any card with damage, not just the Active) and discards one
+  -- chosen attached Energy card as its cost. AIPlay_SuperPotion/AIDecide_
+  -- SuperPotion_Phase08/Phase11 (trainer_cards.asm) select the target slot
+  -- and the Energy to discard; this effect only applies whatever the
+  -- decision/selection layer already chose, matching Potion_HealEffect's
+  -- split between selection and effect above.
+  self:register("SuperPotion_DamageCheck", function(s, context)
+    local actor = actorForTrainer(context)
+    if not actor then return nil, "effect_context_missing_actor" end
+    local count = actor.duelVars:get(s.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+    for slot = 0, count - 1 do
+      local damage = s:_playAreaDamage(actor, slot)
+      if damage and damage > 0 and actor.duelOps:createArenaOrBenchEnergyCardList(slot) > 0 then
+        return false
+      end
+    end
+    return true
+  end)
+  self:register("SuperPotion_PlayerSelection", function(s, context)
+    local actor = actorForTrainer(context)
+    if not actor then return nil, "effect_context_missing_actor" end
+    local slot, err = s:_selectPlayArea(context)
+    if slot == nil then return nil, err end
+    local damage = s:_playAreaDamage(actor, slot)
+    if not damage or damage <= 0 then return nil, "invalid_selection:no_damage" end
+    local energyCount = actor.duelOps:createArenaOrBenchEnergyCardList(slot)
+    if energyCount == 0 then return nil, "invalid_selection:no_energy" end
+    local discard, discardErr =
+      s:_selection(context, "discardEnergy", "selectDiscardEnergy", { playArea = slot })
+    if discard == nil then return nil, discardErr end
+    actor.memory:writeSymbol8("hTempPlayAreaLocation_ffa1", slot)
+    actor.memory:writeSymbol8("hTemp_ffa0", discard)
+    actor.memory:writeSymbol8("hTempRetreatCostCards", math.min(40, damage))
+    return false
+  end)
+  self:register("SuperPotion_HealAndDiscardEffect", function(s, context)
+    local actor = actorForTrainer(context)
+    if not actor then return nil, "effect_context_missing_actor" end
+    local slot = actor.memory:readSymbol8("hTempPlayAreaLocation_ffa1")
+    local discard = actor.memory:readSymbol8("hTemp_ffa0")
+    local heal = actor.memory:readSymbol8("hTempRetreatCostCards")
+    local hpOffset = s.c.DUELVARS_ARENA_CARD_HP + slot
+    actor.duelVars:set(hpOffset, actor.duelVars:get(hpOffset) + heal)
+    actor.duelOps:putCardInDiscardPile(discard)
+    s:_event("heal_play_area", { slot = slot, amount = heal, discardedEnergy = discard })
+    return false
+  end)
+
   -- Revive places a chosen Basic Pokemon from the user's Discard Pile on the
   -- Bench with half HP rounded up to the nearest 10.
   self:register("Revive_BenchCheck", function(s, context)

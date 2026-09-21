@@ -3569,6 +3569,243 @@ function AI:_decideMrFuji()
   return true, { bench = selected }
 end
 
+-- AICheckIfAttackIsHighRecoil:: despite the name, the source routine's final
+-- carry (after its `ccf`) means "there IS a usable attack AND it is NOT
+-- flagged High Recoil" -- i.e. a normal, safe attack is available. Every
+-- caller of this routine bails (does not need this specific KO-avoidance
+-- branch) exactly when that is true, and only continues when either no
+-- attack is usable at all or the usable one is itself a recoil risk.
+-- Preserved literally rather than renamed/re-derived, matching the project's
+-- rule against silently substituting cleaner-looking behavior for source.
+function AI:_checkIfAttackIsHighRecoilForAI()
+  local usable, selected = self:processButDontUseAttack()
+  if usable == nil then return nil, selected end
+  if not usable then return false end
+  local deckIndex = self.duelVars:get(self.c.DUELVARS_ARENA_CARD)
+  local _, attack = self.combat:loadAttack(deckIndex, selected)
+  return not self:_attackFlag(attack, 1, self.c.HIGH_RECOIL_F)
+end
+
+-- AIPickEnergyCardToDiscard:: finds an attached Energy that is not useful to
+-- the card's own attacks per CheckIfEnergyIsUseful (already translated and
+-- shared with the retreat-payment picker as _energyIsUsefulForRetreat);
+-- defaults to the first attached Energy card if every attached card is
+-- useful, or nil if none is attached. Distinct from _pickAttachedEnergyToRemove
+-- (PickAttachedEnergyCardToRemove), which prioritizes Double Colorless
+-- Energy first -- this routine has no such DCE-first case.
+function AI:_pickEnergyCardToDiscard(slot)
+  local count = self.duelOps:createArenaOrBenchEnergyCardList(slot)
+  if not count or count == 0 then return nil end
+  local _, activeId, active = self:_cardAtPlayArea(slot, false)
+  local base, bank = self.memory:address("wDuelTempList")
+  local first, notUseful
+  for i = 0, count - 1 do
+    local deckIndex = self.memory:read8("wram", base + i, bank)
+    first = first or deckIndex
+    if not notUseful and not self:_energyIsUsefulForRetreat(deckIndex, activeId, active.type) then
+      notUseful = deckIndex
+    end
+  end
+  return notUseful or first
+end
+
+-- AIDecide_SuperPotion_Phase08/Phase11 (trainer_cards.asm). Phase08 is the
+-- emergency defensive heal: only relevant when the Active card has no safe
+-- usable attack of its own, has at least one Energy attached (Super Potion's
+-- discard cost requires one), and healing would let it survive an otherwise
+-- exactly-lethal hit. Phase11 is the general opportunistic heal: scan every
+-- Play Area slot with >=40 damage (skipping cards whose attacks would become
+-- unusable after the discard, or that have a BOOST_IF_TAKEN_DAMAGE attack),
+-- starting from the Active card unless healing it would specifically have
+-- prevented the Phase08 scenario's KO -- in which case Phase08 already owns
+-- that decision and Phase11 starts from the Bench instead.
+function AI:_decideSuperPotion(phase)
+  if phase == 8 then
+    local retreat, retreatErr = self:decideWhetherToRetreat()
+    if retreat == nil then return nil, retreatErr end
+    if retreat then return false end
+    local safeAttack, safeErr = self:_checkIfAttackIsHighRecoilForAI()
+    if safeAttack == nil then return nil, safeErr end
+    if safeAttack then return false end
+    local attached = self.duelOps:getPlayAreaCardAttachedEnergies(self.c.PLAY_AREA_ARENA)
+    if not attached or attached == 0 then return false end
+    local canKO, koDamage = self:checkIfDefendingPokemonCanKnockOut()
+    if canKO == nil then return nil, koDamage end
+    if not canKO then return false end
+    local hp = self.duelVars:get(self.c.DUELVARS_ARENA_CARD_HP)
+    local damage = self:_damageAt(self.c.PLAY_AREA_ARENA)
+    local heal = math.min(40, damage or 0)
+    -- Literal source arithmetic (hp + heal - koDamage), even though
+    -- koDamage always equals hp here by construction of the exact-KO check
+    -- just above -- see the AI.lua comment history for why this is kept
+    -- mechanical rather than simplified to "heal > 0".
+    if heal == 0 or hp + heal <= koDamage then return false end
+    local discard = self:_pickEnergyCardToDiscard(self.c.PLAY_AREA_ARENA)
+    if discard == nil then return false end
+    return true, { playArea = self.c.PLAY_AREA_ARENA, discardEnergy = discard }
+  end
+
+  -- Phase11.
+  local canKO, koDamage = self:checkIfDefendingPokemonCanKnockOut()
+  if canKO == nil then return nil, koDamage end
+  local startSlot = self.c.PLAY_AREA_ARENA
+  if canKO then
+    local hp = self.duelVars:get(self.c.DUELVARS_ARENA_CARD_HP)
+    local damage = self:_damageAt(self.c.PLAY_AREA_ARENA)
+    local heal = math.min(40, damage or 0)
+    -- "; return if using healing prevents KO." Source returns (bails the
+    -- whole call) unconditionally here -- it does not merely skip the
+    -- Active card and keep scanning. Phase08 above owns this specific
+    -- emergency-heal scenario; Phase11's general scan never runs this turn.
+    if not (heal == 0 or hp + heal <= koDamage) then return false end
+    -- Healing would NOT have prevented the KO -- the Active card dies
+    -- regardless of Super Potion this turn ("using Super Potion on active
+    -- card does not prevent a KO"). Skip it and start the general scan at
+    -- Bench, unless the defending player is on their last prize card, in
+    -- which case source still starts from Active.
+    self.duelVars:swapTurn()
+    local playerPrizes = self.duelOps:countPrizes()
+    self.duelVars:swapTurn()
+    if playerPrizes ~= 1 then startSlot = self.c.PLAY_AREA_BENCH_1 end
+  end
+
+  local count = self.duelVars:get(self.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+  for slot = startSlot, count - 1 do
+    local attached = self.duelOps:getPlayAreaCardAttachedEnergies(slot)
+    if attached and attached > 0 then
+      local boosted, boostedErr = self:_activeHasUsableBoostIfTakenDamageAttack(slot)
+      if boosted == nil then return nil, boostedErr end
+      if not boosted then
+        local unusableAfterDiscard, unusableErr = self:_discardingMakesAttacksUnusable(slot)
+        if unusableAfterDiscard == nil then return nil, unusableErr end
+        if not unusableAfterDiscard then
+          local damage = self:_damageAt(slot)
+          if damage and damage >= 40 then
+            local discard = self:_pickEnergyCardToDiscard(slot)
+            if discard == nil then goto superPotionNextSlot end
+            if slot == self.c.PLAY_AREA_ARENA then
+              local safeAttack, safeErr = self:_checkIfAttackIsHighRecoilForAI()
+              if safeAttack == nil then return nil, safeErr end
+              if not safeAttack then goto superPotionNextSlot end
+              return true, { playArea = slot, discardEnergy = discard }
+            end
+            self.duelVars:swapTurn()
+            local playerPrizes = self.duelOps:countPrizes()
+            self.duelVars:swapTurn()
+            if playerPrizes == 1 or self.rng:random(10) >= 3 then
+              return true, { playArea = slot, discardEnergy = discard }
+            end
+            return false
+          end
+        end
+      end
+    end
+    ::superPotionNextSlot::
+  end
+  return false
+end
+
+-- AIDecide_SuperPotion_Phase11's ".CheckIfHasAttackWithBoostIfTakenDamageFlag":
+-- carry (true here) if either attack is currently usable and flagged
+-- BOOST_IF_TAKEN_DAMAGE_F -- healing such a card would remove its own damage
+-- bonus, so Super Potion skips it.
+function AI:_activeHasUsableBoostIfTakenDamageAttack(slot)
+  local saved = self.memory:readSymbol8("hTempPlayAreaLocation_ff9d")
+  self.memory:writeSymbol8("hTempPlayAreaLocation_ff9d", slot)
+  local found = false
+  for attackIndex = 0, 1 do
+    local unusable = self:_checkIfBenchAttackUnusable(slot, attackIndex)
+    if slot == self.c.PLAY_AREA_ARENA then
+      local usable = self:_checkAttackUsableForAI(attackIndex)
+      unusable = not usable
+    end
+    if not unusable then
+      local deckIndex = self.duelVars:get(self.c.DUELVARS_ARENA_CARD + slot)
+      local _, attack = self.combat:loadAttack(deckIndex, attackIndex)
+      if self:_attackFlag(attack, 3, self.c.BOOST_IF_TAKEN_DAMAGE_F) then
+        found = true
+        break
+      end
+    end
+  end
+  self.memory:writeSymbol8("hTempPlayAreaLocation_ff9d", saved)
+  return found
+end
+
+-- ".CheckIfDiscardingMakesAttacksUnusable": carry (true here) if, for either
+-- attack that currently has enough Energy, discarding the chosen card would
+-- drop it below what that attack needs. Checks both attacks unconditionally
+-- (source falls through .second_attack_2 regardless of the first attack's
+-- outcome unless it already found a "becomes unusable" case), returning true
+-- the first time a currently-usable attack would stop being usable.
+function AI:_discardingMakesAttacksUnusable(slot)
+  for attackIndex = 0, 1 do
+    local before = self:checkEnergyNeededForAttack(slot, attackIndex)
+    if before and before.enough then
+      local after, err = self:_checkEnergyNeededForAttackAfterDiscard(slot, attackIndex)
+      if after == nil then return nil, err end
+      if not after.enough then return true end
+    end
+  end
+  return false
+end
+
+-- CheckEnergyNeededForAttackAfterDiscard:: mirrors checkEnergyNeededForAttack
+-- exactly (same recompute-then-deficit arithmetic, matching the source's own
+-- near-duplicate routine), except the Energy AIPickEnergyCardToDiscard would
+-- discard (one colored Energy, or two Colorless for Double Colorless Energy)
+-- is removed from the freshly recomputed totals before the deficit check.
+function AI:_checkEnergyNeededForAttackAfterDiscard(slot, attackIndex)
+  local deckIndex = self.duelVars:get(self.c.DUELVARS_ARENA_CARD + slot)
+  if deckIndex == 0xff then return nil, "empty_slot" end
+  local _, attack = self.combat:loadAttack(deckIndex, attackIndex)
+  if attack.nameTextId == 0 or attack.category == self.c.POKEMON_POWER then
+    return nil, "no_attack"
+  end
+  local discard = self:_pickEnergyCardToDiscard(slot)
+  self.duelOps:getPlayAreaCardAttachedEnergies(slot)
+  if slot == self.c.PLAY_AREA_ARENA then self.combat.status:handleEnergyBurn() end
+  local base, bank = self.memory:address("wAttachedEnergies")
+
+  if discard ~= nil then
+    local discardId = self.cardData:getCardIDFromDeckIndex(discard)
+    local totalNow = self.memory:readSymbol8("wTotalAttachedEnergies")
+    if discardId == self.c.DOUBLE_COLORLESS_ENERGY then
+      local colorless = self.memory:read8("wram", base + self.c.COLORLESS, bank)
+      self.memory:write8("wram", base + self.c.COLORLESS, math.max(0, colorless - 2), bank)
+      self.memory:writeSymbol8("wTotalAttachedEnergies", math.max(0, totalNow - 2))
+    else
+      for color = 0, self.c.NUM_COLORED_TYPES - 1 do
+        if self:_energyCardIdForColor(color) == discardId then
+          local attached = self.memory:read8("wram", base + color, bank)
+          self.memory:write8("wram", base + color, math.max(0, attached - 1), bank)
+          break
+        end
+      end
+      self.memory:writeSymbol8("wTotalAttachedEnergies", math.max(0, totalNow - 1))
+    end
+  end
+
+  local requiredColored, coloredNeeded, neededColor = 0, 0, nil
+  for color = 0, self.c.NUM_COLORED_TYPES - 1 do
+    local required = attack.energy[color] or 0
+    local attached = self.memory:read8("wram", base + color, bank)
+    requiredColored = requiredColored + required
+    if required > attached then
+      coloredNeeded = required - attached
+      neededColor = color
+    end
+  end
+  local total = self.memory:readSymbol8("wTotalAttachedEnergies")
+  local coloredSatisfied = requiredColored - coloredNeeded
+  local colorlessRequired = attack.energy[self.c.COLORLESS] or 0
+  local colorlessNeeded = math.max(0, colorlessRequired - math.max(0, total - coloredSatisfied))
+  return {
+    colored = coloredNeeded, colorless = colorlessNeeded, color = neededColor,
+    enough = coloredNeeded == 0 and colorlessNeeded == 0,
+  }
+end
+
 function AI:_decidePotion(phase)
   if phase == 7 then
     local retreat, err = self:decideWhetherToRetreat()
@@ -4228,6 +4465,8 @@ function AI:_decideTrainer(constantName, phase, currentTrainerDeckIndex)
     return self.duelVars:get(self.c.DUELVARS_NUMBER_OF_CARDS_NOT_IN_DECK) < self.c.DECK_SIZE - 9
   elseif constantName == "POTION" then
     return self:_decidePotion(phase)
+  elseif constantName == "SUPER_POTION" then
+    return self:_decideSuperPotion(phase)
   elseif constantName == "DEFENDER" then
     return self:_decideDefender(phase)
   elseif constantName == "PLUSPOWER" then
@@ -4336,6 +4575,7 @@ function AI:processHandTrainerCards(phase)
         or constantName == "MR_FUJI" or constantName == "ENERGY_RETRIEVAL"
         or constantName == "SUPER_ENERGY_RETRIEVAL" or constantName == "SUPER_ENERGY_REMOVAL"
         or constantName == "GUST_OF_WIND" or constantName == "POKE_BALL"
+        or constantName == "SUPER_POTION"
       if not supported then return nil, "untranslated_ai_trainer:" .. constantName end
       if self:_chooseRandomlyNotToDoAction() then break end
       local decision, selectionOrErr, parameter =
