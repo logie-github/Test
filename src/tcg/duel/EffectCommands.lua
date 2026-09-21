@@ -1187,6 +1187,12 @@ function EffectCommands:_installSharedHandlers()
       return s:_healAttackingArena(context, heal)
     end)
   end
+  self:register("FirstAid_DamageCheck", function(s, context)
+    local actor = s:_actor(context)
+    if not actor then return nil, "effect_context_missing_actor" end
+    local damage = s:_playAreaDamage(actor, s.c.PLAY_AREA_ARENA)
+    return (damage or 0) < 10
+  end)
   self:register("FirstAid_HealEffect", function(s, context)
     return s:_healAttackingArena(context, 10)
   end)
@@ -3552,6 +3558,27 @@ function EffectCommands:_installSharedHandlers()
   self:register("GengarDarkMind_DamageBenchEffect", damageSelectedBench(10))
   self:register("HypnoDarkMind_PlayerSelectEffect", selectOpponentBenchOrNone)
   self:register("HypnoDarkMind_DamageBenchEffect", damageSelectedBench(10))
+
+  -- Meowth/Persian's Cat Punch and Slicing Wind: PickRandomPlayAreaCard on
+  -- the opponent's side (Random(count), no self-exclusion or re-roll, unlike
+  -- the own/opponent-coin-pick RandomlyDamagePlayAreaPokemon primitive used
+  -- by BigThunder/MagneticStorm), then straight into DealDamageToPlayAreaPokemon.
+  local function damageRandomOpponentPlayAreaPokemon(amount, animation)
+    return function(s, context)
+      local combat = context.combat
+      if not combat then return nil, "effect_context_missing_combat" end
+      local count = combat.duelVars:getNonTurn(s.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+      local slot = s.setup.rng:random(count)
+      s.memory:writeSymbol8("wLoadedAttackAnimation", animation)
+      local damage, err = combat:dealDamageToPlayAreaPokemon(slot, amount, true)
+      if damage == nil then return nil, err end
+      return false
+    end
+  end
+  self:register("CatPunchEffect",
+    damageRandomOpponentPlayAreaPokemon(20, self.c.ATK_ANIM_CAT_PUNCH_PLAY_AREA))
+  self:register("SlicingWindEffect",
+    damageRandomOpponentPlayAreaPokemon(30, self.c.ATK_ANIM_BENCH_HIT))
 
   self:register("Blizzard_BenchDamage50PercentEffect", function(s)
     local result, err = s.setup:tossCoin()
