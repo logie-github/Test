@@ -41,13 +41,23 @@ class LegendaryZapdosTurnSourceTests(unittest.TestCase):
     def setUp(self):
         self.ai_src = read("src/tcg/duel/AI.lua")
 
-    def _block(self, start_marker, end_marker):
+    def _block(self, start_marker, end_marker=None):
         start = self.ai_src.index(start_marker)
-        end = self.ai_src.index(end_marker, start)
+        # Any function body here never contains another top-level "function
+        # AI:" definition or the file's final "return AI", so the nearer of
+        # those two is a stable boundary regardless of what gets inserted or
+        # removed after this function in the file.
+        candidates = []
+        for marker in ("\nfunction AI:", "\nreturn AI"):
+            try:
+                candidates.append(self.ai_src.index(marker, start + 1))
+            except ValueError:
+                pass
+        end = min(candidates)
         return self.ai_src[start:end]
 
     def test_anti_mill_check_runs_before_any_phase(self):
-        block = self._block("function AI:doTurnLegendaryZapdos", "\n-- AIDoTurn_LegendaryMoltres")
+        block = self._block("function AI:doTurnLegendaryZapdos")
         init_pos = block.index("self:initTurnVars()")
         anti_mill_pos = block.index("self:handleAIAntiMewtwoDeckStrategy()")
         phase1_pos = block.index("AI_TRAINER_CARD_PHASE_01")
@@ -55,7 +65,7 @@ class LegendaryZapdosTurnSourceTests(unittest.TestCase):
         self.assertLess(anti_mill_pos, phase1_pos)
 
     def test_phase_list_is_1_4_7_10_13_not_the_general_deck_list(self):
-        block = self._block("function AI:doTurnLegendaryZapdos", "\n-- AIDoTurn_LegendaryMoltres")
+        block = self._block("function AI:doTurnLegendaryZapdos")
         self.assertIn("AI_TRAINER_CARD_PHASE_01, self.c.AI_TRAINER_CARD_PHASE_04", block)
         self.assertIn("AI_TRAINER_CARD_PHASE_07", block)
         self.assertIn("AI_TRAINER_CARD_PHASE_10", block)
@@ -66,7 +76,7 @@ class LegendaryZapdosTurnSourceTests(unittest.TestCase):
             self.assertNotIn(absent, block)
 
     def test_voltorb_electabuzz_branch_checks_arena_then_hand_then_attached_count(self):
-        block = self._block("function AI:doTurnLegendaryZapdos", "\n-- AIDoTurn_LegendaryMoltres")
+        block = self._block("function AI:doTurnLegendaryZapdos")
         self.assertIn("self.c.VOLTORB", block)
         self.assertIn("self:_findCardIDInHand(self.c.ELECTRODE_LV35)", block)
         self.assertIn("self.c.ELECTABUZZ_LV35", block)
@@ -84,7 +94,7 @@ class LegendaryZapdosTurnSourceTests(unittest.TestCase):
         self.assertIn("return self:_tryToPlayEnergyCard(bestSlot, handEnergy)", generic)
 
     def test_zapdos_wired_into_do_turn_dispatch(self):
-        block = self._block("function AI:doTurn()", "\nreturn AI")
+        block = self._block("function AI:doTurn()")
         self.assertIn('label == "AIActionTable_LegendaryZapdos"', block)
         self.assertIn("self:doTurnLegendaryZapdos()", block)
 

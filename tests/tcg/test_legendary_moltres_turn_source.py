@@ -33,13 +33,23 @@ class LegendaryMoltresTurnSourceTests(unittest.TestCase):
     def setUp(self):
         self.ai_src = read("src/tcg/duel/AI.lua")
 
-    def _block(self, start_marker, end_marker):
+    def _block(self, start_marker, end_marker=None):
         start = self.ai_src.index(start_marker)
-        end = self.ai_src.index(end_marker, start)
+        # Any function body here never contains another top-level "function
+        # AI:" definition or the file's final "return AI", so the nearer of
+        # those two is a stable boundary regardless of what gets inserted or
+        # removed after this function in the file.
+        candidates = []
+        for marker in ("\nfunction AI:", "\nreturn AI"):
+            try:
+                candidates.append(self.ai_src.index(marker, start + 1))
+            except ValueError:
+                pass
+        end = min(candidates)
         return self.ai_src[start:end]
 
     def test_anti_mill_check_runs_before_any_phase(self):
-        block = self._block("function AI:doTurnLegendaryMoltres", "\n-- AIDoAction_Turn")
+        block = self._block("function AI:doTurnLegendaryMoltres")
         init_pos = block.index("self:initTurnVars()")
         anti_mill_pos = block.index("self:handleAIAntiMewtwoDeckStrategy()")
         phase2_pos = block.index("AI_TRAINER_CARD_PHASE_02")
@@ -47,7 +57,7 @@ class LegendaryMoltresTurnSourceTests(unittest.TestCase):
         self.assertLess(anti_mill_pos, phase2_pos)
 
     def test_phase_list_is_2_4_5_10_11_13(self):
-        block = self._block("function AI:doTurnLegendaryMoltres", "\n-- AIDoAction_Turn")
+        block = self._block("function AI:doTurnLegendaryMoltres")
         for present in ("AI_TRAINER_CARD_PHASE_02", "AI_TRAINER_CARD_PHASE_04",
                         "AI_TRAINER_CARD_PHASE_05", "AI_TRAINER_CARD_PHASE_10",
                         "AI_TRAINER_CARD_PHASE_11", "AI_TRAINER_CARD_PHASE_13"):
@@ -57,7 +67,7 @@ class LegendaryMoltresTurnSourceTests(unittest.TestCase):
             self.assertNotIn(absent, block)
 
     def test_moltres_direct_play_checks_all_four_gates_in_order(self):
-        block = self._block("function AI:doTurnLegendaryMoltres", "\n-- AIDoAction_Turn")
+        block = self._block("function AI:doTurnLegendaryMoltres")
         bench_pos = block.index("playAreaCount < self.c.MAX_PLAY_AREA_POKEMON")
         deck_pos = block.index("notInDeck < self.c.DECK_SIZE - 9")
         muk_pos = block.index("countPokemonWithActivePkmnPowerInBothPlayAreas(self.c.MUK)")
@@ -69,7 +79,7 @@ class LegendaryMoltresTurnSourceTests(unittest.TestCase):
         self.assertLess(hand_pos, play_pos)
 
     def test_energy_branch_is_single_card_gate_reusing_try_to_play_energy_card(self):
-        block = self._block("function AI:doTurnLegendaryMoltres", "\n-- AIDoAction_Turn")
+        block = self._block("function AI:doTurnLegendaryMoltres")
         self.assertIn("arenaCardId == self.c.MAGMAR_LV31", block)
         self.assertIn("self:_tryToPlayEnergyCard(self.c.PLAY_AREA_ARENA, handEnergy)", block)
         # Unlike Zapdos's Voltorb/Electrode-in-hand check, Moltres's gate is a
@@ -77,7 +87,7 @@ class LegendaryMoltresTurnSourceTests(unittest.TestCase):
         self.assertNotIn("_findCardIDInHand(self.c.ELECTRODE", block)
 
     def test_moltres_wired_into_do_turn_dispatch(self):
-        block = self._block("function AI:doTurn()", "\nreturn AI")
+        block = self._block("function AI:doTurn()")
         self.assertIn('label == "AIActionTable_LegendaryMoltres"', block)
         self.assertIn("self:doTurnLegendaryMoltres()", block)
 

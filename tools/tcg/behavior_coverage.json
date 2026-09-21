@@ -1305,6 +1305,15 @@
       ],
       "target": "src/tcg/duel/AI.lua",
       "state": "translated"
+    },
+    {
+      "source": "src/engine/duel/ai/decks/legendary_dragonite.asm",
+      "labels": [
+        "AIActionTable_LegendaryDragonite",
+        "AIDoTurn_LegendaryDragonite"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated"
     }
   ]
 }

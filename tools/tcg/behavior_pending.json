@@ -148,7 +148,7 @@
       "target": "src/tcg/duel/AI.lua",
       "state": "partial",
       "remaining": [
-        "the three remaining Legendary bosses' (Articuno/Dragonite/Ronald) bespoke AIDoTurn_<Deck> turn logic -- each its own tracked pending entry (Zapdos's and Moltres's are now native)",
+        "the two remaining Legendary bosses' (Articuno/Ronald) bespoke AIDoTurn_<Deck> turn logic -- each its own tracked pending entry (Zapdos's, Moltres's, and Dragonite's are now native)",
         "any future/unverified AIActionTable_* label outside the 19 confirmed against DeckAIPointerTable"
       ],
       "notes": "GeneralDecks and GeneralNoRetreat enter the native common turn core with common retreat/switch scoring, common active Pokemon Power AI, and the cartridge random action-skip gate. Of the sixteen boss/special decks, eleven route .do_turn straight to the same native AIMainTurnLogic core (verified directly against each engine/duel/ai/decks/*.asm file); .forced_switch/.ko_switch/.take_prize are native for all sixteen. Unresolved specialized decisions still fail closed."
@@ -353,18 +353,6 @@
       "state": "partial",
       "remaining": [
         "AIDoTurn_LegendaryArticuno's bespoke turn logic"
-      ],
-      "notes": ".start_duel/.forced_switch/.ko_switch/.take_prize are native (identical to every other verified boss table); only .do_turn's own bespoke routine remains, behind the turnSpecial adapter."
-    },
-    {
-      "source": "src/engine/duel/ai/decks/legendary_dragonite.asm",
-      "labels": [
-        "AIActionTable_LegendaryDragonite"
-      ],
-      "target": "src/tcg/duel/AI.lua",
-      "state": "partial",
-      "remaining": [
-        "AIDoTurn_LegendaryDragonite's bespoke turn logic"
       ],
       "notes": ".start_duel/.forced_switch/.ko_switch/.take_prize are native (identical to every other verified boss table); only .do_turn's own bespoke routine remains, behind the turnSpecial adapter."
     },

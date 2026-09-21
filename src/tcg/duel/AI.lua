@@ -5863,6 +5863,95 @@ function AI:doTurnLegendaryMoltres()
   return true, "finish_no_attack"
 end
 
+-- AIDoTurn_LegendaryDragonite:: bespoke turn logic for the Legendary
+-- Dragonite boss deck (engine/duel/ai/decks/legendary_dragonite.asm).
+-- Unlike Zapdos's and Moltres's, phase 01 runs *before* the anti-Mewtwo-mill
+-- check here, matching AIMainTurnLogic's own ordering. The Energy-attach
+-- branch force-attaches directly to the Arena when it's Kangaskhan with no
+-- Energy attached yet (single-card gate, no hand-search precondition, since
+-- the check is purely "is the Arena Pokemon Kangaskhan"). Also has its own
+-- short Professor-Oak repeat pass (phases 01/02/07/10/11 again, no phase 15
+-- on the repeat), distinct from AIMainTurnLogic's longer one.
+function AI:doTurnLegendaryDragonite()
+  self:initTurnVars()
+  local ok1, err1 = self:processHandTrainerCards(self.c.AI_TRAINER_CARD_PHASE_01)
+  if ok1 == nil then return nil, err1 end
+  local antiMillOk, antiMillErr = self:handleAIAntiMewtwoDeckStrategy()
+  if antiMillOk == nil then return nil, antiMillErr end
+  if antiMillOk then
+    local ok2, err2 = self:processHandTrainerCards(self.c.AI_TRAINER_CARD_PHASE_02)
+    if ok2 == nil then return nil, err2 end
+    local playOk, playErr = self:decidePlayPokemonCard()
+    if playOk == nil then return nil, playErr end
+    local ok7, err7 = self:processHandTrainerCards(self.c.AI_TRAINER_CARD_PHASE_07)
+    if ok7 == nil then return nil, err7 end
+    local retreatOk, retreatErr = self:processRetreat()
+    if retreatOk == nil then return nil, retreatErr end
+    for _, phase in ipairs({self.c.AI_TRAINER_CARD_PHASE_10, self.c.AI_TRAINER_CARD_PHASE_11}) do
+      local a, b = self:processHandTrainerCards(phase)
+      if a == nil then return nil, b end
+    end
+
+    if self.memory:readSymbol8("wAlreadyPlayedEnergy") == 0 then
+      local arenaIndex = self.duelVars:get(self.c.DUELVARS_ARENA_CARD)
+      local arenaCardId = self.cardData:getCardIDFromDeckIndex(arenaIndex)
+      if arenaCardId == self.c.KANGASKHAN then
+        local handEnergy = self:_energyCardsInHand()
+        if #handEnergy > 0 then
+          if self.duelOps:countNumberOfEnergyCardsAttached(self.c.PLAY_AREA_ARENA) ~= 0 then
+            local energyOk, energyErr = self:processAndTryToPlayEnergy()
+            if energyOk == nil then return nil, energyErr end
+          else
+            local attachOk, attachErr = self:_tryToPlayEnergyCard(self.c.PLAY_AREA_ARENA, handEnergy)
+            if attachOk == nil then return nil, attachErr end
+          end
+        end
+      else
+        local energyOk, energyErr = self:processAndTryToPlayEnergy()
+        if energyOk == nil then return nil, energyErr end
+      end
+    end
+
+    local playOk2, playErr2 = self:decidePlayPokemonCard()
+    if playOk2 == nil then return nil, playErr2 end
+    local ok15, err15 = self:processHandTrainerCards(self.c.AI_TRAINER_CARD_PHASE_15)
+    if ok15 == nil then return nil, err15 end
+
+    -- Short Professor-Oak repeat pass, specific to this deck's own phase
+    -- list: 01/02, play, 07, retreat, 10/11, energy (no Kangaskhan re-check
+    -- on this pass), play again. No phase 15 the second time.
+    if bit.band(self.memory:readSymbol8("wPreviousAIFlags"), self.c.AI_FLAG_USED_PROFESSOR_OAK) ~= 0 then
+      local rok1, rerr1 = self:processHandTrainerCards(self.c.AI_TRAINER_CARD_PHASE_01)
+      if rok1 == nil then return nil, rerr1 end
+      local rok2, rerr2 = self:processHandTrainerCards(self.c.AI_TRAINER_CARD_PHASE_02)
+      if rok2 == nil then return nil, rerr2 end
+      local rplayOk, rplayErr = self:decidePlayPokemonCard()
+      if rplayOk == nil then return nil, rplayErr end
+      local rok7, rerr7 = self:processHandTrainerCards(self.c.AI_TRAINER_CARD_PHASE_07)
+      if rok7 == nil then return nil, rerr7 end
+      local rretreatOk, rretreatErr = self:processRetreat()
+      if rretreatOk == nil then return nil, rretreatErr end
+      for _, phase in ipairs({self.c.AI_TRAINER_CARD_PHASE_10, self.c.AI_TRAINER_CARD_PHASE_11}) do
+        local a, b = self:processHandTrainerCards(phase)
+        if a == nil then return nil, b end
+      end
+      if self.memory:readSymbol8("wAlreadyPlayedEnergy") == 0 then
+        local renergyOk, renergyErr = self:processAndTryToPlayEnergy()
+        if renergyOk == nil then return nil, renergyErr end
+      end
+      local rplayOk2, rplayErr2 = self:decidePlayPokemonCard()
+      if rplayOk2 == nil then return nil, rplayErr2 end
+    end
+  end
+
+  local attacked3, attackResult3 = self:processAndTryToUseAttack()
+  if attacked3 == nil then return nil, attackResult3 end
+  if attacked3 then return true, attackResult3 end
+  self.combat.core:clearNonTurnTemporaryDuelvars()
+  self.memory:writeSymbol8("wOpponentTurnEnded", 1)
+  return true, "finish_no_attack"
+end
+
 -- AIDoAction_Turn:: dispatches through the source DeckAIPointerTable. Generic
 -- tables now use the native common core; special/boss tables remain adapters.
 function AI:doTurn()
@@ -5885,6 +5974,8 @@ function AI:doTurn()
     return self:doTurnLegendaryZapdos()
   elseif label == "AIActionTable_LegendaryMoltres" then
     return self:doTurnLegendaryMoltres()
+  elseif label == "AIActionTable_LegendaryDragonite" then
+    return self:doTurnLegendaryDragonite()
   end
   return self:_required("turnSpecial")(label, self.memory:readSymbol8("wOpponentDeckID"))
 end
