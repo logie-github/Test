@@ -3676,6 +3676,18 @@ function AI:_decidePokemonBreeder()
   return true, { playArea = bestSlot, handStage2Pokemon = stage2ForSlot[bestSlot] }
 end
 
+-- AIDecide_ImposterProfessorOak:: both counts are read from the NON-turn
+-- duelist (the human opponent), since this card shuffles their hand back
+-- into their deck and redraws it, not the AI's own.
+function AI:_decideImposterProfessorOak()
+  local notInDeck = self.duelVars:getNonTurn(self.c.DUELVARS_NUMBER_OF_CARDS_NOT_IN_DECK)
+  local handCount = self.duelVars:getNonTurn(self.c.DUELVARS_NUMBER_OF_CARDS_IN_HAND)
+  if notInDeck < self.c.DECK_SIZE - 14 then
+    return handCount >= 9
+  end
+  return handCount < 6
+end
+
 -- AICheckIfAttackIsHighRecoil:: despite the name, the source routine's final
 -- carry (after its `ccf`) means "there IS a usable attack AND it is NOT
 -- flagged High Recoil" -- i.e. a normal, safe attack is available. Every
@@ -4616,6 +4628,8 @@ function AI:_decideTrainer(constantName, phase, currentTrainerDeckIndex)
     return self:_decideMrFuji()
   elseif constantName == "POKEMON_BREEDER" then
     return self:_decidePokemonBreeder()
+  elseif constantName == "IMPOSTER_PROFESSOR_OAK" then
+    return self:_decideImposterProfessorOak()
   end
   return nil, "untranslated_ai_trainer:" .. constantName
 end
@@ -4685,6 +4699,7 @@ function AI:processHandTrainerCards(phase)
         or constantName == "SUPER_ENERGY_RETRIEVAL" or constantName == "SUPER_ENERGY_REMOVAL"
         or constantName == "GUST_OF_WIND" or constantName == "POKE_BALL"
         or constantName == "SUPER_POTION" or constantName == "POKEMON_BREEDER"
+        or constantName == "IMPOSTER_PROFESSOR_OAK"
       if not supported then return nil, "untranslated_ai_trainer:" .. constantName end
       if self:_chooseRandomlyNotToDoAction() then break end
       local decision, selectionOrErr, parameter =

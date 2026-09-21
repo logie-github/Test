@@ -789,7 +789,8 @@
         "SuperPotion_HealAndDiscardEffect",
         "PokemonBreeder_HandPlayAreaCheck",
         "PokemonBreeder_PlayerSelection",
-        "PokemonBreeder_EvolveEffect"
+        "PokemonBreeder_EvolveEffect",
+        "ImposterProfessorOakEffect"
       ],
       "target": "src/tcg/duel/EffectCommands.lua",
       "state": "translated",
@@ -1079,6 +1080,15 @@
         "CountNumberOfEnergyCardsAttached"
       ],
       "target": "src/tcg/duel/DuelOps.lua",
+      "state": "translated"
+    },
+    {
+      "source": "src/engine/duel/ai/trainer_cards.asm",
+      "labels": [
+        "AIPlay_ImposterProfessorOak",
+        "AIDecide_ImposterProfessorOak"
+      ],
+      "target": "src/tcg/duel/AI.lua",
       "state": "translated"
     }
   ]

@@ -1121,6 +1121,41 @@ function EffectCommands:_installSharedHandlers()
     return false
   end)
 
+  -- Imposter Professor Oak targets the NON-turn duelist: their whole hand is
+  -- returned to their deck (not discarded, unlike ordinary Professor Oak),
+  -- the deck is reshuffled, and they draw a fresh 7. ShuffleCardsInDeck's
+  -- ExchangeRNG call happens while still swapped to the opponent, matching
+  -- the source's own turn-swapped RNG exchange.
+  self:register("ImposterProfessorOakEffect", function(_, context)
+    local a = context.playerActions
+    if not a then return nil, "effect_context_missing_player_actions" end
+    a.duelVars:swapTurn()
+    a.duelOps:createHandCardList()
+    a.duelOps:sortCardsInDuelTempListByID()
+    local base, bank = a.memory:address("wDuelTempList")
+    local pos = 0
+    while true do
+      local deckIndex = a.memory:read8("wram", base + pos, bank)
+      if deckIndex == 0xff then break end
+      a.duelOps:removeCardFromHand(deckIndex)
+      a.duelOps:returnCardToDeck(deckIndex)
+      pos = pos + 1
+    end
+    local failed, exchangeErr = a.combat.setup:exchangeRNG()
+    if failed then
+      a.duelVars:swapTurn()
+      return nil, exchangeErr
+    end
+    a.duelOps:shuffleDeck()
+    for _ = 1, 7 do
+      local deckIndex, carry = a.duelOps:drawCardFromDeck()
+      if carry then break end
+      a.duelOps:addCardToHand(deckIndex)
+    end
+    a.duelVars:swapTurn()
+    return false
+  end)
+
   self:register("Potion_DamageCheck", function(s, context)
     local a = context.playerActions
     if not a then return nil, "effect_context_missing_player_actions" end
