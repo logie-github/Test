@@ -1411,6 +1411,29 @@
       "target": "src/tcg/duel/AI.lua",
       "state": "translated",
       "notes": "Common attack usability/damage prediction is native; the source-specific AISelectSpecialAttackParameters dispatcher (Mew/Mewtwo x2/Exeggutor/Electrode) is fully translated. CheckEnergyNeededForAttack's documented back-to-back-overwrite quirk for a hypothetical dual-colored-energy attack (no real card in this game's pool needs one) is reproduced exactly: only a color with its OWN genuine shortfall overwrites the running result, so the highest-indexed SHORT color wins, not merely the highest-indexed color checked -- verified under real LuaJIT execution."
+    },
+    {
+      "source": "src/engine/duel/ai/trainer_cards.asm",
+      "labels": [
+        "AIDecide_Potion_Phase07",
+        "AIDecide_Potion_Phase10",
+        "AIPlay_Potion",
+        "AIDecide_Defender_Phase13",
+        "AIDecide_Defender_Phase14",
+        "AIPlay_Defender",
+        "AIDecide_PlusPower_Phase13",
+        "AIDecide_PlusPower_Phase14",
+        "AIPlay_PlusPower",
+        "AIDecide_Switch",
+        "AIPlay_Switch",
+        "AIDecide_FullHeal",
+        "AIPlay_FullHeal",
+        "AIDecide_EnergySearch",
+        "AIPlay_EnergySearch"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "These high-frequency Trainer families make native source-shaped decisions and execute through the translated player-side Trainer effect engine. Every card name AI_TRAINER_PHASES references is covered by AI_TRAINER_SUPPORTED (33/33). The shared random action-skip gate (AI:_chooseRandomlyNotToDoAction) reproduces the source's exact three-tier probability table (0% boss-deck range/post-Legendary-Cards, 50% for the six listed decks, 25% otherwise) and deck-ID boundaries, verified under real LuaJIT execution. Potion/Super-Potion high-recoil and BOOST_IF_TAKEN_DAMAGE interactions are complete for Super Potion; Potion's own simpler heal path never required that branch."
     }
   ]
 }

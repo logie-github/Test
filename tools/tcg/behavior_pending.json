@@ -260,33 +260,6 @@
         "presentation/delay/OppAction choreography"
       ],
       "notes": "Attack, retreat, and active-to-bench Grass Energy transfer modes use the native random action-skip gate and Venusaur/Muk power checks. Transfer-to-Bench now re-runs the cartridge AI_ENERGY_FLAG_DONT_PLAY|SKIP_EVOLUTION|SKIP_ARENA_CARD score preview before each moved Grass Energy, including score backup/restore and lower-Bench-slot tie behavior."
-    },
-    {
-      "source": "src/engine/duel/ai/trainer_cards.asm",
-      "labels": [
-        "AIDecide_Potion_Phase07",
-        "AIDecide_Potion_Phase10",
-        "AIPlay_Potion",
-        "AIDecide_Defender_Phase13",
-        "AIDecide_Defender_Phase14",
-        "AIPlay_Defender",
-        "AIDecide_PlusPower_Phase13",
-        "AIDecide_PlusPower_Phase14",
-        "AIPlay_PlusPower",
-        "AIDecide_Switch",
-        "AIPlay_Switch",
-        "AIDecide_FullHeal",
-        "AIPlay_FullHeal",
-        "AIDecide_EnergySearch",
-        "AIPlay_EnergySearch"
-      ],
-      "target": "src/tcg/duel/AI.lua",
-      "state": "partial",
-      "remaining": [
-        "rare deck/card-specific policy branches and exact random-skip cadence",
-        "Potion/Super-Potion high-recoil and BOOST_IF_TAKEN_DAMAGE interactions are now complete for Super Potion (AIDecide_SuperPotion_Phase08/Phase11); Potion's own simpler heal path never required this branch"
-      ],
-      "notes": "These high-frequency Trainer families now make native source-shaped decisions and execute through the translated player-side Trainer effect engine; unsupported cases fail closed."
     }
   ]
 }
