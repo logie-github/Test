@@ -4563,6 +4563,45 @@ function EffectCommands:_installSharedHandlers()
     return false
   end)
 
+  -- Mysterious Fossil / Clefairy Doll's synthetic "Discard" Power (engine/
+  -- duel/core.asm patches these two Trainer-as-Pokemon cards' data with 10
+  -- HP, UNABLE_RETREAT, and a single fake Power pointing at this effect
+  -- list, since they have no printed attacks/Powers of their own). Same
+  -- shape as Cowardice above, but discards straight to the discard pile
+  -- rather than returning to hand, and gates on Play Area count alone (no
+  -- CAN_EVOLVE_THIS_TURN check).
+  self:register("TrainerCardAsPokemon_BenchCheck", function(s, context)
+    local actor = powerActor(s, context); if not actor then return nil, "effect_context_missing_actor" end
+    local slot = powerSlot(s, context)
+    s.memory:writeSymbol8("hTemp_ffa0", slot)
+    return actor.duelVars:get(s.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA) < 2
+  end)
+  self:register("TrainerCardAsPokemon_PlayerSelectSwitch", function(s, context)
+    local actor = powerActor(s, context); if not actor then return nil, "effect_context_missing_actor" end
+    local slot = powerSlot(s, context)
+    if slot ~= s.c.PLAY_AREA_ARENA then return false end
+    local replacement, err = s:_selection(context, "replacement", "selectBench",
+      { power = "trainer_card_as_pokemon" })
+    if replacement == nil then return nil, err end
+    local count = actor.duelVars:get(s.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+    if type(replacement) ~= "number" or replacement < s.c.PLAY_AREA_BENCH_1
+        or replacement >= count then return nil, "invalid_selection:replacement" end
+    s.memory:writeSymbol8("hTempPlayAreaLocation_ffa1", replacement)
+    return false
+  end)
+  self:register("TrainerCardAsPokemon_DiscardEffect", function(s, context)
+    local actor = powerActor(s, context); if not actor then return nil, "effect_context_missing_actor" end
+    local slot = s.memory:readSymbol8("hTemp_ffa0")
+    actor.duelOps:movePlayAreaCardToDiscardPile(slot)
+    if slot == s.c.PLAY_AREA_ARENA then
+      local replacement = s.memory:readSymbol8("hTempPlayAreaLocation_ffa1")
+      actor.duelOps:swapArenaWithBenchPokemon(replacement)
+    end
+    actor.duelOps:shiftAllPokemonToFirstPlayAreaSlots()
+    s:_event("trainer_card_as_pokemon_discard", { slot = slot })
+    return false
+  end)
+
   -- Vileplume: Heal.
   self:register("Heal_OncePerTurnCheck", function(s, context)
     local actor = powerActor(s, context); if not actor then return nil, "effect_context_missing_actor" end

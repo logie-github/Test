@@ -761,13 +761,15 @@
         "TentacruelSupersonicEffect",
         "DevolutionSpray_PlayAreaEvolutionCheck",
         "DevolutionSpray_PlayerSelection",
-        "DevolutionSpray_DevolutionEffect"
+        "DevolutionSpray_DevolutionEffect",
+        "TrainerCardAsPokemon_BenchCheck",
+        "TrainerCardAsPokemon_DiscardEffect",
+        "TrainerCardAsPokemon_PlayerSelectSwitch"
       ],
       "target": "src/tcg/duel/EffectCommands.lua",
       "state": "partial",
       "notes": "Generic effect families include all 81/81 unique EFFECTCMDTYPE_AI identities, all 45/45 unique EFFECTCMDTYPE_AI_SELECTION identities, and all 5/5 unique EFFECTCMDTYPE_AI_SWITCH_DEFENDING_PKMN identities. Metronome player execution now selects a non-Power defending attack, rejects recursive Metronome, runs copied INITIAL_EFFECT_1/2 through the normal dispatcher, preserves nested copied-attack selection state, and leaves the copied attack loaded for the outer discard/selection/damage/after-damage pipeline. Unknown function identities still fail closed. A systematic runtime cross-check (introspecting EffectCommands.lua's actual self.handlers after construction, against every function name engine/duel/effect_commands.asm's 317 lists reference, parsed via tools/tcg/build_manifest.py) found this entry was previously mis-marked fully translated: ~61 real function names (see remaining) have no implementation at all. The Selfdestruct family (Weezing/Golem/Magnemite/Magneton x2) was closed out and added to labels above; this correction reclassifies the entry as partial rather than translated.",
       "remaining": [
-        "TrainerCardAsPokemon_BenchCheck/_DiscardEffect/_PlayerSelectSwitch",
         "Gale_LoadAnimation/_SwitchEffect, StepIn_BenchCheck/_SwitchEffect, Wail_BenchCheck/_FillBenchEffect",
         "SpacingOut_CheckDamage/_HealEffect/_Success50PercentEffect, SolarPower_CheckUse/_RemoveStatusEffect",
         "LeekSlap_OncePerDuelCheck/_SetUsedThisDuelFlag, FriendshipSong_AddToBench50PercentEffect/_BenchCheck",
