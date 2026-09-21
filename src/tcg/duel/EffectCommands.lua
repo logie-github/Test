@@ -4631,6 +4631,29 @@ function EffectCommands:_installSharedHandlers()
     return false
   end)
 
+  -- Slowbro: Step In. Unlike the other manual Powers here, this one can
+  -- ONLY be used from the Bench (source: "CanOnlyBeUsedOnTheBenchText" when
+  -- hTempPlayAreaLocation_ff9d == PLAY_AREA_ARENA), swapping itself into
+  -- the Active spot. The used-this-turn flag is set on PLAY_AREA_ARENA
+  -- unconditionally afterward (no +slot offset in the source), since by
+  -- then this card IS the new Arena occupant.
+  self:register("StepIn_BenchCheck", function(s, context)
+    local actor = powerActor(s, context); if not actor then return nil, "effect_context_missing_actor" end
+    local slot = powerSlot(s, context)
+    s.memory:writeSymbol8("hTemp_ffa0", slot)
+    if slot == s.c.PLAY_AREA_ARENA then return true end
+    local flags = actor.duelVars:get(s.c.DUELVARS_ARENA_CARD_FLAGS + slot)
+    if bit.band(flags, powerUsedMask(s)) ~= 0 then return true end
+    return s.status:checkIsIncapableOfUsingPkmnPower(slot)
+  end)
+  self:register("StepIn_SwitchEffect", function(s, context)
+    local actor = powerActor(s, context); if not actor then return nil, "effect_context_missing_actor" end
+    local slot = s.memory:readSymbol8("hTemp_ffa0")
+    actor.duelOps:swapArenaWithBenchPokemon(slot)
+    markPowerUsed(s, actor, s.c.PLAY_AREA_ARENA)
+    return false
+  end)
+
   -- Venomoth: Shift.
   self:register("Shift_OncePerTurnCheck", function(s, context)
     local actor = powerActor(s, context); if not actor then return nil, "effect_context_missing_actor" end
