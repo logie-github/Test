@@ -1269,6 +1269,31 @@ function EffectCommands:_installSharedHandlers()
     return false
   end)
 
+  -- Imakuni? confuses the player's OWN Active Pokemon (a self-inflicted
+  -- downside card). Clefairy Doll and Mysterious Fossil are always immune;
+  -- Snorlax is immune only while its own Pkmn Power (Thick Skinned) is
+  -- active, i.e. not already incapable of using it.
+  self:register("ImakuniEffect", function(s, context)
+    local a = context.playerActions
+    if not a then return nil, "effect_context_missing_player_actions" end
+    local deckIndex = a.duelVars:get(s.c.DUELVARS_ARENA_CARD)
+    local cardId = a.cardData:getCardIDFromDeckIndex(deckIndex)
+
+    if cardId == s.c.CLEFAIRY_DOLL or cardId == s.c.MYSTERIOUS_FOSSIL then
+      return false
+    end
+    if cardId == s.c.SNORLAX then
+      local incapable = a.combat.status:checkIsIncapableOfUsingPkmnPower(s.c.PLAY_AREA_ARENA)
+      if not incapable then return false end
+    end
+
+    local status = a.duelVars:get(s.c.DUELVARS_ARENA_CARD_STATUS)
+    a.duelVars:set(s.c.DUELVARS_ARENA_CARD_STATUS,
+      bit.bor(bit.band(status, s.c.PSN_DBLPSN), s.c.CONFUSED))
+    s:_event("imakuni_confuse", { deckIndex = deckIndex })
+    return false
+  end)
+
   self:register("Potion_DamageCheck", function(s, context)
     local a = context.playerActions
     if not a then return nil, "effect_context_missing_player_actions" end

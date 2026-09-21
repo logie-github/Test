@@ -3751,6 +3751,13 @@ function AI:_decideLass()
   return true
 end
 
+-- AIDecide_Imakuni:: plays whenever the Active isn't already Confused --
+-- the card's own AI makes no attempt to avoid the self-inflicted downside.
+function AI:_decideImakuni()
+  local status = bit.band(self.duelVars:get(self.c.DUELVARS_ARENA_CARD_STATUS), self.c.CNF_SLP_PRZ)
+  return status ~= self.c.CONFUSED
+end
+
 -- AICheckIfAttackIsHighRecoil:: despite the name, the source routine's final
 -- carry (after its `ccf`) means "there IS a usable attack AND it is NOT
 -- flagged High Recoil" -- i.e. a normal, safe attack is available. Every
@@ -4697,6 +4704,8 @@ function AI:_decideTrainer(constantName, phase, currentTrainerDeckIndex)
     return self:_decideScoopUp()
   elseif constantName == "LASS" then
     return self:_decideLass()
+  elseif constantName == "IMAKUNI_CARD" then
+    return self:_decideImakuni()
   end
   return nil, "untranslated_ai_trainer:" .. constantName
 end
@@ -4768,7 +4777,7 @@ function AI:processHandTrainerCards(phase)
         or constantName == "GUST_OF_WIND" or constantName == "POKE_BALL"
         or constantName == "SUPER_POTION" or constantName == "POKEMON_BREEDER"
         or constantName == "IMPOSTER_PROFESSOR_OAK" or constantName == "SCOOP_UP"
-        or constantName == "LASS"
+        or constantName == "LASS" or constantName == "IMAKUNI_CARD"
       if not supported then return nil, "untranslated_ai_trainer:" .. constantName end
       if self:_chooseRandomlyNotToDoAction() then break end
       local decision, selectionOrErr, parameter =
