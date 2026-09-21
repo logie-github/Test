@@ -1197,6 +1197,36 @@ function EffectCommands:_installSharedHandlers()
     return s:_healAttackingArena(context, 10)
   end)
 
+  -- Slowpoke's Spacing Out: same damage-check shape as First Aid above,
+  -- but a coin flip gates the heal, and the heal itself is a raw +10 add
+  -- rather than the clamped _healAttackingArena helper -- safe because
+  -- SpacingOut_CheckDamage already guarantees damage >= 10 before this
+  -- phase can run, so hp + 10 can never exceed the card's max HP.
+  self:register("SpacingOut_CheckDamage", function(s, context)
+    local actor = s:_actor(context)
+    if not actor then return nil, "effect_context_missing_actor" end
+    local damage = s:_playAreaDamage(actor, s.c.PLAY_AREA_ARENA)
+    return (damage or 0) < 10
+  end)
+  self:register("SpacingOut_Success50PercentEffect", function(s)
+    local result, err = s.setup:tossCoin()
+    if result == nil then return nil, err end
+    s.memory:writeSymbol8("hTemp_ffa0", result)
+    if result == s.c.TAILS then return s:_setWasUnsuccessful() end
+    s.memory:writeSymbol8("wLoadedAttackAnimation", s.c.ATK_ANIM_RECOVER)
+    return false
+  end)
+  self:register("SpacingOut_HealEffect", function(s, context)
+    local actor = s:_actor(context)
+    if not actor then return nil, "effect_context_missing_actor" end
+    if s.memory:readSymbol8("hTemp_ffa0") == s.c.TAILS then return false end
+    local damage = s:_playAreaDamage(actor, s.c.PLAY_AREA_ARENA)
+    if not damage or damage <= 0 then return false end
+    local hp = actor.duelVars:get(s.c.DUELVARS_ARENA_CARD_HP)
+    actor.duelVars:set(s.c.DUELVARS_ARENA_CARD_HP, hp + 10)
+    return false
+  end)
+
   -- Fixed recoil families delegate through the source-equivalent self-damage
   -- modifier path in Combat so weakness/resistance and attached Trainers stay
   -- consistent with DealRecoilDamageToSelf::.
@@ -4894,6 +4924,29 @@ function EffectCommands:_installSharedHandlers()
     s:_event("damage_counter_transfer", { from = fromSlot, to = toSlot })
     return false
   end
+
+  -- Venusaur: Solar Power. Usable once per turn, and only while at least
+  -- one active Pokemon (either side) has a status condition; clears both
+  -- sides' status unconditionally when used.
+  self:register("SolarPower_CheckUse", function(s, context)
+    local actor = powerActor(s, context); if not actor then return nil, "effect_context_missing_actor" end
+    local slot = powerSlot(s, context)
+    s.memory:writeSymbol8("hTemp_ffa0", slot)
+    local flags = actor.duelVars:get(s.c.DUELVARS_ARENA_CARD_FLAGS + slot)
+    if bit.band(flags, powerUsedMask(s)) ~= 0 then return true end
+    if s.status:checkIsIncapableOfUsingPkmnPower(slot) then return true end
+    if actor.duelVars:get(s.c.DUELVARS_ARENA_CARD_STATUS) ~= 0 then return false end
+    return actor.duelVars:getNonTurn(s.c.DUELVARS_ARENA_CARD_STATUS) == 0
+  end)
+  self:register("SolarPower_RemoveStatusEffect", function(s, context)
+    local actor = powerActor(s, context); if not actor then return nil, "effect_context_missing_actor" end
+    local slot = powerSlot(s, context)
+    s.memory:writeSymbol8("wLoadedAttackAnimation", s.c.ATK_ANIM_HEAL_BOTH_SIDES)
+    markPowerUsed(s, actor, slot)
+    actor.duelVars:set(s.c.DUELVARS_ARENA_CARD_STATUS, s.c.NO_STATUS)
+    actor.duelVars:setNonTurn(s.c.DUELVARS_ARENA_CARD_STATUS, s.c.NO_STATUS)
+    return false
+  end)
 
   -- Alakazam: Damage Swap.
   self:register("DamageSwap_CheckDamage", function(s, context)
