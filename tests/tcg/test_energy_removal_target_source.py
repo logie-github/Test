@@ -12,7 +12,10 @@ ignoring the source's real priority cascade. Now translated:
 2. Scan from that point for the first card with Energy attached that
    currently has enough Energy for either attack (stripping it would
    disable an attack it could otherwise make right now) --
-   AI:_checkIfNotEnoughEnergyToAttack (new).
+   AI:_checkIfNotEnoughEnergyToAttack (new). The "usable now, or would
+   become usable with Energy in hand" check itself reuses the existing
+   AI:_lookForEnergyNeededInHand rather than a new helper -- an earlier
+   draft duplicated that logic under a new name before this was noticed.
 3. If nothing qualifies, fall back to a Bench-only pass picking the card
    with the single highest-damage attack estimate, ignoring usability --
    AI:_findHighestDamagingBenchAttack (new).
@@ -63,9 +66,12 @@ class EnergyRemovalTargetSourceTests(unittest.TestCase):
         return self.ai_src[start:end]
 
     def test_look_for_energy_needed_handles_one_and_two_colorless_cases(self):
-        block = self._block("function AI:_lookForEnergyNeededForAttackInHand")
+        # Pre-existing helper (LookForEnergyNeededForAttackInHand), already
+        # used by _canKnockOutNowOrWithHandEnergy -- _decideEnergyRemoval
+        # reuses it rather than duplicating the same logic under a new name.
+        block = self._block("function AI:_lookForEnergyNeededInHand")
         self.assertIn("total == 1", block)
-        self.assertIn("need.colored ~= 0", block)
+        self.assertIn("need.colored > 0", block)
         self.assertIn("self:_findCardIDInHand(need.energyCardId)", block)
         self.assertIn("#self:_energyCardsInHand() > 0", block)
         self.assertIn("total == 2 and need.colorless == 2", block)
@@ -90,7 +96,7 @@ class EnergyRemovalTargetSourceTests(unittest.TestCase):
         block = self._block("function AI:_decideEnergyRemoval")
         ko_pos = block.index("self:checkIfAnyAttackKnocksOutDefendingCard")
         usable_pos = block.index("self:_checkAttackUsableForAI")
-        hand_pos = block.index("self:_lookForEnergyNeededForAttackInHand")
+        hand_pos = block.index("self:_lookForEnergyNeededInHand")
         swap_pos = block.index("self.duelVars:swapTurn()")
         scan_pos = block.index("self:_checkIfNotEnoughEnergyToAttack(slot)")
         fallback_pos = block.index("self:_findHighestDamagingBenchAttack(slot)")

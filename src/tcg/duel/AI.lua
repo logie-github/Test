@@ -4454,25 +4454,6 @@ function AI:_decideProfessorOak()
   return score >= 60
 end
 
--- LookForEnergyNeededForAttackInHand:: true if the specific Energy the
--- attack still needs (a single colored card, a single colorless card, or
--- Double Colorless Energy for exactly two remaining colorless) is sitting
--- in the (current turn duelist's) hand.
-function AI:_lookForEnergyNeededForAttackInHand(slot, attackIndex)
-  local need = self:checkEnergyNeededForAttack(slot, attackIndex)
-  if need == nil then return false end
-  local total = need.colored + need.colorless
-  if total == 1 then
-    if need.colored ~= 0 then
-      return self:_findCardIDInHand(need.energyCardId) ~= nil
-    end
-    return #self:_energyCardsInHand() > 0
-  elseif total == 2 and need.colorless == 2 then
-    return self:_findCardIDInHand(self.c.DOUBLE_COLORLESS_ENERGY) ~= nil
-  end
-  return false
-end
-
 -- CheckIfNotEnoughEnergyToAttack:: true when neither attack currently has
 -- enough Energy, or the second attack has enough but with surplus Energy
 -- beyond its printed cost (stripping one Energy card wouldn't actually
@@ -4533,7 +4514,7 @@ function AI:_decideEnergyRemoval()
     if self:_checkAttackUsableForAI(koAttack) then
       startFromBench = true
     else
-      startFromBench = self:_lookForEnergyNeededForAttackInHand(self.c.PLAY_AREA_ARENA, koAttack) == true
+      startFromBench = self:_lookForEnergyNeededInHand(self.c.PLAY_AREA_ARENA, koAttack) == true
     end
   end
 

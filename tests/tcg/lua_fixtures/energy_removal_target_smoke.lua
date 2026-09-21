@@ -6,7 +6,7 @@
 -- attached, on the Player's side, ignoring the source's actual priority
 -- cascade entirely. This exercises two layers for real:
 --
--- Part A: the two new small helpers (_lookForEnergyNeededForAttackInHand,
+-- Part A: the two new small helpers (_lookForEnergyNeededInHand,
 -- _checkIfNotEnoughEnergyToAttack) against the real, already-existing
 -- checkEnergyNeededForAttack/_surplusEnergyForAttack pipeline and a real
 -- memory-backed wAttachedEnergies block (not stubbed -- this is exactly the
@@ -116,7 +116,7 @@ local function newPartAAI(opts)
 end
 
 -- ---------------------------------------------------------------------
--- _lookForEnergyNeededForAttackInHand
+-- _lookForEnergyNeededInHand
 -- ---------------------------------------------------------------------
 do
   -- Needs exactly 1 Fire Energy; Fire Energy is in hand.
@@ -126,7 +126,7 @@ do
     handCardIds = { C.FIRE_ENERGY },
   })
   check("needs 1 colored, matching card in hand -> found",
-    ai:_lookForEnergyNeededForAttackInHand(C.PLAY_AREA_ARENA, 0), true)
+    ai:_lookForEnergyNeededInHand(C.PLAY_AREA_ARENA, 0), true)
 end
 do
   -- Needs exactly 1 Fire Energy; hand has Water Energy instead.
@@ -136,7 +136,7 @@ do
     handCardIds = { C.WATER_ENERGY },
   })
   check("needs 1 colored, non-matching card in hand -> not found",
-    ai:_lookForEnergyNeededForAttackInHand(C.PLAY_AREA_ARENA, 0), false)
+    ai:_lookForEnergyNeededInHand(C.PLAY_AREA_ARENA, 0), false)
 end
 do
   -- Needs exactly 1 Colorless; any Energy in hand satisfies it.
@@ -146,7 +146,7 @@ do
     handCardIds = { C.WATER_ENERGY },
   })
   check("needs 1 colorless, any Energy in hand -> found",
-    ai:_lookForEnergyNeededForAttackInHand(C.PLAY_AREA_ARENA, 0), true)
+    ai:_lookForEnergyNeededInHand(C.PLAY_AREA_ARENA, 0), true)
 end
 do
   -- Needs exactly 2 Colorless; only Double Colorless Energy satisfies it.
@@ -156,7 +156,7 @@ do
     handCardIds = { C.DOUBLE_COLORLESS_ENERGY },
   })
   check("needs 2 colorless, DCE in hand -> found",
-    ai:_lookForEnergyNeededForAttackInHand(C.PLAY_AREA_ARENA, 0), true)
+    ai:_lookForEnergyNeededInHand(C.PLAY_AREA_ARENA, 0), true)
 end
 do
   -- Needs exactly 2 Colorless; ordinary Energy in hand does NOT satisfy it.
@@ -166,7 +166,7 @@ do
     handCardIds = { C.FIRE_ENERGY },
   })
   check("needs 2 colorless, ordinary Energy in hand -> not found",
-    ai:_lookForEnergyNeededForAttackInHand(C.PLAY_AREA_ARENA, 0), false)
+    ai:_lookForEnergyNeededInHand(C.PLAY_AREA_ARENA, 0), false)
 end
 do
   -- Needs 1 colored + 1 colorless (total 2, not the colorless==2 case) -> unhandled.
@@ -176,7 +176,7 @@ do
     handCardIds = { C.FIRE_ENERGY, C.DOUBLE_COLORLESS_ENERGY },
   })
   check("needs 1 colored + 1 colorless (unhandled combo) -> not found",
-    ai:_lookForEnergyNeededForAttackInHand(C.PLAY_AREA_ARENA, 0), false)
+    ai:_lookForEnergyNeededInHand(C.PLAY_AREA_ARENA, 0), false)
 end
 
 -- ---------------------------------------------------------------------
@@ -260,7 +260,7 @@ local function newPartBAI(opts)
     return opts.canKO, 0
   end
   ai._checkAttackUsableForAI = function() return opts.attackUsable == true end
-  ai._lookForEnergyNeededForAttackInHand = function() return opts.energyInHand == true end
+  ai._lookForEnergyNeededInHand = function() return opts.energyInHand == true end
   ai._checkIfNotEnoughEnergyToAttack = function(_, slot)
     return (opts.notEnoughBySlot or {})[slot] ~= false
   end
