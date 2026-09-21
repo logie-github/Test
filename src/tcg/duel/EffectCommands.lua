@@ -1044,6 +1044,21 @@ function EffectCommands:_installSharedHandlers()
     coinZeroDamage(self.c.ATK_ANIM_DIVE_BOMB, true))
   self:register("LeekSlap_NoDamage50PercentEffect", coinZeroDamage(nil, false))
 
+  -- Cloyster: Clamp. Heads keeps the printed damage and jumps straight into
+  -- the plain (unconditional) ParalysisEffect; tails zeroes damage and
+  -- marks the attack unsuccessful instead.
+  self:register("ClampEffect", function(s, context)
+    s.memory:writeSymbol8("wLoadedAttackAnimation", s.c.ATK_ANIM_HIT_EFFECT)
+    local result, err = s.setup:tossCoin()
+    if result == nil then return nil, err end
+    if result == s.c.HEADS then
+      return s.handlers["ParalysisEffect"](s, context)
+    end
+    s.memory:writeSymbol8("wLoadedAttackAnimation", s.c.ATK_ANIM_NONE)
+    s:_setDefiniteDamage(0)
+    return s:_setWasUnsuccessful()
+  end)
+
   -- Farfetch'd: Leek Slap can only ever be used once per duel (a duel-long
   -- flag on the Arena card, distinct from the per-turn USED_PKMN_POWER_
   -- THIS_TURN flags elsewhere in this file).
@@ -3542,6 +3557,11 @@ function EffectCommands:_installSharedHandlers()
   self:register("PealOfThunder_InitialEffect", triggeredOnly)
   self:register("TransparencyEffect", triggeredOnly)
   self:register("PrehistoricPowerEffect", triggeredOnly)
+  self:register("ClairvoyanceEffect", triggeredOnly)
+  self:register("InvisibleWallEffect", triggeredOnly)
+  self:register("NeutralizingShieldEffect", triggeredOnly)
+  self:register("KabutoArmorEffect", triggeredOnly)
+  self:register("ThickSkinnedEffect", triggeredOnly)
   self:register("Quickfreeze_Paralysis50PercentEffect", function(s)
     local result, err = s.setup:tossCoin()
     if result == nil then return nil, err end
