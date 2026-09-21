@@ -3613,6 +3613,43 @@ function EffectCommands:_installSharedHandlers()
     return s:_addToDamage(nidokingCount * 20)
   end)
 
+  -- Electrode's Chain Lightning: fixed 10 damage, then an extra 10 to
+  -- every Play Area Pokemon -- both sides, arena included -- that shares
+  -- the Defending Pokemon's color (skipped entirely if the Defending
+  -- Pokemon is Colorless). Reuses the already-registered
+  -- Combat:dealDamageToPlayAreaPokemon and Status:getPlayAreaCardColor.
+  self:register("ChainLightningEffect", function(s, context)
+    local combat = context.combat
+    if not combat then return nil, "effect_context_missing_combat" end
+    s:_setDefiniteDamage(10)
+
+    combat.duelVars:swapTurn()
+    local defenderColor = s.status:getPlayAreaCardColor(s.c.PLAY_AREA_ARENA)
+    combat.duelVars:swapTurn()
+    if defenderColor == s.c.COLORLESS then return false end
+
+    local function damageSameColorBench(isDamageToSelf)
+      local count = combat.duelVars:get(s.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+      for slot = s.c.PLAY_AREA_ARENA, count - 1 do
+        if s.status:getPlayAreaCardColor(slot) == defenderColor then
+          local damage, err = combat:dealDamageToPlayAreaPokemon(slot, 10, false,
+            { isDamageToSelf = isDamageToSelf })
+          if damage == nil then return nil, err end
+        end
+      end
+      return true
+    end
+
+    combat.duelVars:swapTurn()
+    local ok, err = damageSameColorBench(false)
+    combat.duelVars:swapTurn()
+    if ok == nil then return nil, err end
+
+    local ok2, err2 = damageSameColorBench(true)
+    if ok2 == nil then return nil, err2 end
+    return false
+  end)
+
   self:register("Blizzard_BenchDamage50PercentEffect", function(s)
     local result, err = s.setup:tossCoin()
     if result == nil then return nil, err end

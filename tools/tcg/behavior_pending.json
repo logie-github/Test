@@ -795,7 +795,8 @@
         "SlicingWindEffect",
         "FirstAid_DamageCheck",
         "PsywaveEffect",
-        "BoyfriendsEffect"
+        "BoyfriendsEffect",
+        "ChainLightningEffect"
       ],
       "target": "src/tcg/duel/EffectCommands.lua",
       "state": "partial",
@@ -805,7 +806,7 @@
         "SpacingOut_CheckDamage/_HealEffect/_Success50PercentEffect, SolarPower_CheckUse/_RemoveStatusEffect",
         "FriendshipSong_AddToBench50PercentEffect/_BenchCheck",
         "IceBreath_RandomPokemonDamageEffect/_ZeroDamage",
-        "Remaining standalone attack effects: BigThunderEffect, ChainLightningEffect, HurricaneEffect, MagneticStormEffect, MixUpEffect, MorphEffect, ThunderstormEffect"
+        "Remaining standalone attack effects: BigThunderEffect, HurricaneEffect, MagneticStormEffect, MixUpEffect, MorphEffect, ThunderstormEffect"
       ]
     }
   ]
