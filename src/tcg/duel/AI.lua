@@ -5005,22 +5005,203 @@ function AI:_decideEnergySearch()
   return true, { deckBasicEnergy = deckIndex }
 end
 
-function AI:_decideProfessorOak()
-  local notInDeck = self.duelVars:get(self.c.DUELVARS_NUMBER_OF_CARDS_NOT_IN_DECK)
-  if notInDeck >= self.c.DECK_SIZE - 6 then return false end
-  -- Specialized Articuno/Excavation/Wonders of Science branches remain pending;
-  -- do not substitute the generic score for those source-specific decks.
-  local deckId = self.memory:readSymbol8("wOpponentDeckID")
-  if deckId == self.c.LEGENDARY_ARTICUNO_DECK_ID or deckId == self.c.EXCAVATION_DECK_ID
-      or deckId == self.c.WONDERS_OF_SCIENCE_DECK_ID then
-    return nil, "untranslated_ai_professor_oak_special_deck"
+-- CheckIfCardCanBePlayed:: an evolution card's own playability additionally
+-- consults IsPrehistoricPowerActive and CheckIfCanEvolveInto against every
+-- Play Area slot; a Trainer defers to CheckCantUseTrainerDueToEffect and its
+-- own INITIAL_EFFECT_1 handler (the same pair processHandTrainerCards uses).
+-- Branch order mirrors the source's own `cp TYPE_ENERGY` / `cp TYPE_TRAINER`
+-- dispatch: card kinds below TYPE_ENERGY are Pokemon, exactly TYPE_TRAINER is
+-- Trainer, everything else is Energy.
+function AI:_checkIfCardCanBePlayed(deckIndex)
+  local cardId = self.cardData:getCardIDFromDeckIndex(deckIndex)
+  local row = self.cardData:get(cardId)
+  if not row then return false end
+
+  if row.type < self.c.TYPE_ENERGY then
+    if row.stage == self.c.BASIC then
+      local count = self.duelVars:get(self.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+      return count < self.c.MAX_PLAY_AREA_POKEMON
+    end
+    if self:_isPrehistoricPowerActive() then return false end
+    local count = self.duelVars:get(self.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+    for slot = self.c.PLAY_AREA_ARENA, count - 1 do
+      if self.duelOps:checkIfCanEvolveInto(deckIndex, slot) then return true end
+    end
+    return false
   end
+
+  if row.type == self.c.TYPE_TRAINER then
+    if self.combat.status:checkCantUseTrainerDueToEffect() then return false end
+    self.playerActions.effects:loadNonPokemonCardEffectCommands(deckIndex, self.cardData)
+    local carry, err = self.playerActions.effects:tryExecute(
+      self.c.EFFECTCMDTYPE_INITIAL_EFFECT_1, { playerActions = self.playerActions })
+    if carry == nil then return nil, err end
+    return not carry
+  end
+
+  -- Energy card: playable only if this turn's one-Energy-per-turn slot is free.
+  return self.memory:readSymbol8("wAlreadyPlayedEnergy") == 0
+end
+
+-- CheckForEvolutionInList:: the real routine temporarily overwrites
+-- PLAY_AREA_ARENA's own arena-card byte with `cardId` so it can reuse
+-- CheckIfCanEvolveInto, which means the CAN_EVOLVE_THIS_TURN flag it
+-- consults is always PLAY_AREA_ARENA's real flag, regardless of which
+-- Play Area slot's card `cardId` actually came from. Reproduced here as a
+-- pure read (no memory mutation) with the identical net result.
+function AI:_checkForEvolutionInList(cardId, list)
+  local current = self.cardData:get(cardId)
+  if not current then return nil end
+  local flags = self.duelVars:get(self.c.DUELVARS_ARENA_CARD_FLAGS + self.c.PLAY_AREA_ARENA)
+  if bit.band(flags, self.c.CAN_EVOLVE_THIS_TURN) == 0 then return nil end
+  for _, deckIndex in ipairs(list) do
+    local evolution = self.cardData:get(self.cardData:getCardIDFromDeckIndex(deckIndex))
+    if evolution and evolution.preEvolutionTextId == current.nameTextId then
+      return deckIndex
+    end
+  end
+  return nil
+end
+
+-- .LookForEvolution:: scans every deck index (any location) for a card that
+-- can evolve the Play Area Pokemon at `slot`. Returns (foundInHand,
+-- foundAnywhere) -- foundInHand short-circuits the scan the moment a hand
+-- copy turns up, exactly like the source's early `scf; ret`.
+function AI:_lookForEvolutionForPlayArea(slot)
+  local foundAnywhere = false
+  for deckIndex = 0, self.c.DECK_SIZE - 1 do
+    if self.duelOps:checkIfCanEvolveInto(deckIndex, slot) then
+      foundAnywhere = true
+      local location = self.duelVars:get(self.c.DUELVARS_CARD_LOCATIONS + deckIndex)
+      if location == self.c.CARD_LOCATION_HAND then
+        return true, true
+      end
+    end
+  end
+  return false, foundAnywhere
+end
+
+-- AIDecide_ProfessorOak's `.general_logic` tail (from `.general_logic_got_
+-- initial_score` onward), shared verbatim by the plain default-deck path,
+-- WondersOfScience's own Grimer/Muk-miss fallthrough, and Excavation's
+-- Mysterious-Fossil-scored entry -- all three reach this same scoring body,
+-- differing only in `initialScore` (always 30 for the first two).
+function AI:_decideProfessorOakGeneral(initialScore)
+  local notInDeck = self.duelVars:get(self.c.DUELVARS_NUMBER_OF_CARDS_NOT_IN_DECK)
   if notInDeck >= self.c.DECK_SIZE - 14 then return false end
-  local score = 30
+
+  local score = initialScore
   local handCount = self.duelVars:get(self.c.DUELVARS_NUMBER_OF_CARDS_IN_HAND)
   if handCount < 4 then score = score + 50 elseif handCount >= 9 then score = score - 30 end
   if #self:_energyCardsInHand() == 0 then score = score + 40 end
+
+  -- Blastoise Lv52's Rain Dance power is neutralized by Muk's Toxic Gas;
+  -- only encourage holding/drawing Water Energy when Rain Dance would work.
+  local _, mukActive = self.combat.status:countPokemonWithActivePkmnPowerInBothPlayAreas(self.c.MUK)
+  if not mukActive then
+    local blastoiseCount = self.combat.status:countTurnDuelistPokemonWithActivePkmnPower(self.c.BLASTOISE)
+    if blastoiseCount > 0 and not self:_findCardIDInHand(self.c.WATER_ENERGY) then
+      score = score + 10
+    end
+  end
+
+  -- Source bug: `cp TYPE_ENERGY; jr c, .loop_hand` skips every card whose
+  -- type is BELOW TYPE_ENERGY (i.e. every Pokemon card), the opposite of the
+  -- intended "skip Energy cards"; only Trainer/Energy cards' raw stage byte
+  -- (never meaningfully BASIC for them) actually gets checked below.
+  for _, deckIndex in ipairs(self.duelOps:createHandCardList()) do
+    local row = self.cardData:get(self.cardData:getCardIDFromDeckIndex(deckIndex))
+    if row and row.type >= self.c.TYPE_ENERGY and row.stage == self.c.BASIC then
+      score = score + 10
+    end
+  end
+
+  local foundEvolutionAnywhere, foundEvolutionInHand = false, false
+  local count = self.duelVars:get(self.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+  for slot = self.c.PLAY_AREA_ARENA, count - 1 do
+    local inHand, anywhere = self:_lookForEvolutionForPlayArea(slot)
+    if inHand then foundEvolutionInHand = true end
+    if anywhere then foundEvolutionAnywhere = true end
+  end
+  if foundEvolutionAnywhere and not foundEvolutionInHand then score = score + 10 end
+
   return score >= 60
+end
+
+-- .HandleExcavationDeck:: same DECK_SIZE-14 gate as the general path, but the
+-- initial score depends on whether Mysterious Fossil is already out (hand or
+-- Play Area) -- already out means less urgency (30), missing means strong
+-- encouragement to dig for it (80).
+function AI:_decideProfessorOakExcavation(notInDeck)
+  if notInDeck >= self.c.DECK_SIZE - 14 then return false end
+  local initialScore = self:_cardIDInHandAndPlayArea(self.c.MYSTERIOUS_FOSSIL) and 30 or 80
+  return self:_decideProfessorOakGeneral(initialScore)
+end
+
+-- .HandleWondersOfScienceDeck:: never play Oak while Grimer or Muk is
+-- already in hand; otherwise falls through to the plain general path.
+function AI:_decideProfessorOakWondersOfScience()
+  if self:_cardIDInHand(self.c.GRIMER) or self:_cardIDInHand(self.c.MUK) then return false end
+  return self:_decideProfessorOakGeneral(30)
+end
+
+-- .HandleLegendaryArticunoDeck:: with fewer than 3 Play Area Pokemon, first
+-- checks whether any of them already has an evolution available in hand
+-- (CheckForEvolutionInList against PLAY_AREA_ARENA's own evolve-this-turn
+-- flag, not each slot's own -- see _checkForEvolutionInList); if NONE do,
+-- play Oak immediately without the playable-cards check below. Otherwise
+-- (>=3 Play Area Pokemon, or an in-hand evolution was found) falls into the
+-- energy-count/hand-playability gate: >=4 Energy cards in hand cancels Oak
+-- outright; else Oak is played only if every remaining hand card (both
+-- Professor Oak copies excluded) is currently unplayable, meaning nothing of
+-- value would be lost by discarding the whole hand.
+function AI:_decideProfessorOakLegendaryArticuno()
+  local count = self.duelVars:get(self.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+  if count < 3 then
+    local hand = self.duelOps:createHandCardList()
+    local foundEvolution = false
+    for slot = self.c.PLAY_AREA_ARENA, count - 1 do
+      local realDeckIndex = self.duelVars:get(self.c.DUELVARS_ARENA_CARD + slot)
+      local realCardId = self.cardData:getCardIDFromDeckIndex(realDeckIndex)
+      if self:_checkForEvolutionInList(realCardId, hand) then
+        foundEvolution = true
+        break
+      end
+    end
+    if not foundEvolution then return true end
+  end
+
+  if #self:_energyCardsInHand() >= 4 then return false end
+
+  local filtered, removed = {}, 0
+  for _, deckIndex in ipairs(self.duelOps:createHandCardList()) do
+    if removed < 2 and self.cardData:getCardIDFromDeckIndex(deckIndex) == self.c.PROFESSOR_OAK then
+      removed = removed + 1
+    else
+      filtered[#filtered + 1] = deckIndex
+    end
+  end
+
+  for _, deckIndex in ipairs(filtered) do
+    if self:_checkIfCardCanBePlayed(deckIndex) then return false end
+  end
+  return true
+end
+
+function AI:_decideProfessorOak()
+  local notInDeck = self.duelVars:get(self.c.DUELVARS_NUMBER_OF_CARDS_NOT_IN_DECK)
+  if notInDeck >= self.c.DECK_SIZE - 6 then return false end
+
+  local deckId = self.memory:readSymbol8("wOpponentDeckID")
+  if deckId == self.c.LEGENDARY_ARTICUNO_DECK_ID then
+    return self:_decideProfessorOakLegendaryArticuno()
+  elseif deckId == self.c.EXCAVATION_DECK_ID then
+    return self:_decideProfessorOakExcavation(notInDeck)
+  elseif deckId == self.c.WONDERS_OF_SCIENCE_DECK_ID then
+    return self:_decideProfessorOakWondersOfScience()
+  end
+
+  return self:_decideProfessorOakGeneral(30)
 end
 
 -- CheckIfNotEnoughEnergyToAttack:: true when neither attack currently has

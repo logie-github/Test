@@ -1372,6 +1372,16 @@
       "target": "src/tcg/duel/AI.lua",
       "state": "translated",
       "notes": "All ten decks: LegendaryMoltres/StrangePower (shared LookForCardIDToTradeWithDifferentHandCard), LegendaryArticuno (bespoke Seel/Dewgong search), LegendaryDragonite (Energy/Pokemon-count gate then evolution chain), LegendaryRonald (Eeveelutions + Dratini chain, single-copy trade-away), BlisteringPokemon/PowerGenerator/FlowerGarden/Flamethrower (evolution chain + FindDuplicatePokemonCards, including its documented 'last duplicate pair wins' quirk), SoundOfTheWaves (evolution chain + spare-copy trade-away). PowerGenerator's own missing `jr .no_carry` (register-garbage fallthrough on total chain failure) is documented, not reimplemented -- fails closed instead."
+    },
+    {
+      "source": "src/engine/duel/ai/trainer_cards.asm",
+      "labels": [
+        "AIDecide_ProfessorOak",
+        "AIPlay_ProfessorOak"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "Deck-agnostic gate, then a three-way deck-ID dispatch (LegendaryArticuno/Excavation/WondersOfScience) falling through to the shared general scoring path (AI:_decideProfessorOakGeneral), used directly by the default deck, WondersOfScience's own Grimer/Muk-miss fallthrough, and Excavation's Mysterious-Fossil-scored entry. Preserves the general path's documented hand-Basic-Pokemon type-check bug (skips real Pokemon cards, checks Trainer/Energy cards' raw stage byte instead) and LegendaryArticuno's PLAY_AREA_ARENA-flags-not-slot-specific CheckForEvolutionInList quirk, the latter reproduced as a pure read with no memory mutation."
     }
   ]
 }
