@@ -3595,6 +3595,24 @@ function EffectCommands:_installSharedHandlers()
     return false
   end)
 
+  -- NidoranF/NidoranM's Boyfriends: +20 damage for every Nidoking in the
+  -- attacker's own Play Area (scans DUELVARS_ARENA_CARD across the play
+  -- area the same way _playAreaDamage's callers do, rather than
+  -- countCardIDInLocation's single-slot bitmask match).
+  self:register("BoyfriendsEffect", function(s, context)
+    local actor = s:_actor(context)
+    if not actor then return nil, "effect_context_missing_actor" end
+    local count = actor.duelVars:get(s.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+    local nidokingCount = 0
+    for slot = 0, count - 1 do
+      local deckIndex = actor.duelVars:get(s.c.DUELVARS_ARENA_CARD + slot)
+      if actor.cardData:getCardIDFromDeckIndex(deckIndex) == s.c.NIDOKING then
+        nidokingCount = nidokingCount + 1
+      end
+    end
+    return s:_addToDamage(nidokingCount * 20)
+  end)
+
   self:register("Blizzard_BenchDamage50PercentEffect", function(s)
     local result, err = s.setup:tossCoin()
     if result == nil then return nil, err end
