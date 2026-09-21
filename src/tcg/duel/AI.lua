@@ -153,6 +153,142 @@ function AI:setSamsStartingPlayArea()
   end
 end
 
+-- All sixteen non-general, non-SamPractice AIActionTable_* labels (verified
+-- against every engine/duel/ai/decks/*.asm boss file) share the EXACT same
+-- .start_duel/.forced_switch/.ko_switch/.take_prize sequence: only their
+-- data lists (already generated per opponent deck ID) and, for 5 of the 16,
+-- .do_turn differ.
+local AI_BOSS_ACTION_TABLES = {
+  AIActionTable_LegendaryMoltres = true, AIActionTable_LegendaryZapdos = true,
+  AIActionTable_LegendaryArticuno = true, AIActionTable_LegendaryDragonite = true,
+  AIActionTable_FirstStrike = true, AIActionTable_RockCrusher = true,
+  AIActionTable_GoGoRainDance = true, AIActionTable_ZappingSelfdestruct = true,
+  AIActionTable_FlowerPower = true, AIActionTable_StrangePsyshock = true,
+  AIActionTable_WondersOfScience = true, AIActionTable_FireCharge = true,
+  AIActionTable_ImRonald = true, AIActionTable_PowerfulRonald = true,
+  AIActionTable_InvincibleRonald = true, AIActionTable_LegendaryRonald = true,
+}
+
+-- Of the sixteen, these eleven route .do_turn straight to AIMainTurnLogic
+-- (== mainTurnLogic(false) below); the remaining five (the Legendary bosses
+-- and Legendary Ronald) each have their own bespoke AIDoTurn_<Deck> routine
+-- and stay behind the turnSpecial adapter boundary.
+local AI_BOSS_GENERAL_TURN_TABLES = {
+  AIActionTable_FirstStrike = true, AIActionTable_RockCrusher = true,
+  AIActionTable_GoGoRainDance = true, AIActionTable_ZappingSelfdestruct = true,
+  AIActionTable_FlowerPower = true, AIActionTable_StrangePsyshock = true,
+  AIActionTable_WondersOfScience = true, AIActionTable_FireCharge = true,
+  AIActionTable_ImRonald = true, AIActionTable_PowerfulRonald = true,
+  AIActionTable_InvincibleRonald = true,
+}
+
+-- CountEnergyAndBasicPokemonInDeckRange (inlined section of
+-- SetUpBossStartingHandAndDeck): tallies Energy and Basic-stage Pokemon
+-- cards across `count` consecutive DUELVARS_DECK_CARDS slots starting at
+-- `startOffset`.
+function AI:_countEnergyAndBasicInDeckRange(startOffset, count)
+  local energy, basic = 0, 0
+  for i = startOffset, startOffset + count - 1 do
+    local deckIndex = self.duelVars:get(self.c.DUELVARS_DECK_CARDS + i)
+    local cardId = self.cardData:getCardIDFromDeckIndex(deckIndex)
+    local row = assert(self.cardData:get(cardId))
+    if row.type >= self.c.TYPE_ENERGY and row.type < self.c.TYPE_TRAINER then
+      energy = energy + 1
+    elseif row.type < self.c.TYPE_ENERGY and row.stage == self.c.BASIC then
+      basic = basic + 1
+    end
+  end
+  return energy, basic
+end
+
+-- SetUpBossStartingHandAndDeck:: returns the whole starting hand to the deck
+-- and reshuffles until the deal has at least 2 Basic Pokemon and 2 Energy
+-- among what would become the new 7-card hand, AND at least 4 of each
+-- counting the following 6 cards too (what would become the face-down
+-- prizes). The source's own prize-avoidance check (.CheckIfIDIsInList) has a
+-- real bug -- `cp a` where `or a` was clearly intended -- that makes it
+-- unconditionally report "not found" no matter what wAICardListAvoidPrize
+-- contains, so that check never actually forces a reshuffle on real
+-- hardware; that dead branch is not reproduced as a functioning filter.
+function AI:setUpBossStartingHandAndDeck()
+  local size = self.c.STARTING_HAND_SIZE
+  for _ = 1, size do
+    local deckIndex = self.duelVars:get(self.c.DUELVARS_HAND)
+    self.duelOps:removeCardFromHand(deckIndex)
+    self.duelOps:returnCardToDeck(deckIndex)
+  end
+
+  while true do
+    local energy1, basic1 = self:_countEnergyAndBasicInDeckRange(0, size)
+    if basic1 >= 2 and energy1 >= 2 then
+      local energy2, basic2 = self:_countEnergyAndBasicInDeckRange(size, 6)
+      if basic1 + basic2 >= 4 and energy1 + energy2 >= 4 then break end
+    end
+    self.duelOps:shuffleDeck()
+  end
+
+  -- The 7 target cards are captured up front rather than re-read after each
+  -- draw: SearchCardInDeckAndAddToHand always removes exactly the current
+  -- gone-boundary card here (each of these 7 deck indices is, in turn,
+  -- always the lowest-index undrawn slot at the moment it's searched for),
+  -- so it never needs to shift anything below the next target -- capturing
+  -- the list first is behaviorally identical to the source's live re-reads.
+  local targets = {}
+  for i = 0, size - 1 do
+    targets[#targets + 1] = self.duelVars:get(self.c.DUELVARS_DECK_CARDS + i)
+  end
+  for _, deckIndex in ipairs(targets) do
+    self.duelOps:searchCardInDeckAndAddToHand(deckIndex)
+    self.duelOps:addCardToHand(deckIndex)
+  end
+end
+
+-- TrySetUpBossStartingPlayArea:: returns false if wAICardListArenaPriority
+-- is unset or none of its card IDs are in hand (no Active could be placed);
+-- otherwise places the first hand match from the Arena priority list as
+-- Active, then repeatedly places the first remaining hand match from the
+-- Bench priority list until either that list is exhausted or the Play Area
+-- reaches 3 Pokemon.
+function AI:trySetUpBossStartingPlayArea()
+  local arenaPriority = self:_deckAIList("arenaPriority")
+  local arenaIds = arenaPriority and arenaPriority.cardIds
+  if type(arenaIds) ~= "table" or #arenaIds == 0 then return false end
+
+  local hand = self.duelOps:createHandCardList()
+  local function playFirstMatch(cardIds)
+    for _, wantedId in ipairs(cardIds) do
+      for i, deckIndex in ipairs(hand) do
+        if self.cardData:getCardIDFromDeckIndex(deckIndex) == wantedId then
+          table.remove(hand, i) -- keep `hand` a valid ipairs sequence
+          self.duelOps:putHandPokemonCardInPlayArea(deckIndex)
+          return true
+        end
+      end
+    end
+    return false
+  end
+
+  if not playFirstMatch(arenaIds) then return false end
+
+  local benchPriority = self:_deckAIList("benchPriority")
+  local benchIds = benchPriority and benchPriority.cardIds
+  if type(benchIds) == "table" and #benchIds > 0 then
+    local count = self.duelVars:get(self.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+    while count < 3 and playFirstMatch(benchIds) do
+      count = self.duelVars:get(self.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+    end
+  end
+  return true
+end
+
+-- AIActionTable_<Boss>'s shared .start_duel sequence.
+function AI:bossStartDuel()
+  self:initDuelVars()
+  self:setUpBossStartingHandAndDeck()
+  if not self:trySetUpBossStartingPlayArea() then return end
+  self:playInitialBasicCards()
+end
+
 -- AIDoAction_StartDuel dispatch for fully translated action tables.
 function AI:startDuel()
   local label = self:_actionTable()
@@ -165,8 +301,11 @@ function AI:startDuel()
     self:setSamsStartingPlayArea()
     return
   end
-  -- Boss/special decks modify starting hand/deck/play area through their own
-  -- tables. Do not route them through generic startup.
+  if AI_BOSS_ACTION_TABLES[label] then
+    return self:bossStartDuel()
+  end
+  -- Any other/future special decks modify starting hand/deck/play area
+  -- through their own tables. Do not route them through generic startup.
   return self:_required("startDuelSpecial")(label, self.memory:readSymbol8("wOpponentDeckID"))
 end
 
@@ -205,17 +344,20 @@ end
 
 -- AIDoAction_ForcedSwitch:: follows the selected deck action table. General
 -- decks use the common Bench scorer, while Sam's scripted practice turns use
--- PickRandomBenchPokemon exactly as the source does. Specialized deck tables
--- keep an action-specific host boundary because several of them override the
--- common forced-switch policy. The caller is responsible for swapping to the
--- defending AI's duel-variable page before invoking this routine.
+-- PickRandomBenchPokemon exactly as the source does. All sixteen boss/
+-- special deck tables' own .forced_switch handlers were checked directly
+-- (engine/duel/ai/decks/*.asm) and every one calls the exact same
+-- AIDecideBenchPokemonToSwitchTo with no per-deck override; only a label
+-- outside that verified set still falls back to the adapter boundary. The
+-- caller is responsible for swapping to the defending AI's duel-variable
+-- page before invoking this routine.
 function AI:forcedSwitch()
   local label = self:_actionTable()
   local slot, reason
   if label == "AIActionTable_SamPractice" and self:isSamPracticeScriptedTurn() then
     slot = self:pickRandomBenchPokemon()
   elseif label == "AIActionTable_GeneralDecks" or label == "AIActionTable_GeneralNoRetreat"
-      or label == "AIActionTable_SamPractice" then
+      or label == "AIActionTable_SamPractice" or AI_BOSS_ACTION_TABLES[label] then
     slot, reason = self:decideBenchPokemonToSwitchTo()
     if not slot then return nil, reason end
   else
@@ -237,15 +379,16 @@ function AI:forcedSwitch()
 end
 
 -- AIDoAction_KOSwitch:: Sam keeps its scripted choice during the tutorial;
--- general tables now use the native common bench scorer. Specialized tables
--- retain their deck-specific adapter boundary.
+-- general tables and all sixteen verified boss/special tables (see
+-- forcedSwitch's comment) use the native common bench scorer. Only a label
+-- outside that verified set retains the deck-specific adapter boundary.
 function AI:koSwitch()
   local label = self:_actionTable()
   if label == "AIActionTable_SamPractice" and self:isSamPracticeScriptedTurn() then
     return self:getPlayAreaLocationOfRaticateOrRattata()
   end
   if label == "AIActionTable_GeneralDecks" or label == "AIActionTable_GeneralNoRetreat"
-      or label == "AIActionTable_SamPractice" then
+      or label == "AIActionTable_SamPractice" or AI_BOSS_ACTION_TABLES[label] then
     local slot, reason = self:decideBenchPokemonToSwitchTo()
     assert(slot, "AIDecideBenchPokemonToSwitchTo failed: " .. tostring(reason))
     self.memory:writeSymbol8("hTemp_ffa0", slot)
@@ -5515,6 +5658,12 @@ function AI:doTurn()
     return self:mainTurnLogic(true)
   elseif label == "AIActionTable_SamPractice" then
     if self:isSamPracticeScriptedTurn() then return self:performSamScriptedTurn() end
+    return self:mainTurnLogic(false)
+  elseif AI_BOSS_GENERAL_TURN_TABLES[label] then
+    -- Eleven of the sixteen boss/special tables route .do_turn straight to
+    -- AIMainTurnLogic with no wrapper of their own (verified directly
+    -- against engine/duel/ai/decks/*.asm); the remaining five each have a
+    -- bespoke AIDoTurn_<Deck> and stay on the adapter path below.
     return self:mainTurnLogic(false)
   end
   return self:_required("turnSpecial")(label, self.memory:readSymbol8("wOpponentDeckID"))

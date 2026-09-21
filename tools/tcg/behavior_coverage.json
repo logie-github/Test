@@ -1146,6 +1146,123 @@
       "target": "src/tcg/duel/AI.lua",
       "state": "translated",
       "notes": "Rewritten from a fixed per-phase Trainer-name priority list into a faithful hand-snapshot, hand-order scan matching CreateHandCardList + the AITrainerCardLogic table lookup: cards are considered in hand order (not this file's authoring order in AI_TRAINER_PHASES, whose per-phase membership was already byte-verified against the real table and is unchanged), CheckCantUseTrainerDueToEffect and the card's own EFFECTCMDTYPE_INITIAL_EFFECT_1 gate now run before AIChooseRandomlyNotToDoAction and the card-specific AIDecide_* routine, a successful play that leaves AI_FLAG_MODIFIED_HAND set in wPreviousAIFlags forces a fresh snapshot and restarts the scan from the top (clearing the flag) rather than the prior special-cased Bill-only relist hack, and SWITCH never matches once AI_FLAG_USED_SWITCH is already set. Verified against a real LuaJIT execution fixture (25 checks) covering hand-order iteration, both gates' ordering, the relist restart and flag-clear, the no-relist continuation path, and the SWITCH skip."
+    },
+    {
+      "source": "src/engine/duel/ai/boss_deck_set_up.asm",
+      "labels": [
+        "SetUpBossStartingHandAndDeck"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "The reshuffle-until-satisfied threshold loop (>=2 Basic/Energy in the new 7-card hand, >=4/>=4 counting the following 6) and the final draw are native. The source's own .CheckIfIDIsInList prize-avoidance check has a real bug (`cp a` where `or a` was clearly intended) that makes it unconditionally report \"not found\" regardless of wAICardListAvoidPrize's contents; that dead branch is documented rather than reproduced as a functioning filter."
+    },
+    {
+      "source": "src/engine/duel/ai/core.asm",
+      "labels": [
+        "TrySetUpBossStartingPlayArea"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "Arena placement from wAICardListArenaPriority (fail closed to \"no Play Area set up\" if absent or no hand match) followed by Bench placement from wAICardListBenchPriority until either that list is exhausted or the Play Area reaches 3 Pokemon, both reading the same generated per-deck list data already used elsewhere via _deckAIList."
+    },
+    {
+      "source": "src/engine/duel/ai/decks/fire_charge.asm",
+      "labels": [
+        "AIActionTable_FireCharge"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "Identical to every other verified boss table: .start_duel/.forced_switch/.ko_switch/.take_prize/.do_turn all dispatch to the shared boss-deck routines (bossStartDuel, decideBenchPokemonToSwitchTo, pickPrizeCards, mainTurnLogic); only this deck's own generated priority-list data differs."
+    },
+    {
+      "source": "src/engine/duel/ai/decks/first_strike.asm",
+      "labels": [
+        "AIActionTable_FirstStrike"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "Identical to every other verified boss table: .start_duel/.forced_switch/.ko_switch/.take_prize/.do_turn all dispatch to the shared boss-deck routines (bossStartDuel, decideBenchPokemonToSwitchTo, pickPrizeCards, mainTurnLogic); only this deck's own generated priority-list data differs."
+    },
+    {
+      "source": "src/engine/duel/ai/decks/flower_power.asm",
+      "labels": [
+        "AIActionTable_FlowerPower"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "Identical to every other verified boss table: .start_duel/.forced_switch/.ko_switch/.take_prize/.do_turn all dispatch to the shared boss-deck routines (bossStartDuel, decideBenchPokemonToSwitchTo, pickPrizeCards, mainTurnLogic); only this deck's own generated priority-list data differs."
+    },
+    {
+      "source": "src/engine/duel/ai/decks/go_go_rain_dance.asm",
+      "labels": [
+        "AIActionTable_GoGoRainDance"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "Identical to every other verified boss table: .start_duel/.forced_switch/.ko_switch/.take_prize/.do_turn all dispatch to the shared boss-deck routines (bossStartDuel, decideBenchPokemonToSwitchTo, pickPrizeCards, mainTurnLogic); only this deck's own generated priority-list data differs."
+    },
+    {
+      "source": "src/engine/duel/ai/decks/im_ronald.asm",
+      "labels": [
+        "AIActionTable_ImRonald"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "Identical to every other verified boss table: .start_duel/.forced_switch/.ko_switch/.take_prize/.do_turn all dispatch to the shared boss-deck routines (bossStartDuel, decideBenchPokemonToSwitchTo, pickPrizeCards, mainTurnLogic); only this deck's own generated priority-list data differs."
+    },
+    {
+      "source": "src/engine/duel/ai/decks/invincible_ronald.asm",
+      "labels": [
+        "AIActionTable_InvincibleRonald"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "Identical to every other verified boss table: .start_duel/.forced_switch/.ko_switch/.take_prize/.do_turn all dispatch to the shared boss-deck routines (bossStartDuel, decideBenchPokemonToSwitchTo, pickPrizeCards, mainTurnLogic); only this deck's own generated priority-list data differs."
+    },
+    {
+      "source": "src/engine/duel/ai/decks/powerful_ronald.asm",
+      "labels": [
+        "AIActionTable_PowerfulRonald"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "Identical to every other verified boss table: .start_duel/.forced_switch/.ko_switch/.take_prize/.do_turn all dispatch to the shared boss-deck routines (bossStartDuel, decideBenchPokemonToSwitchTo, pickPrizeCards, mainTurnLogic); only this deck's own generated priority-list data differs."
+    },
+    {
+      "source": "src/engine/duel/ai/decks/rock_crusher.asm",
+      "labels": [
+        "AIActionTable_RockCrusher"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "Identical to every other verified boss table: .start_duel/.forced_switch/.ko_switch/.take_prize/.do_turn all dispatch to the shared boss-deck routines (bossStartDuel, decideBenchPokemonToSwitchTo, pickPrizeCards, mainTurnLogic); only this deck's own generated priority-list data differs."
+    },
+    {
+      "source": "src/engine/duel/ai/decks/strange_psyshock.asm",
+      "labels": [
+        "AIActionTable_StrangePsyshock"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "Identical to every other verified boss table: .start_duel/.forced_switch/.ko_switch/.take_prize/.do_turn all dispatch to the shared boss-deck routines (bossStartDuel, decideBenchPokemonToSwitchTo, pickPrizeCards, mainTurnLogic); only this deck's own generated priority-list data differs."
+    },
+    {
+      "source": "src/engine/duel/ai/decks/wonders_of_science.asm",
+      "labels": [
+        "AIActionTable_WondersOfScience"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "Identical to every other verified boss table: .start_duel/.forced_switch/.ko_switch/.take_prize/.do_turn all dispatch to the shared boss-deck routines (bossStartDuel, decideBenchPokemonToSwitchTo, pickPrizeCards, mainTurnLogic); only this deck's own generated priority-list data differs."
+    },
+    {
+      "source": "src/engine/duel/ai/decks/zapping_selfdestruct.asm",
+      "labels": [
+        "AIActionTable_ZappingSelfdestruct"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "Identical to every other verified boss table: .start_duel/.forced_switch/.ko_switch/.take_prize/.do_turn all dispatch to the shared boss-deck routines (bossStartDuel, decideBenchPokemonToSwitchTo, pickPrizeCards, mainTurnLogic); only this deck's own generated priority-list data differs."
     }
   ]
 }
