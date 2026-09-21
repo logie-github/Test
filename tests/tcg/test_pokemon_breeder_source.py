@@ -37,7 +37,7 @@ class PokemonBreederSourceTests(unittest.TestCase):
             "    return self:_decidePokemonBreeder()",
             self.ai_src,
         )
-        self.assertIn('or constantName == "POKEMON_BREEDER"', self.ai_src)
+        self.assertIn('POKEMON_BREEDER = true', self.ai_src)  # AI_TRAINER_SUPPORTED table
         self.assertIn('"POTION", "GUST_OF_WIND", "POKEMON_BREEDER",', self.ai_src)
 
     def test_decide_covers_two_pass_structure(self):

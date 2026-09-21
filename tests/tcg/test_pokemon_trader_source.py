@@ -40,7 +40,7 @@ class PokemonTraderSourceTests(unittest.TestCase):
             "    return self:_decidePokemonTrader()",
             self.ai_src,
         )
-        self.assertIn('or constantName == "POKEMON_TRADER"', self.ai_src)
+        self.assertIn('POKEMON_TRADER = true', self.ai_src)  # AI_TRAINER_SUPPORTED table
         self.assertIn('"MAINTENANCE", "POKE_BALL", "COMPUTER_SEARCH", "POKEMON_TRADER"', self.ai_src)
 
     def test_decide_fails_closed_on_all_ten_specialized_decks(self):

@@ -1137,6 +1137,15 @@
       ],
       "target": "src/tcg/duel/AI.lua",
       "state": "translated"
+    },
+    {
+      "source": "src/engine/duel/ai/trainer_cards.asm",
+      "labels": [
+        "_AIProcessHandTrainerCards"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "Rewritten from a fixed per-phase Trainer-name priority list into a faithful hand-snapshot, hand-order scan matching CreateHandCardList + the AITrainerCardLogic table lookup: cards are considered in hand order (not this file's authoring order in AI_TRAINER_PHASES, whose per-phase membership was already byte-verified against the real table and is unchanged), CheckCantUseTrainerDueToEffect and the card's own EFFECTCMDTYPE_INITIAL_EFFECT_1 gate now run before AIChooseRandomlyNotToDoAction and the card-specific AIDecide_* routine, a successful play that leaves AI_FLAG_MODIFIED_HAND set in wPreviousAIFlags forces a fresh snapshot and restarts the scan from the top (clearing the flag) rather than the prior special-cased Bill-only relist hack, and SWITCH never matches once AI_FLAG_USED_SWITCH is already set. Verified against a real LuaJIT execution fixture (25 checks) covering hand-order iteration, both gates' ordering, the relist restart and flag-clear, the no-relist continuation path, and the SWITCH skip."
     }
   ]
 }

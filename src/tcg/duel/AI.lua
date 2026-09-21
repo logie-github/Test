@@ -4873,45 +4873,122 @@ local AI_TRAINER_PHASES = {
   [15] = { "PROFESSOR_OAK" },
 }
 
--- _AIProcessHandTrainerCards:: common phase scanner. The high-frequency native
--- decision set is handled here; unimplemented Trainer policies still fail closed.
+-- AITrainerCardLogic is keyed by (phase, cardID) pairs; membership per phase
+-- exactly mirrors AI_TRAINER_PHASES above (verified against the decomp's own
+-- data/duel/ai_trainer_card_logic.asm table), so the per-phase name sets
+-- double as that membership test.
+local AI_TRAINER_PHASE_SET = {}
+local AI_TRAINER_CARD_NAMES = {}
+for phase, names in pairs(AI_TRAINER_PHASES) do
+  local set = {}
+  for _, name in ipairs(names) do
+    set[name] = true
+    AI_TRAINER_CARD_NAMES[name] = true
+  end
+  AI_TRAINER_PHASE_SET[phase] = set
+end
+
+-- Keep unsupported Trainer policies fail-closed instead of allowing the
+-- random skip gate to hide an untranslated branch.
+local AI_TRAINER_SUPPORTED = {
+  BILL = true, POTION = true, DEFENDER = true, PLUSPOWER = true, SWITCH = true,
+  FULL_HEAL = true, ENERGY_SEARCH = true, PROFESSOR_OAK = true, ENERGY_REMOVAL = true,
+  POKEDEX = true, RECYCLE = true, MAINTENANCE = true, ITEM_FINDER = true, REVIVE = true,
+  POKEMON_FLUTE = true, POKEMON_CENTER = true, MR_FUJI = true, ENERGY_RETRIEVAL = true,
+  SUPER_ENERGY_RETRIEVAL = true, SUPER_ENERGY_REMOVAL = true, GUST_OF_WIND = true,
+  POKE_BALL = true, SUPER_POTION = true, POKEMON_BREEDER = true,
+  IMPOSTER_PROFESSOR_OAK = true, SCOOP_UP = true, LASS = true, IMAKUNI_CARD = true,
+  GAMBLER = true, CLEFAIRY_DOLL = true, MYSTERIOUS_FOSSIL = true, COMPUTER_SEARCH = true,
+  POKEMON_TRADER = true,
+}
+
+-- CardID -> AI_TRAINER_PHASES constant name. Built lazily since it depends on
+-- the generated constants table, and cached since that table never changes
+-- for the lifetime of an AI instance.
+function AI:_trainerConstantNameForCardID(cardId)
+  if not self._trainerCardIdToName then
+    local map = {}
+    for name in pairs(AI_TRAINER_CARD_NAMES) do
+      local id = self.c[name]
+      if id then map[id] = name end
+    end
+    self._trainerCardIdToName = map
+  end
+  return self._trainerCardIdToName[cardId]
+end
+
+-- _AIProcessHandTrainerCards:: takes one hand snapshot per pass and walks it
+-- in HAND order (not this file's authoring order), matching the source's own
+-- CreateHandCardList-then-scan structure rather than a fixed per-phase name
+-- priority. For each snapshotted card that maps to this phase, the source
+-- runs CheckCantUseTrainerDueToEffect and the card's own EFFECTCMDTYPE_
+-- INITIAL_EFFECT_1 gate BEFORE AIChooseRandomlyNotToDoAction and the card-
+-- specific AIDecide_* routine -- not only as validation once PlayerActions:
+-- playTrainer executes it. A successful play that leaves AI_FLAG_MODIFIED_
+-- HAND set in wPreviousAIFlags forces a fresh snapshot and restarts from the
+-- top (clearing the flag); otherwise the scan just continues to the next
+-- snapshot position. SWITCH additionally never matches once AI_FLAG_USED_
+-- SWITCH is already set, mirroring the table scan's own per-row skip.
 function AI:processHandTrainerCards(phase)
   assert(self.playerActions, "general AI requires PlayerActions")
-  local names = AI_TRAINER_PHASES[phase]
-  if not names then return true end
-  for _, constantName in ipairs(names) do
-    local cardId = self.c[constantName]
-    while cardId and self:_findCardIDInHand(cardId) do
-      local currentTrainerDeckIndex = self:_findCardIDInHand(cardId)
-      -- Keep unsupported Trainer policies fail-closed instead of allowing the
-      -- random skip gate to hide an untranslated branch.
-      local supported = constantName == "BILL" or constantName == "POTION"
-        or constantName == "DEFENDER" or constantName == "PLUSPOWER"
-        or constantName == "SWITCH" or constantName == "FULL_HEAL"
-        or constantName == "ENERGY_SEARCH" or constantName == "PROFESSOR_OAK"
-        or constantName == "ENERGY_REMOVAL" or constantName == "POKEDEX"
-        or constantName == "RECYCLE" or constantName == "MAINTENANCE"
-        or constantName == "ITEM_FINDER" or constantName == "REVIVE"
-        or constantName == "POKEMON_FLUTE" or constantName == "POKEMON_CENTER"
-        or constantName == "MR_FUJI" or constantName == "ENERGY_RETRIEVAL"
-        or constantName == "SUPER_ENERGY_RETRIEVAL" or constantName == "SUPER_ENERGY_REMOVAL"
-        or constantName == "GUST_OF_WIND" or constantName == "POKE_BALL"
-        or constantName == "SUPER_POTION" or constantName == "POKEMON_BREEDER"
-        or constantName == "IMPOSTER_PROFESSOR_OAK" or constantName == "SCOOP_UP"
-        or constantName == "LASS" or constantName == "IMAKUNI_CARD" or constantName == "GAMBLER"
-        or constantName == "CLEFAIRY_DOLL" or constantName == "MYSTERIOUS_FOSSIL"
-        or constantName == "COMPUTER_SEARCH" or constantName == "POKEMON_TRADER"
-      if not supported then return nil, "untranslated_ai_trainer:" .. constantName end
-      if self:_chooseRandomlyNotToDoAction() then break end
-      local decision, selectionOrErr, parameter =
-        self:_decideTrainer(constantName, phase, currentTrainerDeckIndex)
-      if decision == nil then return nil, selectionOrErr end
-      if not decision then break end
-      local played, playErr = self:_playTrainerForAI(constantName, selectionOrErr, parameter)
-      if not played then return nil, playErr end
-      -- Most AI Trainer effects are one-shot in a phase. Bill is explicitly
-      -- allowed to continue scanning the modified hand, matching the source.
-      if constantName ~= "BILL" then break end
+  assert(self.combat, "general AI requires Combat")
+  local phaseSet = AI_TRAINER_PHASE_SET[phase]
+  if not phaseSet then return true end
+
+  local snapshot = self.duelOps:createHandCardList()
+  local pos = 1
+  while pos <= #snapshot do
+    local deckIndex = snapshot[pos]
+    local cardId = self.cardData:getCardIDFromDeckIndex(deckIndex)
+    local constantName = self:_trainerConstantNameForCardID(cardId)
+    local matches = constantName ~= nil and phaseSet[constantName]
+    if matches and constantName == "SWITCH" and self.c.AI_FLAG_USED_SWITCH
+        and bit.band(self.memory:readSymbol8("wPreviousAIFlags"), self.c.AI_FLAG_USED_SWITCH) ~= 0 then
+      matches = false
+    end
+
+    if not matches then
+      pos = pos + 1
+    else
+      if not AI_TRAINER_SUPPORTED[constantName] then
+        return nil, "untranslated_ai_trainer:" .. constantName
+      end
+
+      if self.combat.status:checkCantUseTrainerDueToEffect() then
+        pos = pos + 1
+      else
+        self.playerActions.effects:loadNonPokemonCardEffectCommands(deckIndex, self.cardData)
+        local carry, err = self.playerActions.effects:tryExecute(
+          self.c.EFFECTCMDTYPE_INITIAL_EFFECT_1, { playerActions = self.playerActions })
+        if carry == nil then return nil, err end
+
+        if carry then
+          pos = pos + 1
+        elseif self:_chooseRandomlyNotToDoAction() then
+          pos = pos + 1
+        else
+          local decision, selectionOrErr, parameter = self:_decideTrainer(constantName, phase, deckIndex)
+          if decision == nil then return nil, selectionOrErr end
+          if not decision then
+            pos = pos + 1
+          else
+            local played, playErr = self:_playTrainerForAI(constantName, selectionOrErr, parameter)
+            if not played then return nil, playErr end
+
+            local modified = bit.band(self.memory:readSymbol8("wPreviousAIFlags"),
+              self.c.AI_FLAG_MODIFIED_HAND or 0) ~= 0
+            if modified then
+              self.memory:writeSymbol8("wPreviousAIFlags",
+                bit.band(self.memory:readSymbol8("wPreviousAIFlags"),
+                  bit.bnot(self.c.AI_FLAG_MODIFIED_HAND or 0)))
+              snapshot = self.duelOps:createHandCardList()
+              pos = 1
+            else
+              pos = pos + 1
+            end
+          end
+        end
+      end
     end
   end
   return true

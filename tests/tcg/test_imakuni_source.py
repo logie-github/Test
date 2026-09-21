@@ -35,7 +35,7 @@ class ImakuniSourceTests(unittest.TestCase):
             "    return self:_decideImakuni()",
             self.ai_src,
         )
-        self.assertIn('or constantName == "IMAKUNI_CARD"', self.ai_src)
+        self.assertIn('IMAKUNI_CARD = true', self.ai_src)  # AI_TRAINER_SUPPORTED table
         self.assertIn('[1] = { "IMAKUNI_CARD", "GAMBLER" }', self.ai_src)
 
     def test_decide_checks_confused_only(self):

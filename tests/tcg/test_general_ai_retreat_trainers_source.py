@@ -110,7 +110,11 @@ class GeneralAIRetreatTrainerSourceTests(unittest.TestCase):
                      "RESHUFFLE_DECK_ID"):
             self.assertIn(name, src)
         self.assertIn("self.rng:random(4)", src)
-        self.assertIn("if self:_chooseRandomlyNotToDoAction() then break end", src)
+        # processHandTrainerCards calls this before the card-specific decision
+        # (elseif form, since it also gates on the headache/INITIAL_EFFECT_1
+        # checks that now run ahead of it); other call sites use the plain
+        # early-return form.
+        self.assertIn("elseif self:_chooseRandomlyNotToDoAction() then", src)
         self.assertIn("if self:_chooseRandomlyNotToDoAction() then return false end", src)
 
     def test_next_common_trainer_decision_set_is_native(self):

@@ -34,7 +34,7 @@ class SuperPotionSourceTests(unittest.TestCase):
             'elseif constantName == "SUPER_POTION" then\n    return self:_decideSuperPotion(phase)',
             self.ai_src,
         )
-        self.assertIn('or constantName == "SUPER_POTION"', self.ai_src)
+        self.assertIn('SUPER_POTION = true', self.ai_src)  # AI_TRAINER_SUPPORTED table
         # AI_TRAINER_PHASES already scaffolded SUPER_POTION at phases 8 and 11
         # before this card's logic existed; confirm it still does.
         self.assertIn('[8] = { "SUPER_POTION" }', self.ai_src)

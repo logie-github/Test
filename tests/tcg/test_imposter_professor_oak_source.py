@@ -35,7 +35,7 @@ class ImposterProfessorOakSourceTests(unittest.TestCase):
             "    return self:_decideImposterProfessorOak()",
             self.ai_src,
         )
-        self.assertIn('or constantName == "IMPOSTER_PROFESSOR_OAK"', self.ai_src)
+        self.assertIn('IMPOSTER_PROFESSOR_OAK = true', self.ai_src)  # AI_TRAINER_SUPPORTED table
         self.assertIn('"POKEMON_BREEDER",\n    "IMPOSTER_PROFESSOR_OAK", "FULL_HEAL" }', self.ai_src)
 
     def test_decide_reads_non_turn_duelist_and_matches_both_branches(self):

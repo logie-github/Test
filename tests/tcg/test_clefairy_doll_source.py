@@ -35,8 +35,8 @@ class ClefairyDollSourceTests(unittest.TestCase):
             "    return self:_decideClefairyDollOrMysteriousFossil()",
             self.ai_src,
         )
-        self.assertIn('or constantName == "CLEFAIRY_DOLL" or constantName == "MYSTERIOUS_FOSSIL"',
-                       self.ai_src)
+        self.assertIn("CLEFAIRY_DOLL = true", self.ai_src)  # AI_TRAINER_SUPPORTED table
+        self.assertIn("MYSTERIOUS_FOSSIL = true", self.ai_src)
         self.assertIn('"CLEFAIRY_DOLL", "MYSTERIOUS_FOSSIL" }', self.ai_src)
 
     def test_decide_checks_wigglytuff_override_and_threshold(self):

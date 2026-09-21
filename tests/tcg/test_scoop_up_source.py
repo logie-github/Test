@@ -36,7 +36,7 @@ class ScoopUpSourceTests(unittest.TestCase):
             "    return self:_decideScoopUp()",
             self.ai_src,
         )
-        self.assertIn('or constantName == "SCOOP_UP"', self.ai_src)
+        self.assertIn('SCOOP_UP = true', self.ai_src)  # AI_TRAINER_SUPPORTED table
         self.assertIn('[10] = { "POTION", "GUST_OF_WIND", "ENERGY_RETRIEVAL", "MR_FUJI", "SCOOP_UP" },',
                        self.ai_src)
 

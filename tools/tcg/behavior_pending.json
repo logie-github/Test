@@ -304,18 +304,6 @@
       "notes": "Source phase ordering, Professor Oak second pass, common active Pokemon Power decisions, and the deck-dependent random action-skip gate are native; the no-retreat variant intentionally skips common retreat processing as on cartridge."
     },
     {
-      "source": "src/engine/duel/ai/trainer_cards.asm",
-      "labels": [
-        "_AIProcessHandTrainerCards"
-      ],
-      "target": "src/tcg/duel/AI.lua",
-      "state": "partial",
-      "remaining": [
-        "exact hand-snapshot/table scan order and generic modified-hand relist semantics outside the explicitly translated restart paths"
-      ],
-      "notes": "Every Trainer decision/play family named in the original handoff priority list now dispatches natively: Bill, Potion, Defender, PlusPower, Switch, Full Heal, Energy Search, general Professor Oak, Energy Removal, Pokemon Center, Pokedex, Mr Fuji, Maintenance, Recycle, Item Finder, Revive, Pokemon Flute, Energy Retrieval, Super Energy Retrieval, Super Energy Removal, Gust of Wind, Poke Ball, Super Potion, Pokemon Breeder (forced-priority Stage2 set plus the general fallback with its Dragonite Lv41 evolution gate), Imposter Professor Oak (targets the non-turn duelist's hand/deck, distinct from ordinary Professor Oak's discard-based effect), Scoop Up's general KO/retreat/70%-damage path, Lass (both duelists' hands, own-hand-Trainer self-veto), Imakuni (plays unless the Active is already Confused, no attempt to avoid its own downside), Gambler (Imakuni-deck 2-in-10 roll plus the Mewtwo-mill-flag-gated general branch, own separate coverage entry), Clefairy Doll / Mysterious Fossil (shared decision and effect implementations), Computer Search's hand-count gate, and Pokemon Trader's dispatch boundary. Several of these (Scoop Up, Computer Search, Pokemon Trader, and the general Professor Oak/Energy Removal scoring) still fail closed on their own specific rare-deck branches, each tracked as its own separate pending entry rather than repeated here. AIChooseRandomlyNotToDoAction is native; any other unsupported entry still fails closed."
-    },
-    {
       "source": "src/engine/duel/ai/pkmn_powers.asm",
       "labels": [
         "HandleAIEnergyTrans",
