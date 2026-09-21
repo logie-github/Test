@@ -4331,25 +4331,308 @@ function AI:_decideComputerSearch(avoidDeckIndex)
   return false
 end
 
+-- CheckIfHasCardIDInHand:: despite the name, requires TWO copies of the
+-- card in hand to return the second one's deck index -- the first match
+-- only marks "seen once" and keeps scanning. Used by decks that only want
+-- to trade away a spare copy of a specific card, never their only one.
+function AI:_checkIfHasCardIDInHand(cardId)
+  local seenOnce = false
+  for _, deckIndex in ipairs(self.duelOps:createHandCardList()) do
+    if self.cardData:getCardIDFromDeckIndex(deckIndex) == cardId then
+      if seenOnce then return deckIndex end
+      seenOnce = true
+    end
+  end
+  return nil
+end
+
+-- FindDuplicatePokemonCards:: nested nothing-skipped hand-pair scan for any
+-- two Pokemon cards sharing a card ID. Keeps looping after a match --a
+-- documented source quirk ("for some reason loop still continues... it
+-- overwrites the result") -- so the LAST duplicate pair found in this
+-- (i,j) i<j scan order wins, not the first.
+function AI:_findDuplicatePokemonCards()
+  local hand = self.duelOps:createHandCardList()
+  local result
+  for i = 1, #hand do
+    local idI = self.cardData:getCardIDFromDeckIndex(hand[i])
+    for j = i + 1, #hand do
+      local idJ = self.cardData:getCardIDFromDeckIndex(hand[j])
+      if idJ == idI then
+        local row = self.cardData:get(idJ)
+        if row and row.type < self.c.TYPE_ENERGY then result = hand[j] end
+      end
+    end
+  end
+  return result
+end
+
+-- CountPokemonCardsInHandAndInPlayArea::
+function AI:_countPokemonCardsInHandAndInPlayArea()
+  local total = self.duelVars:get(self.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+  for _, deckIndex in ipairs(self.duelOps:createHandCardList()) do
+    local row = self.cardData:get(self.cardData:getCardIDFromDeckIndex(deckIndex))
+    if row and row.type < self.c.TYPE_ENERGY then total = total + 1 end
+  end
+  return total
+end
+
+-- CountOppEnergyCardsInHandAndAttached::
+function AI:_countEnergyCardsInHandAndAttached()
+  local total = #self:_energyCardsInHand()
+  local count = self.duelVars:get(self.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+  for slot = self.c.PLAY_AREA_ARENA, count - 1 do
+    total = total + self.duelOps:countNumberOfEnergyCardsAttached(slot)
+  end
+  return total
+end
+
+-- LookForCardIDToTradeWithDifferentHandCard:: wantedCardId must not already
+-- be in hand, and must be in deck; then returns the first Pokemon card in
+-- hand (hand order) whose card ID isn't avoidCardId, to trade away.
+function AI:_lookForCardIDToTradeWithDifferentHandCard(wantedCardId, avoidCardId)
+  if self:_cardIDInHand(wantedCardId) then return nil end
+  local target = self:_findCardIDInDeck(wantedCardId)
+  if not target then return nil end
+  for _, deckIndex in ipairs(self.duelOps:createHandCardList()) do
+    local cardId = self.cardData:getCardIDFromDeckIndex(deckIndex)
+    if cardId ~= avoidCardId then
+      local row = self.cardData:get(cardId)
+      if row and row.type < self.c.TYPE_ENERGY then return target, deckIndex end
+    end
+  end
+  return nil
+end
+
+-- Shared evolution-chain walk used by 7 of Pokemon Trader's 10 deck
+-- routines: for each "line" (an evolution family, given as an array of
+-- {preEvolution, evolution} stage-transition pairs, checked in order),
+-- first try every stage transition's "pre-evolution already out (hand or
+-- Play Area)" case, then -- only if none of that line's transitions
+-- matched -- every transition's "evolution already in hand" case, before
+-- moving to the next line. A line may instead be given as
+-- {andPlayArea = {...}, hand = {...}} when the source's own two passes use
+-- a different pair order (PowerGenerator's Magnemite line does).
+function AI:_pokemonTraderEvolutionChainTarget(lines)
+  for _, line in ipairs(lines) do
+    for _, pair in ipairs(line.andPlayArea or line) do
+      local target = self:_pokeBallGivenCardInHandAndPlayArea(pair[2], pair[1])
+      if target then return target end
+    end
+    for _, pair in ipairs(line.hand or line) do
+      local target = self:_pokeBallGivenCardInHand(pair[1], pair[2])
+      if target then return target end
+    end
+  end
+  return nil
+end
+
+function AI:_decidePokemonTraderLegendaryMoltres()
+  local target, tradeAway = self:_lookForCardIDToTradeWithDifferentHandCard(
+    self.c.MOLTRES_LV37, self.c.MOLTRES_LV35)
+  if not target then return false end
+  return true, { deckPokemon = target, handPokemon = tradeAway }
+end
+
+-- AIDecide_PokemonTrader_LegendaryArticuno:: skips entirely if the AI
+-- already has ArticunoLv35 or Lapras out; otherwise prefers fetching Seel
+-- (if not already out), falling back to Dewgong (if not already out).
+-- Trading away requires a SPARE copy (CheckIfHasCardIDInHand's own
+-- 2-copies-required semantics) of Chansey, Ditto, or ArticunoLv37, in
+-- that priority order.
+function AI:_decidePokemonTraderLegendaryArticuno()
+  if self:_cardIDInHandAndPlayArea(self.c.ARTICUNO_LV35) then return false end
+  if self:_cardIDInHandAndPlayArea(self.c.LAPRAS) then return false end
+
+  local target
+  if not self:_cardIDInHandAndPlayArea(self.c.SEEL) then
+    target = self:_findCardIDInDeck(self.c.SEEL)
+  end
+  if not target then
+    if self:_cardIDInHandAndPlayArea(self.c.DEWGONG) then return false end
+    target = self:_findCardIDInDeck(self.c.DEWGONG)
+    if not target then return false end
+  end
+
+  for _, cardId in ipairs({ self.c.CHANSEY, self.c.DITTO, self.c.ARTICUNO_LV37 }) do
+    local tradeAway = self:_checkIfHasCardIDInHand(cardId)
+    if tradeAway then return true, { deckPokemon = target, handPokemon = tradeAway } end
+  end
+  return false
+end
+
+-- AIDecide_PokemonTrader_LegendaryDragonite:: with fewer than 5 total
+-- Energy cards (hand + attached) OR fewer than 5 total Pokemon cards (hand
+-- + Play Area, only checked when Energy count is already >=5), targets
+-- Kangaskhan directly; otherwise walks the Magikarp/Gyarados,
+-- Dratini/Dragonair/DragoniteLv41, Charmander/Charmeleon/Charizard chain.
+function AI:_decidePokemonTraderLegendaryDragonite()
+  local useKangaskhan = true
+  if self:_countEnergyCardsInHandAndAttached() >= 5 then
+    useKangaskhan = self:_countPokemonCardsInHandAndInPlayArea() < 5
+  end
+  local target
+  if useKangaskhan then
+    target = self:_findCardIDInDeck(self.c.KANGASKHAN)
+  else
+    target = self:_pokemonTraderEvolutionChainTarget({
+      { { self.c.MAGIKARP, self.c.GYARADOS } },
+      { { self.c.DRATINI, self.c.DRAGONAIR }, { self.c.DRAGONAIR, self.c.DRAGONITE_LV41 } },
+      { { self.c.CHARMANDER, self.c.CHARMELEON }, { self.c.CHARMELEON, self.c.CHARIZARD } },
+    })
+  end
+  if not target then return false end
+  for _, cardId in ipairs({ self.c.DRAGONAIR, self.c.CHARMELEON, self.c.GYARADOS,
+      self.c.MAGIKARP, self.c.CHARMANDER, self.c.DRATINI }) do
+    local tradeAway = self:_checkIfHasCardIDInHand(cardId)
+    if tradeAway then return true, { deckPokemon = target, handPokemon = tradeAway } end
+  end
+  return false
+end
+
+-- AIDecide_PokemonTrader_LegendaryRonald:: walks Eevee's three
+-- Eeveelutions (each its own single-transition line) then the Dratini
+-- chain. Trading away only needs a single copy (LookForCardIDInHandList_
+-- Bank8, not the 2-copies CheckIfHasCardIDInHand) of ZapdosLv68,
+-- ArticunoLv37, or MoltresLv37.
+function AI:_decidePokemonTraderLegendaryRonald()
+  local target = self:_pokemonTraderEvolutionChainTarget({
+    { { self.c.EEVEE, self.c.FLAREON_LV22 } },
+    { { self.c.EEVEE, self.c.VAPOREON_LV29 } },
+    { { self.c.EEVEE, self.c.JOLTEON_LV24 } },
+    { { self.c.DRATINI, self.c.DRAGONAIR }, { self.c.DRAGONAIR, self.c.DRAGONITE_LV41 } },
+  })
+  if not target then return false end
+  for _, cardId in ipairs({ self.c.ZAPDOS_LV68, self.c.ARTICUNO_LV37, self.c.MOLTRES_LV37 }) do
+    local tradeAway = self:_findCardIDInHand(cardId)
+    if tradeAway then return true, { deckPokemon = target, handPokemon = tradeAway } end
+  end
+  return false
+end
+
+function AI:_decidePokemonTraderBlisteringPokemon()
+  local target = self:_pokemonTraderEvolutionChainTarget({
+    { { self.c.RHYHORN, self.c.RHYDON } },
+    { { self.c.CUBONE, self.c.MAROWAK_LV26 } },
+    { { self.c.PONYTA, self.c.RAPIDASH } },
+  })
+  if not target then return false end
+  local tradeAway = self:_findDuplicatePokemonCards()
+  if not tradeAway then return false end
+  return true, { deckPokemon = target, handPokemon = tradeAway }
+end
+
+function AI:_decidePokemonTraderSoundOfTheWaves()
+  local target = self:_pokemonTraderEvolutionChainTarget({
+    { { self.c.SEEL, self.c.DEWGONG } },
+    { { self.c.KRABBY, self.c.KINGLER } },
+    { { self.c.SHELLDER, self.c.CLOYSTER } },
+    { { self.c.HORSEA, self.c.SEADRA } },
+    { { self.c.TENTACOOL, self.c.TENTACRUEL } },
+  })
+  if not target then return false end
+  for _, cardId in ipairs({ self.c.SEEL, self.c.KRABBY, self.c.HORSEA,
+      self.c.SHELLDER, self.c.TENTACOOL }) do
+    local tradeAway = self:_checkIfHasCardIDInHand(cardId)
+    if tradeAway then return true, { deckPokemon = target, handPokemon = tradeAway } end
+  end
+  return false
+end
+
+-- AIDecide_PokemonTrader_PowerGenerator:: the Magnemite line's own second
+-- (hand-only) pass checks pairs in a different order (Lv15 before Lv13)
+-- than its first (Play-Area) pass (Lv13 before Lv15) -- a literal source
+-- asymmetry, not a transcription slip. The real source is also missing a
+-- `jr .no_carry` after this whole chain fails, falling through into
+-- .find_duplicates with leftover register garbage (from whichever of the
+-- three internal exit paths the last failed lookup took) treated as the
+-- target card -- not deterministically reproducible, and not
+-- reimplemented; this fails closed exactly where the chain search itself
+-- comes up empty instead.
+function AI:_decidePokemonTraderPowerGenerator()
+  local target = self:_pokemonTraderEvolutionChainTarget({
+    { { self.c.PIKACHU_LV14, self.c.RAICHU_LV40 }, { self.c.PIKACHU_LV12, self.c.RAICHU_LV40 } },
+    { { self.c.VOLTORB, self.c.ELECTRODE_LV42 }, { self.c.VOLTORB, self.c.ELECTRODE_LV35 } },
+    {
+      andPlayArea = {
+        { self.c.MAGNEMITE_LV13, self.c.MAGNETON_LV35 }, { self.c.MAGNEMITE_LV15, self.c.MAGNETON_LV35 },
+        { self.c.MAGNEMITE_LV13, self.c.MAGNETON_LV28 }, { self.c.MAGNEMITE_LV15, self.c.MAGNETON_LV28 },
+      },
+      hand = {
+        { self.c.MAGNEMITE_LV15, self.c.MAGNETON_LV35 }, { self.c.MAGNEMITE_LV13, self.c.MAGNETON_LV35 },
+        { self.c.MAGNEMITE_LV15, self.c.MAGNETON_LV28 }, { self.c.MAGNEMITE_LV13, self.c.MAGNETON_LV28 },
+      },
+    },
+  })
+  if not target then return false end
+  local tradeAway = self:_findDuplicatePokemonCards()
+  if not tradeAway then return false end
+  return true, { deckPokemon = target, handPokemon = tradeAway }
+end
+
+function AI:_decidePokemonTraderFlowerGarden()
+  local target = self:_pokemonTraderEvolutionChainTarget({
+    { { self.c.BULBASAUR, self.c.IVYSAUR }, { self.c.IVYSAUR, self.c.VENUSAUR_LV67 } },
+    { { self.c.BELLSPROUT, self.c.WEEPINBELL }, { self.c.WEEPINBELL, self.c.VICTREEBEL } },
+    { { self.c.ODDISH, self.c.GLOOM }, { self.c.GLOOM, self.c.VILEPLUME } },
+  })
+  if not target then return false end
+  local tradeAway = self:_findDuplicatePokemonCards()
+  if not tradeAway then return false end
+  return true, { deckPokemon = target, handPokemon = tradeAway }
+end
+
+-- AIDecide_PokemonTrader_StrangePower:: inputting MrMime as both the
+-- wanted and avoid card ID is redundant (per the source's own comment)
+-- since the wanted-card-already-in-hand check already covers it.
+function AI:_decidePokemonTraderStrangePower()
+  local target, tradeAway = self:_lookForCardIDToTradeWithDifferentHandCard(
+    self.c.MR_MIME, self.c.MR_MIME)
+  if not target then return false end
+  return true, { deckPokemon = target, handPokemon = tradeAway }
+end
+
+function AI:_decidePokemonTraderFlamethrower()
+  local target = self:_pokemonTraderEvolutionChainTarget({
+    { { self.c.CHARMANDER, self.c.CHARMELEON }, { self.c.CHARMELEON, self.c.CHARIZARD } },
+    { { self.c.VULPIX, self.c.NINETALES_LV32 } },
+    { { self.c.GROWLITHE, self.c.ARCANINE_LV45 } },
+    { { self.c.EEVEE, self.c.FLAREON_LV28 } },
+  })
+  if not target then return false end
+  local tradeAway = self:_findDuplicatePokemonCards()
+  if not tradeAway then return false end
+  return true, { deckPokemon = target, handPokemon = tradeAway }
+end
+
 -- AIDecide_PokemonTrader:: has no deck-agnostic path at all -- every one of
 -- the ten decks that can ever play this card (Legendary Moltres/Articuno/
 -- Dragonite/Ronald, Blistering Pokemon, Sound of the Waves, Power
 -- Generator, Flower Garden, Strange Power, Flamethrower) dispatches to its
 -- own dedicated card-search routine, and every other deck never plays it
--- at all (a straight `or a; ret`). Those ten routines remain their own
--- tracked pending gap rather than being approximated.
-local POKEMON_TRADER_SPECIAL_DECKS = {
-  "LEGENDARY_MOLTRES_DECK_ID", "LEGENDARY_ARTICUNO_DECK_ID", "LEGENDARY_DRAGONITE_DECK_ID",
-  "LEGENDARY_RONALD_DECK_ID", "BLISTERING_POKEMON_DECK_ID", "SOUND_OF_THE_WAVES_DECK_ID",
-  "POWER_GENERATOR_DECK_ID", "FLOWER_GARDEN_DECK_ID", "STRANGE_POWER_DECK_ID",
-  "FLAMETHROWER_DECK_ID",
-}
+-- at all (a straight `or a; ret`).
 function AI:_decidePokemonTrader()
   local deckId = self.memory:readSymbol8("wOpponentDeckID")
-  for _, name in ipairs(POKEMON_TRADER_SPECIAL_DECKS) do
-    if self.c[name] and deckId == self.c[name] then
-      return nil, "untranslated_ai_pokemon_trader_special_deck"
-    end
+  if deckId == self.c.LEGENDARY_MOLTRES_DECK_ID then
+    return self:_decidePokemonTraderLegendaryMoltres()
+  elseif deckId == self.c.LEGENDARY_ARTICUNO_DECK_ID then
+    return self:_decidePokemonTraderLegendaryArticuno()
+  elseif deckId == self.c.LEGENDARY_DRAGONITE_DECK_ID then
+    return self:_decidePokemonTraderLegendaryDragonite()
+  elseif deckId == self.c.LEGENDARY_RONALD_DECK_ID then
+    return self:_decidePokemonTraderLegendaryRonald()
+  elseif deckId == self.c.BLISTERING_POKEMON_DECK_ID then
+    return self:_decidePokemonTraderBlisteringPokemon()
+  elseif deckId == self.c.SOUND_OF_THE_WAVES_DECK_ID then
+    return self:_decidePokemonTraderSoundOfTheWaves()
+  elseif deckId == self.c.POWER_GENERATOR_DECK_ID then
+    return self:_decidePokemonTraderPowerGenerator()
+  elseif deckId == self.c.FLOWER_GARDEN_DECK_ID then
+    return self:_decidePokemonTraderFlowerGarden()
+  elseif deckId == self.c.STRANGE_POWER_DECK_ID then
+    return self:_decidePokemonTraderStrangePower()
+  elseif deckId == self.c.FLAMETHROWER_DECK_ID then
+    return self:_decidePokemonTraderFlamethrower()
   end
   return false
 end

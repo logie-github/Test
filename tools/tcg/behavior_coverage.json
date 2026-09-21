@@ -1362,6 +1362,16 @@
       "target": "src/tcg/duel/AI.lua",
       "state": "translated",
       "notes": "All four decks that can ever play this card: RockCrusher (3-hand-card Professor Oak case, and the Geodude/Graveler-Golem-Dugtrio evolution chain), WondersOfScience (Oak, then Grimer, then Muk), FireCharge (Chansey/Tauros/JigglypuffLv12 priority), and Anger (reuses AIDecide_Pokeball's own LookForCardIDInDeck_GivenCardIDInHand[AndPlayArea] primitives). The real shuffle-then-first-match discard-pair search (RemoveFromListDifferentCardOfGivenType) runs against the actual RNG."
+    },
+    {
+      "source": "src/engine/duel/ai/trainer_cards.asm",
+      "labels": [
+        "AIDecide_PokemonTrader",
+        "AIPlay_PokemonTrader"
+      ],
+      "target": "src/tcg/duel/AI.lua",
+      "state": "translated",
+      "notes": "All ten decks: LegendaryMoltres/StrangePower (shared LookForCardIDToTradeWithDifferentHandCard), LegendaryArticuno (bespoke Seel/Dewgong search), LegendaryDragonite (Energy/Pokemon-count gate then evolution chain), LegendaryRonald (Eeveelutions + Dratini chain, single-copy trade-away), BlisteringPokemon/PowerGenerator/FlowerGarden/Flamethrower (evolution chain + FindDuplicatePokemonCards, including its documented 'last duplicate pair wins' quirk), SoundOfTheWaves (evolution chain + spare-copy trade-away). PowerGenerator's own missing `jr .no_carry` (register-garbage fallthrough on total chain failure) is documented, not reimplemented -- fails closed instead."
     }
   ]
 }
