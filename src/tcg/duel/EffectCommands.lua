@@ -3650,6 +3650,41 @@ function EffectCommands:_installSharedHandlers()
     return false
   end)
 
+  -- Pidgeot's Gale: switches the Defending Pokemon to a random Bench slot
+  -- (unless the attack was unaffected), then always switches the
+  -- Attacking Pokemon to a random Bench slot too. Shares
+  -- Combat:_applyNoDamageOrEffectPrevention's Status:checkNoDamageOrEffect
+  -- and DuelOps:swapArenaWithBenchPokemon with the existing forcedSwitch
+  -- Effect helper, but keeps its own body since the real ASM's check
+  -- order (prevented, then Destiny Bond, then the switch itself) differs
+  -- from forcedSwitchEffect's (Destiny Bond, then prevented).
+  local function switchToRandomBenchPokemon(s, actor)
+    local count = actor.duelVars:get(s.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+    if count < 2 then return true end
+    local benchSlot = s.setup.rng:random(count - 1) + 1
+    actor.duelOps:swapArenaWithBenchPokemon(benchSlot)
+    return false
+  end
+  self:register("Gale_LoadAnimation", function(s)
+    s.memory:writeSymbol8("wLoadedAttackAnimation", s.c.ATK_ANIM_GALE)
+    return false
+  end)
+  self:register("Gale_SwitchEffect", function(s, context)
+    local combat = context.combat
+    if not combat then return nil, "effect_context_missing_combat" end
+    if not s.status:checkNoDamageOrEffect() then
+      if combat.duelVars:getNonTurn(s.c.DUELVARS_ARENA_CARD_HP) == 0 then
+        combat.status:handleDestinyBondSubstatus()
+      end
+      combat.duelVars:swapTurn()
+      local noBench = switchToRandomBenchPokemon(s, combat)
+      if not noBench then s:_writeWord("wDealtDamage", 0) end
+      combat.duelVars:swapTurn()
+    end
+    switchToRandomBenchPokemon(s, combat)
+    return false
+  end)
+
   self:register("Blizzard_BenchDamage50PercentEffect", function(s)
     local result, err = s.setup:tossCoin()
     if result == nil then return nil, err end
