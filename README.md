@@ -1,87 +1,132 @@
-# Pokémon TCG -> Gen1Recomp translation
+# Pokémon Trading Card Game (GBC) → Gen1Recomp
 
-> **2026-09-19 checkpoint:** Energy Trans now uses the cartridge no-play/skip-Arena Energy preview, common retreat boss/setup and Fossil/Doll branches are translated, and the common Energy labels are fully promoted. Current accounting is 662 translated labels, 248/310 ordinary player-side effect lists, 81/81 generic AI-effect identities, 45/45 AI-selection identities, 5/5 AI-switch identities, and 212/212 tests.
+A from-scratch Lua/LÖVE port of `pret/poketcg` — the decompilation of the
+Game Boy Color **Pokémon Trading Card Game** — built to run as a mod
+inside [Gen1Recomp](https://github.com/bryanthaboi/gen1recomp) (the
+Pokémon Red/Blue/Yellow decompilation-recompilation project). It ships no
+ROM bytes of its own: every card, deck, text string and piece of art is
+read from **your own legally dumped ROM** at runtime, the same way
+Gen1Recomp itself works.
 
+## What "the project" actually is
 
-This package is the current source-backed translation slice for porting `pret/poketcg` into the Gen 1 Recompilation Project's Lua/LÖVE runtime.
+Two things live in this repo:
 
-## Source contract
+1. **`src/tcg/`** — the duel engine itself: memory model, RNG, deck
+   loading, duel setup, turn flow, combat/damage, status conditions,
+   prizes, knockouts, every attack/Pokémon Power/Trainer card effect, and
+   a complete AI opponent (covers all 19 real AI behavior tables the
+   cartridge defines, including all 5 legendary "boss" decks). This is a
+   line-by-line translation of the real Game Boy assembly in
+   [`pret/poketcg`](https://github.com/pret/poketcg), not a
+   reimplementation from memory — see "Source of truth" below.
+2. **`gen1recomp_mod/pokemon_tcg/`** — that engine packaged as an
+   installable Gen1Recomp mod (`profile: total_conversion`). This is the
+   part you actually run. `gen1recomp_mod/build.sh` regenerates it from
+   `src/tcg/` (rewrites `require()` paths into the mod's namespace, drops
+   a couple of dev-only files); the two never drift apart by hand-editing.
 
-- `pret/poketcg` is the source of truth for behavior, layouts, data, quirks and bugs.
-- Supported ROM: Pokémon Trading Card Game (U) [C][!], SHA-1 `0f8670a583255cff3e5b7ca71b5d7454d928fc48`.
-- Runtime data/assets come from the user's validated ROM.
-- ROM addresses come from matching RGBDS `poketcg.sym`; TCG structures are not based on handwritten ROM offsets.
-- Declarative layouts/constants/table order and effect-command identities are generated from the matching decomp source.
-- A player-ready full-game build remains gated until translation accounting reaches 100%. `POKEPORT_TCG_ALLOW_PARTIAL=1` is development-only.
+## What files need to be imported from a ROM
 
-## Current checkpoint
+Two, both supplied by *you*, from ROMs you legally own — this project
+never contains, ships, or generates ROM bytes:
 
-Working engineering estimate: **~56% of the full game**. See `PERCENTAGE_STATUS.md` and `FULL_BREAKDOWN.md` for scope and limitations.
+1. **A Pokémon Red/Blue/Yellow ROM.** Gen1Recomp itself requires this as
+   its base import regardless of which mod you run; this mod rides on it
+   for shared engine infrastructure (it doesn't reuse any of Red's actual
+   game data — species, moves, maps — only its role as the required base).
+2. **The Pokémon Trading Card Game ROM** — a completely different
+   cartridge from Red/Blue/Yellow, not a hack of them. This is what
+   actually supplies every card, deck, and piece of art the duel engine
+   uses. The mod declares it as a `required_imports` entry in
+   `gen1recomp_mod/pokemon_tcg/manifest.json`:
 
-The first playable vertical slice remains **Sam's original practice duel**: all eight player turns and seven scripted Sam turns through a temporary LÖVE state. The UI is host presentation rather than the original cartridge duel renderer.
+   | | |
+   |---|---|
+   | File | `pokemontcg.gbc` |
+   | Size | 1,048,576 bytes (1 MiB) |
+   | MD5 | `219b2cc64e5a052003015d4bd4c622cd` |
+   | SHA-1 | `0f8670a583255cff3e5b7ca71b5d7454d928fc48` |
+   | Release | Pokémon Trading Card Game (USA) |
 
-This generation closes the final tracked common Energy preview mode and the planned common retreat branches:
+   Once both ROMs are imported through Gen1Recomp's own launcher (never
+   through this repo or this mod directly), the mod reads the TCG ROM's
+   bytes in memory for one session via `mod.imports:read(...)` and never
+   writes them back to disk — see `gen1recomp_mod/pokemon_tcg/README.md`
+   for the exact mechanism and its legal posture.
 
-- Energy Trans uses the source `DONT_PLAY | SKIP_EVOLUTION | SKIP_ARENA_CARD` score preview with score-array backup/restore;
-- the preview still scores Arena, selects only Bench, has no `$85` floor and keeps the lower Bench slot on ties;
-- transfer-to-Bench recalculates the preferred target before every Grass Energy move;
-- common retreat includes source boss/progression last-prize gates, Energy-for-retreat flags, Porygon handling and fully-powered/setup-count scoring;
-- Mysterious Fossil/Clefairy Doll execute their trainer-as-Pokémon discard Power during retreat;
-- player-side ordinary effect coverage remains **248/310 nonempty effect-command lists**, with all **4/4** played-Pokémon trigger tables translated.
+## Source of truth
 
-The earlier foundation remains: effect-table ROM/source extraction, common damage/prevention math, exact RNG/shuffle, address-based WRAM/HRAM/SRAM, card/deck extraction, source-format duel SRAM snapshots/rewind, prize/KO state, status/between-turn processing, scripted Sam AI and the playable practice coordinator.
+- [`pret/poketcg`](https://github.com/pret/poketcg) (commit
+  `7a75fe810e91dda43538b249c70ee5da14e38686`) is the source of truth for
+  every rule, quirk, and bug this engine reproduces.
+- ROM addresses come from RGBDS `poketcg.sym`, built from that same
+  source — never hand-guessed offsets.
+- `tools/tcg/build_manifest.py` extracts a manifest (symbol addresses,
+  card/deck layouts, effect-command identities, every constant referenced
+  anywhere in `src/tcg/`) from the decomp source; `src/tcg/import/
+  RomExtractor.lua` cross-checks that manifest against the player's actual
+  ROM bytes at runtime and refuses to proceed on any mismatch.
 
-## Manifest + ledger
+## Status
 
-Build `pret/poketcg` so the matching `poketcg.sym` exists, then run:
+- **The duel engine and AI are the most complete part.** All 19 real AI
+  behavior tables are translated and were exercised for real this
+  session — not just Sam's scripted practice duel, but the general
+  opponent AI playing an actual, non-scripted deck.
+- **Two playable modes**, both booting through the mod's `PokemonTCG`
+  screen:
+  - **Free duel** (the default): your Squirtle-and-Friends deck against
+    the AI's Charmander-and-Friends deck — two real pre-built ROM decks,
+    with a menu built fresh each turn from your actual hand and field.
+    Validated by actually playing it end to end (real boot, interactive
+    setup, 8 real turns, a real win/loss) against a from-source-built
+    `poketcg.gbc`. The matchup is fixed for now (no deck-picker menu
+    yet); a few Trainer cards that need a picker over deck/discard
+    contents (Computer Search, Item Finder, Poké Ball) aren't wired into
+    the menu yet. See `src/tcg/duel/DuelSession.lua`'s header for the
+    full, current disclosure.
+  - **Sam's practice duel** (automatic fallback if the free duel fails to
+    boot): the scripted 7-turn tutorial duel.
+  - Both render real, colorized card art (decoded from your ROM's
+    embedded GBC palettes) with HP bars, not placeholder text.
+- **Not yet built:** deck construction/selection UI, the cartridge's own
+  menu chrome (the current screen is a native, stylized approximation),
+  overworld/story/save-file systems outside a duel.
 
-```sh
-python tools/tcg/build_manifest.py \
-  --decomp /path/to/poketcg \
-  --sym /path/to/poketcg.sym \
-  --out tools/tcg_rom_manifest.json \
-  --ledger tools/tcg_translation_ledger.json
+## Using it
 
-python tools/tcg/check_coverage.py \
-  tools/tcg_rom_manifest.json tools/tcg_translation_ledger.json
-```
-
-Manifest schema 5 fingerprints canonical source/build inputs, includes source-ordered effect-command identities, and imports the AI-specific constants required by the native turn core. ROM import checks those identities against actual ROM bytes and RGBDS symbols before cache generation.
-
-## Install into Gen1Recomp
-
-```sh
-python tools/tcg/apply_foundation.py /path/to/pokemon-gen1-recomp-project
-```
-
-The installer requires the v5 generated TCG data product. Older v4 caches are intentionally re-extracted so AI constants cannot be missing from a reused cache.
-
-Development launch:
-
-```sh
-POKEPORT_TCG_ALLOW_PARTIAL=1 love .
-```
-
-Playable Sam practice checkpoint:
-
-```sh
-POKEPORT_TCG_PRACTICE=1 love .
-```
+1. Get a local checkout of `bryanthaboi/gen1recomp` with LÖVE installed.
+2. `bash gen1recomp_mod/build.sh`, then copy
+   `gen1recomp_mod/pokemon_tcg/` into that checkout's `mods/` directory.
+3. Launch, import your Red ROM as usual, then supply your Pokémon TCG ROM
+   when the mod's import prompt asks for it.
+4. Press **F10** to open the mod manager and enable "Pokemon Trading Card
+   Game" — it's flagged `experimental`, so it starts off.
+5. `python3 tools/modkit.py lint mods/pokemon_tcg` and
+   `python3 tools/modkit.py validate mods/pokemon_tcg` (from the
+   Gen1Recomp checkout) before sharing a build.
 
 ## Tests
 
 ```sh
-python -m unittest discover -s tests/tcg -p 'test_*.py' -v
+python3 -m unittest discover -s tests/tcg -p 'test_*.py' -v
 ```
 
-Current checkpoint: **212/212 tests pass**. Python tooling compiles and all **28** Lua modules parse with Lua 5.3/texlua. A LÖVE executable and user-generated ROM cache were not present in this build environment, so this checkpoint is not claimed as an end-to-end LÖVE execution here.
+504 tests across 84 files: source-shape assertions plus real LuaJIT
+execution smoke tests (`tests/tcg/lua_fixtures/`) for every translated
+module — not just that a function exists, but that calling it does the
+right thing against representative data.
 
-## Next translation slice
+## Repo layout
 
-Close the remaining retreat potential-KO/one-Energy-from-hand edge branch, then continue the unresolved Trainer AI families. After that, continue specialized deck action tables, remaining Pokémon Power policy, unresolved ordinary card effects, and the larger UI/overworld/save/audio systems.
-
----
-
-## 2026-09-19 handoff
-
-For the current project state and exact next AI-completion work, start with `START_HERE_HANDOFF.md`, then `HANDOFF_RECORD.md` and `LATEST_AI_RESEARCH.md`.
+- `src/tcg/` — the engine (canonical source; edit here).
+- `gen1recomp_mod/` — the packaged mod (`build.sh` regenerates
+  `pokemon_tcg/src/tcg/` from the canonical tree; `manifest.json`,
+  `main.lua`, `README.md`, `data/tcg_manifest.lua` are hand-maintained).
+- `tests/tcg/` — Python test suite plus LuaJIT fixtures it shells out to.
+- `tools/tcg/build_manifest.py` — builds the extraction manifest from a
+  `pret/poketcg` checkout + its RGBDS `.sym` file.
+- `tools/tcg/behavior_coverage.json` / `behavior_pending.json` — the
+  translation ledger: which decomp routines are translated, to where,
+  and what's left.
