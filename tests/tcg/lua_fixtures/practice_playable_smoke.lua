@@ -121,6 +121,16 @@ function fakeSession:availableActions()
   return out
 end
 
+local performActionCalls = 0
+function fakeSession:performAction(action)
+  performActionCalls = performActionCalls + 1
+  return true
+end
+
+-- Deliberately does NOT define repeatTurn, the same shape DuelSession has
+-- (no rewind-to-backup concept in a real duel) -- update()'s "b" handler
+-- must guard against that instead of assuming every session implements it.
+
 local fakeGame = { input = { wasPressed = function() return false end } }
 
 local function freshView(cursor, phase)
@@ -187,6 +197,40 @@ local emptyOk, emptyErr = pcall(function()
 end)
 check("empty side (no active, no bench) draw does not error", emptyOk)
 if not emptyOk then print("  error: " .. tostring(emptyErr)) end
+
+-- update(): the actual input-handling path draw() never exercises. This
+-- is exactly where the real repeatTurn() crash was: a session missing an
+-- optional method, only reachable by pressing the button, not by drawing.
+local function withPressed(button, fn)
+  local previous = fakeGame.input.wasPressed
+  fakeGame.input.wasPressed = function(_, b) return b == button end
+  local ok, err = pcall(fn)
+  fakeGame.input.wasPressed = previous
+  return ok, err
+end
+
+local view = freshView(1, "player")
+local aPressOk, aPressErr = withPressed("a", function() view:update(0) end)
+check("pressing A calls session:performAction without error", aPressOk)
+if not aPressOk then print("  error: " .. tostring(aPressErr)) end
+check("pressing A actually invoked performAction", performActionCalls > 0)
+
+local bPressOk, bPressErr = withPressed("b", function() view:update(0) end)
+check("pressing B does not error when the session has no repeatTurn (DuelSession's shape)", bPressOk)
+if not bPressOk then print("  error: " .. tostring(bPressErr)) end
+
+-- A session that DOES implement repeatTurn (PracticeSession's shape)
+-- must still have it invoked.
+local repeatTurnCalls = 0
+local sessionWithRepeat = setmetatable({}, { __index = fakeSession })
+function sessionWithRepeat:repeatTurn() repeatTurnCalls = repeatTurnCalls + 1 end
+local viewWithRepeat = PracticePlayable.new(fakeGame, sessionWithRepeat)
+viewWithRepeat:enter()
+viewWithRepeat.cursor = 1
+local repeatOk, repeatErr = withPressed("b", function() viewWithRepeat:update(0) end)
+check("pressing B does not error when the session has repeatTurn", repeatOk)
+if not repeatOk then print("  error: " .. tostring(repeatErr)) end
+check("pressing B actually invoked repeatTurn when present", repeatTurnCalls > 0)
 
 checks = checks + 1
 if failures == 0 then

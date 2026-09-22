@@ -58,7 +58,11 @@ function PracticePlayable:update(dt)
       self.cursor = math.min(self.cursor, math.max(1, #after))
     end
   end
-  if input:wasPressed("b") then
+  -- repeatTurn (rewind to the last saved backup) is a practice-duel-only
+  -- mechanic tied to Practice.lua's save/restore path; DuelSession has no
+  -- equivalent (there is no "undo" in a real duel), so guard the call
+  -- instead of assuming every session implements it.
+  if input:wasPressed("b") and self.session.repeatTurn then
     self.session:repeatTurn()
     self.cursor = 1
   end

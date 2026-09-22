@@ -9,12 +9,25 @@ mod's in-memory shape) or `gfx.path` (the canonical dev-mode, Data.lua
 on-disk cache shape) -- both are plain grayscale until CardPalette.colorize
 runs, so cardImage() handles both and always recolors.
 
+Shared between PracticeSession and DuelSession (src/tcg/duel/
+DuelSession.lua) -- DuelSession has no repeatTurn() (there is no "undo" in
+a real duel; that's a practice-duel-only rewind tied to Practice.lua's
+save/restore path), so update()'s "b" handler must check for it rather
+than assume every session implements it. A real player hit exactly this:
+pressing B on the free-duel screen crashed with "attempt to call method
+'repeatTurn' (a nil value)" because the first version of this file called
+it unconditionally -- draw() was tested thoroughly but update() (the only
+place that call happens) was not.
+
 Exercised for real by lua_fixtures/practice_playable_smoke.lua under
-LuaJIT (9 checks): draws for the player's turn, a scrolled action list, the
-opponent's turn, both win/loss result phases, and a side with no active
-Pokemon and an empty bench -- all against a love.graphics/love.image stub,
-so every draw call, cache lookup and layout branch runs as real Lua, not
-just a source-shape assertion.
+LuaJIT (14 checks): draws for the player's turn, a scrolled action list,
+the opponent's turn, both win/loss result phases, a side with no active
+Pokemon and an empty bench, and now update() itself -- pressing A invokes
+performAction, pressing B is a no-op against a session without
+repeatTurn (confirmed to reproduce the real crash when the guard is
+removed) and still invokes it against one that has it -- all against a
+love.graphics/love.image stub, so every call and layout branch runs as
+real Lua, not just a source-shape assertion.
 """
 
 import pathlib
@@ -69,6 +82,9 @@ class PracticePlayableSourceTests(unittest.TestCase):
         self.assertIn('self.session:availableActions()', self.src)
         self.assertIn('self.session:performAction(action)', self.src)
         self.assertIn('self.session:repeatTurn()', self.src)
+
+    def test_repeat_turn_is_guarded_for_sessions_without_it(self):
+        self.assertIn('self.session.repeatTurn then', self.src)
 
 
 @unittest.skipUnless(shutil.which("luajit"), "luajit not available in this environment")
