@@ -32,7 +32,7 @@ end
 function PracticeSession.new(data)
   local self = setmetatable({
     data = assert(data), phase = "boot", message = nil,
-    completed = {}, events = {}, instructionText = "",
+    completed = {}, events = {}, instructionText = "", opponentLabel = "SAM",
   }, PracticeSession)
 
   local initialBenchDone = false

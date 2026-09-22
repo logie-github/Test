@@ -16,15 +16,22 @@
 -- whole src/tcg/duel tree) was validated end to end against a real,
 -- from-source-built poketcg.gbc -- every pointer, card record and
 -- effect-command list RomExtractor reads was cross-checked against actual
--- ROM bytes, and EffectCommands.lua's runtime handlers cover 569/569 of
--- the real function labels the cartridge's effect-command lists reference.
--- The mod-loader wiring below (mod.imports, mod.content.screens,
--- mod.content.field:patch) has NOT been run against a live LOVE + loader;
--- it is written directly against this engine's own source
--- (src/mods/Sandbox.lua, docs/modding.md), not guessed.
+-- ROM bytes, EffectCommands.lua's runtime handlers cover 569/569 of the
+-- real function labels the cartridge's effect-command lists reference,
+-- and DuelSession (a live, non-scripted duel: real deck vs real AI deck,
+-- dynamic per-turn menu) was played through boot, interactive setup and
+-- 8 real turns to a real win/loss conclusion against that same built ROM
+-- -- the run that found and fixed three pre-existing bugs (see
+-- DuelSession.lua's header and tests/tcg/test_duel_session_source.py in
+-- the sibling logie-github/Test repo). The mod-loader wiring below
+-- (mod.imports, mod.content.screens, mod.content.field:patch) has NOT
+-- been run against a live LOVE + loader; it is written directly against
+-- this engine's own source (src/mods/Sandbox.lua, docs/modding.md), not
+-- guessed.
 
 return function(mod)
   local RomExtractor = require("mods.pokemon_tcg.src.tcg.import.RomExtractor")
+  local DuelSession = require("mods.pokemon_tcg.src.tcg.duel.DuelSession")
   local PracticeSession = require("mods.pokemon_tcg.src.tcg.duel.PracticeSession")
   local PracticePlayable = require("mods.pokemon_tcg.src.tcg.states.PracticePlayable")
   local manifest = require("mods.pokemon_tcg.data.tcg_manifest")
@@ -92,7 +99,24 @@ return function(mod)
       if not session and not bootError then
         local data, err = buildData()
         if data then
-          session = PracticeSession.new(data)
+          -- Free duel (a real deck vs a real AI deck, not a fixed script)
+          -- is the primary experience; boot() runs synchronously and can
+          -- throw (an unexpected duel-setup failure), so pcall it and fall
+          -- back to the scripted Sam practice duel rather than leave the
+          -- player stuck on the wait screen.
+          local ok, built = pcall(DuelSession.new, data)
+          if ok then
+            session = built
+          else
+            local practiceOk, practiceSession = pcall(PracticeSession.new, data)
+            if practiceOk then
+              session = practiceSession
+              bootError = "Free duel failed to start (" .. tostring(built)
+                .. "); showing the practice duel instead."
+            else
+              bootError = tostring(built)
+            end
+          end
         else
           bootError = err
         end

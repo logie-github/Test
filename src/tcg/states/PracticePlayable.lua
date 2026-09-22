@@ -195,7 +195,8 @@ function PracticePlayable:drawOverlay(x, y, w, h, turnNumber, handCount)
 
   if self.session.phase ~= "player" then
     g.print(("Turn %d"):format(turnNumber), x + 3, y + 2)
-    g.printf("Sam is taking the source-scripted turn...", x + 3, y + 28, w - 6, "center")
+    local label = self.session.opponentLabel or "OPPONENT"
+    g.printf(label .. " is taking their turn...", x + 3, y + 28, w - 6, "center")
     return
   end
 
@@ -238,7 +239,7 @@ function PracticePlayable:draw()
   local opponent = self.session:sideState(c.OPPONENT_TURN)
   local turns = self.session.runtime.memory:readSymbol8("wDuelTurns")
 
-  self:drawSideBlock(1, 1, CANVAS_W - 2, 44, "SAM", opponent)
+  self:drawSideBlock(1, 1, CANVAS_W - 2, 44, self.session.opponentLabel or "OPPONENT", opponent)
   self:drawSideBlock(1, 46, CANVAS_W - 2, 44, "YOU", player)
 
   self:drawOverlay(1, 91, CANVAS_W - 2, CANVAS_H - 92, turns + 1, player.hand or 0)

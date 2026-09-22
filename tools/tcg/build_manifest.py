@@ -872,6 +872,16 @@ def main() -> None:
     sources = source_files(root)
     ledger = load_or_create_ledger(args.ledger.resolve(), sources)
 
+    # This curated list previously omitted files the Lua translation has
+    # since come to depend on (attack_animation_constants.asm's 20+
+    # ATK_ANIM_* names among them) -- each omission meant those constants
+    # were silently absent from the manifest, only surfacing as a runtime
+    # "memory write must be numeric" the first time that code path actually
+    # ran. Scan every constants file instead so a newly-referenced constant
+    # can never again go missing this way; parse_constants already skips
+    # lines/files it doesn't recognize (e.g. charmaps.asm's own format,
+    # handled separately by parse_charmaps), so this is additive, not a
+    # behavior change for the files already listed.
     const_paths = [
         root / "src/constants/hardware.inc",
         root / "src/constants/text_constants.asm",
@@ -882,6 +892,11 @@ def main() -> None:
         root / "src/constants/duel_constants.asm",
         root / "src/constants/misc_constants.asm",
     ]
+    remaining = sorted(
+        p for p in (root / "src/constants").glob("*.asm")
+        if p not in const_paths and p.name != "charmaps.asm"
+    )
+    const_paths.extend(remaining)
     constants = parse_constants(const_paths)
     constants.update(parse_symbol_alias_constants(
         [root / "src/constants/duel_constants.asm"], symbols

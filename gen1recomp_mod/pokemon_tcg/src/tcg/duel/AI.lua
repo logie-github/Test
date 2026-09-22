@@ -8,6 +8,14 @@
 
 local bit = require("bit")
 
+-- TYPE_PKMN_* color -> the single-bit mask CARD_DATA_WEAKNESS/RESISTANCE
+-- bytes use (matches Combat.lua's inline `bit.rshift(0x80, color)`, used
+-- consistently everywhere else this weakness/resistance check happens).
+local function wrMask(cardType)
+  if type(cardType) ~= "number" then return 0 end
+  return bit.rshift(0x80, bit.band(cardType, 0x07))
+end
+
 local AI = {}
 AI.__index = AI
 
@@ -991,11 +999,6 @@ function AI:_cardAtPlayArea(slot, nonTurn)
   end
   if nonTurn then self.duelVars:swapTurn() end
   return deckIndex, cardId, row
-end
-
-local function wrMask(cardType)
-  if type(cardType) ~= "number" then return 0 end
-  return bit.rshift(0x80, bit.band(cardType, 0x07))
 end
 
 function AI:_loadDefendingPokemonColorWRAndPrizeCards()
