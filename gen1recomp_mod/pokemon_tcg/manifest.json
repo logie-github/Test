@@ -1,0 +1,32 @@
+{
+  "id": "pokemon_tcg",
+  "name": "Pokemon Trading Card Game",
+  "version": "0.1.0",
+  "api": 2,
+  "entry": "main.lua",
+  "profile": "total_conversion",
+  "game_version": ">=0.0.0-dev <1.0.0",
+  "category": "TOTAL_CONVERSION",
+  "priority": 100,
+  "dependencies": [],
+  "optional_dependencies": [],
+  "required_imports": [
+    {
+      "id": "pokemontcg",
+      "name": "Pokemon Trading Card Game ROM",
+      "description": "Pokemon Trading Card Game (USA), the standalone Game Boy Color TCG cartridge -- a different game from Red/Blue/Yellow, not a hack of them.",
+      "file": "pokemontcg.gbc",
+      "format": "raw",
+      "size": 1048576,
+      "md5": ["219b2cc64e5a052003015d4bd4c622cd"]
+    }
+  ],
+  "optional_imports": [],
+  "conflicts": [],
+  "incompatible": [],
+  "permissions": ["engine_internals"],
+  "games": ["gen1"],
+  "experimental": true,
+  "description": "Total conversion: the Pokemon Trading Card Game (GBC) duel engine, running as its own game once you supply your own TCG cartridge dump.",
+  "assets_transforms": "transforms.lua"
+}
