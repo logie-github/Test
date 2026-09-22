@@ -179,11 +179,9 @@
       "target": "src/tcg/duel/Combat.lua",
       "state": "partial",
       "remaining": [
-        "card-specific effect functions beyond the translated status/heal/recoil/energy/search/switch/bench-damage families",
-        "remaining special damage, residual effects, and complex multi-target/card-movement paths",
-        "remaining manual Pokemon Power handlers beyond Damage Swap/Cowardice/Heal/Shift/Peek/Strange Behavior/Curse and Energy Trans, plus attack/power animation and link action transport"
+        "attack/power animation and link action transport presentation"
       ],
-      "notes": "Generic player-attack effect phase dispatch remains fail-closed per function identity. Search/retrieval, advanced Energy accounting, attached-Energy selection, forced switching, play-area damage, all four played-Pokemon trigger powers, and the common manual Power families now have native state paths."
+      "notes": "Generic player-attack effect phase dispatch remains fail-closed per function identity, but effect_functions.asm/effect_commands.asm are now fully translated in EffectCommands.lua (see behavior_coverage.json), so every attack and manual Pokemon Power this dispatcher can route to already has a native implementation. Search/retrieval, advanced Energy accounting, attached-Energy selection, forced switching, play-area damage, all four played-Pokemon trigger powers, and every manual Power family have native state paths; only animation/link presentation remains open."
     },
     {
       "source": "src/engine/duel/core.asm",
@@ -205,10 +203,9 @@
       "target": "src/tcg/duel/PlayerActions.lua",
       "state": "partial",
       "remaining": [
-        "general hand/card-list UI and remaining arbitrary card/deck/discard selection presentation",
-        "remaining Trainer effects beyond the translated search/retrieval, Energy, switch, healing, and restoration families"
+        "general hand/card-list UI and remaining arbitrary card/deck/discard selection presentation"
       ],
-      "notes": "Basic placement/evolution and the complete state path for normal/Rain Dance Energy attachment are native; PlayPokemonCard/PlayTrainerCard still omit broad cartridge UI/link presentation and many individual effects."
+      "notes": "Basic placement/evolution and the complete state path for normal/Rain Dance Energy attachment are native. PlayTrainerCard dispatches every Trainer card's actual effect through EffectCommands.lua (effect_functions.asm/effect_commands.asm), which is now fully translated (see behavior_coverage.json); what remains here is cartridge UI/link presentation only, not individual card effects."
     },
     {
       "source": "src/home/substatus.asm",
