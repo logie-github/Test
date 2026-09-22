@@ -3690,6 +3690,50 @@ function EffectCommands:_installSharedHandlers()
     return false
   end)
 
+  -- RandomlyDamagePlayAreaPokemon:: an UpdateRNGSources coin-like pick of
+  -- own vs. opponent Play Area, then Random(count) for the slot within
+  -- that side. Own-side picks re-roll the WHOLE sample (side choice
+  -- included, matching the source's `.sample` retry target) if the slot
+  -- lands on the attacker itself (hTempPlayAreaLocation_ff9d); opponent-
+  -- side picks never need to re-roll. Distinct from the simpler
+  -- PickRandomPlayAreaCard used by CatPunch/SlicingWind/IceBreath, which
+  -- always targets the opponent with no side choice or self-exclusion.
+  local function randomlyDamagePlayAreaPokemon(s, context, amount)
+    local combat = context.combat
+    if not combat then return nil, "effect_context_missing_combat" end
+    while true do
+      s.memory:writeSymbol8("wNoDamageOrEffect", 0)
+      local roll = bit.band(s.setup.rng:updateSources(), 1)
+      if roll == 0 then
+        local count = combat.duelVars:get(s.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+        local slot = s.setup.rng:random(count)
+        if slot ~= s.memory:readSymbol8("hTempPlayAreaLocation_ff9d") then
+          s.memory:writeSymbol8("wLoadedAttackAnimation", s.c.ATK_ANIM_THUNDER_PLAY_AREA)
+          local damage, err = combat:dealDamageToPlayAreaPokemon(slot, amount, false, { isDamageToSelf = true })
+          if damage == nil then return nil, err end
+          return false
+        end
+      else
+        combat.duelVars:swapTurn()
+        local count = combat.duelVars:get(s.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+        local slot = s.setup.rng:random(count)
+        s.memory:writeSymbol8("wLoadedAttackAnimation", s.c.ATK_ANIM_THUNDER_PLAY_AREA)
+        local damage, err = combat:dealDamageToPlayAreaPokemon(slot, amount, false)
+        combat.duelVars:swapTurn()
+        if damage == nil then return nil, err end
+        return false
+      end
+    end
+  end
+
+  -- Zapdos' Big Thunder: fixed 70 damage to a random Pokemon anywhere in
+  -- play (own Bench included, self excluded).
+  self:register("BigThunderEffect", function(s, context)
+    local failed, exchangeErr = s.setup:exchangeRNG()
+    if failed then return nil, exchangeErr end
+    return randomlyDamagePlayAreaPokemon(s, context, 70)
+  end)
+
   -- Pidgeotto's Hurricane: unless the attack was unaffected or the
   -- Defending Pokemon was already KO'd, returns the Defending Pokemon and
   -- every card attached to it (Energy, Trainers) to the opponent's hand,
