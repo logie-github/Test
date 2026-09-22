@@ -3801,6 +3801,51 @@ function EffectCommands:_installSharedHandlers()
     return false
   end)
 
+  -- Zapdos' Thunderstorm: coin-flips every one of the opponent's
+  -- Benched Pokemon (Arena excluded), takes 10 recoil damage per tails,
+  -- then deals 20 damage to every Benched Pokemon that came up heads.
+  -- The real ASM stages the per-slot coin results through hTempList (an
+  -- HRAM buffer) purely so a later loop can re-read them by a different
+  -- alias name -- a plain Lua array captures the same one-result-per-
+  -- bench-slot data with no memory round-trip needed. The source's own
+  -- SwapTurn bracketing around the coin toss itself is a presentation-
+  -- only concern (which side's toss animation plays) with no effect on
+  -- RNG order or duel state, so it's dropped here.
+  self:register("ThunderstormEffect", function(s, context)
+    local combat = context.combat
+    if not combat then return nil, "effect_context_missing_combat" end
+
+    combat.duelVars:swapTurn()
+    local count = combat.duelVars:get(s.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+    local headsBySlot = {}
+    local tails = 0
+    for benchSlot = 1, count - 1 do
+      local result, err = s.setup:tossCoin()
+      if result == nil then return nil, err end
+      if result == s.c.HEADS then
+        headsBySlot[benchSlot] = true
+      else
+        tails = tails + 1
+      end
+    end
+    combat.duelVars:swapTurn()
+
+    if tails > 0 then
+      combat:dealRecoilDamageToSelf(tails * 10)
+    end
+
+    combat.duelVars:swapTurn()
+    for benchSlot = 1, count - 1 do
+      if headsBySlot[benchSlot] then
+        local damage, dmgErr = combat:dealDamageToPlayAreaPokemon(benchSlot, 20, false)
+        if damage == nil then return nil, dmgErr end
+      end
+    end
+    combat.duelVars:swapTurn()
+
+    return false
+  end)
+
   -- Pidgeotto's Hurricane: unless the attack was unaffected or the
   -- Defending Pokemon was already KO'd, returns the Defending Pokemon and
   -- every card attached to it (Energy, Trainers) to the opponent's hand,
