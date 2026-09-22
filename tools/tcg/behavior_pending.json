@@ -245,6 +245,19 @@
         "presentation/delay/OppAction choreography"
       ],
       "notes": "Attack, retreat, and active-to-bench Grass Energy transfer modes use the native random action-skip gate and Venusaur/Muk power checks. Transfer-to-Bench now re-runs the cartridge AI_ENERGY_FLAG_DONT_PLAY|SKIP_EVOLUTION|SKIP_ARENA_CARD score preview before each moved Grass Energy, including score backup/restore and lower-Bench-slot tie behavior."
+    },
+    {
+      "source": "src/engine/duel/core.asm",
+      "labels": [
+        "StartDuel_VSAIOpp"
+      ],
+      "target": "src/tcg/duel/PracticeSession.lua",
+      "state": "partial",
+      "remaining": [
+        "general (non-practice) vs-AI duel start: player deck selection UI, non-Sam opponent-deck menu flow, and dispatch to arbitrary boss/special-deck StartDuel handling",
+        "practice-duel presentation the source UI would show (prize-cursor selection, turn-instruction menu rendering) beyond the first-legal choice this adapter substitutes"
+      ],
+      "notes": "This file was never audited into the ledger despite being the only currently-playable duel path (Game.lua's POKEPORT_TCG_PRACTICE switch). It reproduces StartDuel_VSAIOpp's RAM initialization and MainDuelLoop/HandleTurn ordering (both already tracked separately against TurnFlow.lua) specifically for the scripted Sam practice duel -- fixed opponent deck, fixed 7-turn AI script, fixed player action list per turn. State transitions (deck load, duel setup, draw, attack, knockout/replacement, prize count, win/loss resolution) are native and exercised by tests/tcg/test_practice_playable_source.py; every substitution it makes for untranslated presentation is documented inline and reduces to the same already-tracked menu/UI gaps, not new undocumented behavior. Marked partial rather than translated because it only covers the Sam-practice special case of StartDuel_VSAIOpp, not the general vs-AI duel start."
     }
   ]
 }
