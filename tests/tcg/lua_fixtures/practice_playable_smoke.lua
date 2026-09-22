@@ -14,6 +14,7 @@ end
 -- draw call, cache lookup, palette recolor and layout branch it takes runs
 -- as real Lua, so a nil-index or wrong-argument bug still fails this).
 local drawCalls = { rectangle = 0, print = 0, printf = 0, draw = 0, newImage = 0 }
+local printedTexts = {}
 love = {
   graphics = {
     newFont = function() return {} end,
@@ -26,10 +27,12 @@ love = {
     end,
     print = function(text, x, y)
       assert(type(x) == "number" and type(y) == "number", "bad print coords")
+      printedTexts[#printedTexts + 1] = text
       drawCalls.print = drawCalls.print + 1
     end,
     printf = function(text, x, y, w, align)
       assert(type(x) == "number" and type(y) == "number" and type(w) == "number", "bad printf args")
+      printedTexts[#printedTexts + 1] = text
       drawCalls.printf = drawCalls.printf + 1
     end,
     draw = function(image, x, y, r, sx, sy)
@@ -152,6 +155,38 @@ if not ok then print("  error: " .. tostring(err)) end
 
 check("drew at least one card image", drawCalls.draw >= 1)
 check("cached decoded images (newImage called once per unique card)", drawCalls.newImage <= 3)
+
+local function anyPrintedTextContains(substring)
+  for _, text in ipairs(printedTexts) do
+    if tostring(text):find(substring, 1, true) then return true end
+  end
+  return false
+end
+
+-- A real player mistook this for a broken duel: DuelSession forces
+-- phase="player" for the whole time a setup/prize/knockout pick is
+-- outstanding (see DuelSession:_yieldAsPlayer), so the ordinary "Turn N -
+-- YOUR MOVE" header showed even while still choosing an opening active
+-- Pokemon, with both sides reading "(no active Pokemon)" and nothing on
+-- screen explaining why. Each pending kind must now get its own header.
+for kind, expectedHeader in pairs({
+  setup_active = "CHOOSE YOUR ACTIVE POKEMON",
+  setup_bench = "CHOOSE A BENCH POKEMON",
+  prize = "CHOOSE A PRIZE CARD",
+  knockout = "CHOOSE A REPLACEMENT",
+}) do
+  printedTexts = {}
+  fakeSession.pending = { kind = kind }
+  local pendingOk, pendingErr = pcall(function()
+    local view = freshView(1, "player")
+    view:draw()
+  end)
+  check(("pending kind %q draw does not error"):format(kind), pendingOk)
+  if not pendingOk then print("  error: " .. tostring(pendingErr)) end
+  check(("pending kind %q shows its own header, not the ordinary turn header"):format(kind),
+    anyPrintedTextContains(expectedHeader) and not anyPrintedTextContains("YOUR MOVE ("))
+end
+fakeSession.pending = nil
 
 -- Scrolled cursor (forces the scroll-window branch in drawOverlay).
 local scrollOk, scrollErr = pcall(function()

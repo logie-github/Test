@@ -205,7 +205,25 @@ function PracticePlayable:drawOverlay(x, y, w, h, turnNumber, handCount)
   end
 
   local actions = self.session:availableActions()
-  g.print(("Turn %d - YOUR MOVE (hand: %d)"):format(turnNumber, handCount), x + 3, y + 2)
+  -- A DuelSession pending decision (initial active/bench pick, a prize
+  -- card, a knockout replacement) reuses this same overlay/action-list
+  -- rendering, but is not an ordinary turn -- phase reads "player" for
+  -- the whole time one is outstanding (see DuelSession:_yieldAsPlayer),
+  -- so without this the header claimed "Turn 1 - YOUR MOVE" while the
+  -- player was still picking their opening Pokemon, with both sides
+  -- showing "(no active Pokemon)" and nothing to explain why.
+  local pending = self.session.pending
+  local pendingHeaders = {
+    setup_active = "CHOOSE YOUR ACTIVE POKEMON",
+    setup_bench = "CHOOSE A BENCH POKEMON (or Done)",
+    prize = "CHOOSE A PRIZE CARD",
+    knockout = "CHOOSE A REPLACEMENT",
+  }
+  if pending and pendingHeaders[pending.kind] then
+    g.print(pendingHeaders[pending.kind], x + 3, y + 2)
+  else
+    g.print(("Turn %d - YOUR MOVE (hand: %d)"):format(turnNumber, handCount), x + 3, y + 2)
+  end
   local listTop = y + 11
   local maxRows = math.max(1, math.floor((h - 11 - LINE_H - 2) / LINE_H))
   -- Keep the cursor's row visible: scroll the window once it runs past

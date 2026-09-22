@@ -86,6 +86,19 @@ class PracticePlayableSourceTests(unittest.TestCase):
     def test_repeat_turn_is_guarded_for_sessions_without_it(self):
         self.assertIn('self.session.repeatTurn then', self.src)
 
+    def test_pending_decisions_get_their_own_header(self):
+        # A real player mistook a still-in-progress initial-active pick
+        # for a broken duel (both sides "(no active Pokemon)", the header
+        # reading "Turn 1 - YOUR MOVE" as if a real turn were underway).
+        # DuelSession forces phase="player" for the whole time a setup/
+        # prize/knockout decision is outstanding, so the header must key
+        # off session.pending.kind, not just phase.
+        for token in ('setup_active = "CHOOSE YOUR ACTIVE POKEMON"',
+                      'setup_bench = "CHOOSE A BENCH POKEMON',
+                      'prize = "CHOOSE A PRIZE CARD"',
+                      'knockout = "CHOOSE A REPLACEMENT"'):
+            self.assertIn(token, self.src)
+
 
 @unittest.skipUnless(shutil.which("luajit"), "luajit not available in this environment")
 class PracticePlayableExecutionTests(unittest.TestCase):
