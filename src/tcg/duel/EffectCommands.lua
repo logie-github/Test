@@ -3734,6 +3734,73 @@ function EffectCommands:_installSharedHandlers()
     return randomlyDamagePlayAreaPokemon(s, context, 70)
   end)
 
+  -- Magneton's Magnetic Storm: gathers every Energy card attached
+  -- anywhere in the attacker's own Play Area, shuffles them, and
+  -- redistributes them evenly across every Pokemon in that Play Area
+  -- (floor(totalEnergy / pokemonCount) each, consumed off the front of
+  -- the shuffled list in Play Area order), then randomly hands out the
+  -- totalEnergy % pokemonCount leftover cards one each to a random
+  -- subset of Pokemon (a second shuffle, this time of the slot indices
+  -- themselves, in hTempList). Moves cards via the existing AddCardToHand
+  -- + PutHandCardInPlayArea pair (not PutHandPokemonCardInPlayArea --
+  -- these are Energy re-attachments to already-occupied slots, not new
+  -- Pokemon placements).
+  self:register("MagneticStormEffect", function(s, context)
+    local actor = s:_actor(context)
+    if not actor then return nil, "effect_context_missing_actor" end
+
+    local energyDeckIndices = {}
+    for deckIndex = 0, s.c.DECK_SIZE - 1 do
+      local location = actor.duelVars:get(deckIndex)
+      if bit.band(location, s.c.CARD_LOCATION_PLAY_AREA) ~= 0 then
+        local cardId = actor.cardData:getCardIDFromDeckIndex(deckIndex)
+        local row = actor.cardData:get(cardId)
+        if row and bit.band(row.type, bit.lshift(1, s.c.TYPE_ENERGY_F)) ~= 0 then
+          energyDeckIndices[#energyDeckIndices + 1] = deckIndex
+        end
+      end
+    end
+
+    local pokemonCount = actor.duelVars:get(s.c.DUELVARS_NUMBER_OF_POKEMON_IN_PLAY_AREA)
+    local totalEnergy = #energyDeckIndices
+    local perShare = math.floor(totalEnergy / pokemonCount)
+
+    local base, bank = actor.memory:address("wDuelTempList")
+    for i, deckIndex in ipairs(energyDeckIndices) do
+      actor.memory:write8("wram", base + i - 1, deckIndex, bank)
+    end
+    actor.memory:write8("wram", base + totalEnergy, 0xff, bank)
+    actor.duelOps.rng:shuffleCards(base, totalEnergy)
+
+    local cursor = 0
+    for slot = 0, pokemonCount - 1 do
+      for _ = 1, perShare do
+        local deckIndex = actor.memory:read8("wram", base + cursor, bank)
+        cursor = cursor + 1
+        actor.duelOps:addCardToHand(deckIndex)
+        actor.duelOps:putHandCardInPlayArea(deckIndex, slot)
+      end
+    end
+
+    local remainder = totalEnergy - perShare * pokemonCount
+    if remainder > 0 then
+      local slots = {}
+      for slot = 0, pokemonCount - 1 do slots[#slots + 1] = slot end
+      writeTempList(s, slots)
+      local slotBase, slotBank = s.memory:address("hTempList")
+      actor.duelOps.rng:shuffleCards(slotBase, pokemonCount)
+      for i = 0, remainder - 1 do
+        local deckIndex = actor.memory:read8("wram", base + cursor, bank)
+        cursor = cursor + 1
+        local slot = actor.memory:read8("hram", slotBase + i, slotBank)
+        actor.duelOps:addCardToHand(deckIndex)
+        actor.duelOps:putHandCardInPlayArea(deckIndex, slot)
+      end
+    end
+
+    return false
+  end)
+
   -- Pidgeotto's Hurricane: unless the attack was unaffected or the
   -- Defending Pokemon was already KO'd, returns the Defending Pokemon and
   -- every card attached to it (Energy, Trainers) to the opponent's hand,
