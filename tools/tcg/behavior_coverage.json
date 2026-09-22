@@ -1110,6 +1110,7 @@
         "FlareonRage_AIEffect",
         "FlareonRage_DamageBoostEffect",
         "Fly_AIEffect",
+        "Fly_Success50PercentEffect",
         "FocusEnergyEffect",
         "FoulGas_AIEffect",
         "FoulGas_PoisonOrConfusionEffect",

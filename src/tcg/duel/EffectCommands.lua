@@ -974,6 +974,23 @@ function EffectCommands:_installSharedHandlers()
   self:register("FearowAgilityEffect", protectCoin(
     self.c.SUBSTATUS1_AGILITY, self.c.ATK_ANIM_AGILITY_PROTECT, false))
 
+  -- Pidgeot's Fly: unlike protectCoin's tails branch (a bare
+  -- SetWasUnsuccessful), tails here also explicitly resets the animation
+  -- to none and zeroes damage via SetDefiniteDamage (touching the AI hint
+  -- fields too), so it gets its own body rather than reusing that helper.
+  self:register("Fly_Success50PercentEffect", function(s)
+    local result, err = s.setup:tossCoin()
+    if result == nil then return nil, err end
+    if result == s.c.TAILS then
+      s.memory:writeSymbol8("wLoadedAttackAnimation", s.c.ATK_ANIM_NONE)
+      s:_setDefiniteDamage(0)
+      return s:_setWasUnsuccessful()
+    end
+    s.memory:writeSymbol8("wLoadedAttackAnimation", s.c.ATK_ANIM_AGILITY_PROTECT)
+    s.status:applySubstatus1ToAttackingCard(s.c.SUBSTATUS1_FLY)
+    return false
+  end)
+
   -- Common SUBSTATUS2 families.
   local function setSub2(value)
     return function(s) s.status:applySubstatus2ToDefendingCard(value); return false end
