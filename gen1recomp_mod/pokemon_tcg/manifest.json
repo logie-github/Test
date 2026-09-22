@@ -4,9 +4,9 @@
   "version": "0.1.0",
   "api": 2,
   "entry": "main.lua",
-  "profile": "total_conversion",
+  "profile": "content",
   "game_version": ">=0.0.0-dev <1.0.0",
-  "category": "TOTAL_CONVERSION",
+  "category": "GAMEPLAY",
   "priority": 100,
   "dependencies": [],
   "optional_dependencies": [],
@@ -27,6 +27,6 @@
   "permissions": ["engine_internals"],
   "games": ["gen1"],
   "experimental": true,
-  "description": "Total conversion: the Pokemon Trading Card Game (GBC) duel engine, running as its own game once you supply your own TCG cartridge dump.",
+  "description": "Adds a PLAY TCG entry to the START menu that boots a real Pokemon Trading Card Game (GBC) duel once you supply your own TCG cartridge dump.",
   "assets_transforms": "transforms.lua"
 }

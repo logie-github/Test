@@ -21,10 +21,13 @@ Two things live in this repo:
    [`pret/poketcg`](https://github.com/pret/poketcg), not a
    reimplementation from memory — see "Source of truth" below.
 2. **`gen1recomp_mod/pokemon_tcg/`** — that engine packaged as an
-   installable Gen1Recomp mod (`profile: total_conversion`). This is the
-   part you actually run. `gen1recomp_mod/build.sh` regenerates it from
-   `src/tcg/` (rewrites `require()` paths into the mod's namespace, drops
-   a couple of dev-only files); the two never drift apart by hand-editing.
+   installable Gen1Recomp mod (`profile: content`). It adds a **PLAY TCG**
+   row to Red's own START menu, next to POKéDEX/POKéMON/ITEM/SAVE —
+   Red boots and plays exactly as normal, and TCG is one menu choice
+   away. This is the part you actually run. `gen1recomp_mod/build.sh`
+   regenerates it from `src/tcg/` (rewrites `require()` paths into the
+   mod's namespace, drops a couple of dev-only files); the two never
+   drift apart by hand-editing.
 
 ## What files need to be imported from a ROM
 
@@ -74,8 +77,10 @@ never contains, ships, or generates ROM bytes:
   behavior tables are translated and were exercised for real this
   session — not just Sam's scripted practice duel, but the general
   opponent AI playing an actual, non-scripted deck.
-- **Two playable modes**, both booting through the mod's `PokemonTCG`
-  screen:
+- **Two playable modes**, both reached by pressing START and choosing
+  **PLAY TCG** (a line of flavor text — "You pull out your Gameboy and
+  play." — plays first, then the duel boots fresh; nothing is cached
+  between visits):
   - **Free duel** (the default): your Squirtle-and-Friends deck against
     the AI's Charmander-and-Friends deck — two real pre-built ROM decks,
     with a menu built fresh each turn from your actual hand and field.
@@ -100,10 +105,11 @@ never contains, ships, or generates ROM bytes:
 2. `bash gen1recomp_mod/build.sh`, then copy
    `gen1recomp_mod/pokemon_tcg/` into that checkout's `mods/` directory.
 3. Launch, import your Red ROM as usual, then supply your Pokémon TCG ROM
-   when the mod's import prompt asks for it.
+   through the launcher's import panel.
 4. Press **F10** to open the mod manager and enable "Pokemon Trading Card
    Game" — it's flagged `experimental`, so it starts off.
-5. `python3 tools/modkit.py lint mods/pokemon_tcg` and
+5. In game, press START and choose **PLAY TCG**.
+6. `python3 tools/modkit.py lint mods/pokemon_tcg` and
    `python3 tools/modkit.py validate mods/pokemon_tcg` (from the
    Gen1Recomp checkout) before sharing a build.
 

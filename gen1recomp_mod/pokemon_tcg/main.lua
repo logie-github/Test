@@ -1,7 +1,10 @@
--- pokemon_tcg: total-conversion mod. Boots the Pokemon Trading Card Game
--- (Game Boy) duel engine instead of the Red overworld, once the player
--- supplies their own legally owned Pokemon TCG ROM through the launcher's
--- required-imports flow.
+-- pokemon_tcg: content mod. Adds a "PLAY TCG" row to Red's own START menu
+-- (alongside POKéDEX/POKéMON/ITEM/SAVE), next to the launcher's Red
+-- import you already run every session -- no boot takeover, no total
+-- conversion. Selecting it shows a line of flavor text, then boots a
+-- real Pokemon Trading Card Game duel fresh, off your own legally owned
+-- TCG cartridge dump, supplied through the launcher's required-imports
+-- flow the same way any other required ROM is.
 --
 -- LEGAL POSTURE: this mod ships no ROM-derived bytes. data/tcg_manifest.lua
 -- is the "recipe" -- symbol addresses, card-pointer offsets, effect-command
@@ -20,13 +23,11 @@
 -- real function labels the cartridge's effect-command lists reference,
 -- and DuelSession (a live, non-scripted duel: real deck vs real AI deck,
 -- dynamic per-turn menu) was played through boot, interactive setup and
--- 8 real turns to a real win/loss conclusion against that same built ROM
--- -- the run that found and fixed three pre-existing bugs (see
--- DuelSession.lua's header and tests/tcg/test_duel_session_source.py in
--- the sibling logie-github/Test repo). The mod-loader wiring below
--- (mod.imports, mod.content.screens, mod.content.field:patch) has NOT
--- been run against a live LOVE + loader; it is written directly against
--- this engine's own source (src/mods/Sandbox.lua, docs/modding.md), not
+-- 8 real turns to a real win/loss conclusion against that same built ROM.
+-- The mod-loader wiring below (mod.hooks, mod.content.screens, mod.ui)
+-- has NOT been run against a live LOVE + mod-loader session; it is
+-- written directly against this engine's own source (src/mods/Sandbox.lua,
+-- src/ui/ModUI.lua, src/ui/StartMenu.lua, the example_dexnav mod), not
 -- guessed.
 
 return function(mod)
@@ -35,10 +36,6 @@ return function(mod)
   local PracticeSession = require("mods.pokemon_tcg.src.tcg.duel.PracticeSession")
   local PracticePlayable = require("mods.pokemon_tcg.src.tcg.states.PracticePlayable")
   local manifest = require("mods.pokemon_tcg.data.tcg_manifest")
-
-  -- Built once, the first time a player who has supplied the ROM opens the
-  -- screen; nil until then. bootError explains why it hasn't happened yet.
-  local session, bootError
 
   local function buildData()
     local info, infoErr = mod.imports:info("pokemontcg")
@@ -73,7 +70,7 @@ return function(mod)
     return result
   end
 
-  local function waitScreen(game)
+  local function waitScreen(game, bootError)
     local state = { game = game, isOpaque = true }
     function state:update() end
     function state:draw()
@@ -85,54 +82,56 @@ return function(mod)
       love.graphics.print("Pokemon TCG ROM", 8, 56)
       love.graphics.print("from the launcher", 8, 68)
       love.graphics.print("import panel, then", 8, 80)
-      love.graphics.print("reopen this mod.", 8, 92)
+      love.graphics.print("choose PLAY TCG", 8, 92)
+      love.graphics.print("again.", 8, 104)
       if bootError then
         love.graphics.setColor(0.6, 0, 0, 1)
-        love.graphics.print(tostring(bootError), 4, 116)
+        love.graphics.print(tostring(bootError), 4, 124)
       end
     end
     return state
   end
 
+  -- Each visit builds its own data/session from scratch -- nothing is
+  -- cached across PLAY TCG selections, so every visit really is a fresh
+  -- boot, the same way turning a Game Boy back on is.
   mod.content.screens:register("PokemonTCG", {
     new = function(game, opts)
-      if not session and not bootError then
-        local data, err = buildData()
-        if data then
-          -- Free duel (a real deck vs a real AI deck, not a fixed script)
-          -- is the primary experience; boot() runs synchronously and can
-          -- throw (an unexpected duel-setup failure), so pcall it and fall
-          -- back to the scripted Sam practice duel rather than leave the
-          -- player stuck on the wait screen.
-          local ok, built = pcall(DuelSession.new, data)
-          if ok then
-            session = built
-          else
-            local practiceOk, practiceSession = pcall(PracticeSession.new, data)
-            if practiceOk then
-              session = practiceSession
-              bootError = "Free duel failed to start (" .. tostring(built)
-                .. "); showing the practice duel instead."
-            else
-              bootError = tostring(built)
-            end
-          end
-        else
-          bootError = err
-        end
+      local data, err = buildData()
+      if not data then return waitScreen(game, err) end
+
+      -- Free duel (a real deck vs a real AI deck, not a fixed script) is
+      -- the primary experience; boot() runs synchronously and can throw
+      -- (an unexpected duel-setup failure), so pcall it and fall back to
+      -- the scripted Sam practice duel rather than leave the player stuck.
+      local ok, built = pcall(DuelSession.new, data)
+      if ok then
+        return PracticePlayable.new(game, built)
       end
-      if session then
-        return PracticePlayable.new(game, session)
+      local practiceOk, practiceSession = pcall(PracticeSession.new, data)
+      if practiceOk then
+        return PracticePlayable.new(game, practiceSession)
       end
-      return waitScreen(game)
+      return waitScreen(game, tostring(built))
     end,
   })
 
-  -- Own the boot flow: this is what makes it a total conversion rather than
-  -- a content patch. The Red import still runs underneath and supplies the
-  -- fallback infrastructure (font, base LOVE services); nothing here reuses
-  -- Red's species/move/map data, only its role as the required base import.
-  mod.content.field:patch("boot", {
-    screens = { title = "PokemonTCG" },
-  })
+  -- Row lives next to POKéDEX/POKéMON/ITEM/SAVE in the vanilla START
+  -- menu -- the ui.start_menu.items hook exists exactly so mods can do
+  -- this without patching src/ui/StartMenu.lua (see its own header
+  -- comment). Anchored before SAVE, same placement the example_dexnav
+  -- mod uses for its own row.
+  mod.hooks:wrap("ui.start_menu.items", function(next, game, items)
+    local out = next(game, items)
+    if type(out) ~= "table" then return out end
+    return mod.ui.insertBefore(out, "SAVE", {
+      label = "PLAY TCG",
+      onSelect = function()
+        game.stack:push(mod.ui.TextBox.new(game,
+          "You pull out your\nGameboy and play.", function()
+            mod.ui.push(game, "PokemonTCG")
+          end))
+      end,
+    })
+  end)
 end

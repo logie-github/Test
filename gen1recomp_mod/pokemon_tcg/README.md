@@ -1,19 +1,22 @@
 # Pokemon Trading Card Game
 
-A `total_conversion` mod (api 2) that boots the Pokemon Trading Card Game
-(Game Boy) duel engine instead of Red's overworld. Import your own Pokemon
-Red ROM as usual (it supplies the fallback engine infrastructure this
-conversion sits on), then supply your own Pokemon Trading Card Game ROM
-through the launcher's import panel. Try: open the mod, and it walks you
-through providing the TCG ROM if it isn't there yet. It's flagged
-`experimental`, so enable it in the mod manager (**F10**) before it boots.
+A `content` mod (api 2, category `GAMEPLAY`) that adds a **PLAY TCG** row
+to Red's own START menu -- next to POKéDEX, POKéMON, ITEM, and SAVE. It
+does not touch Red's boot flow or overworld; import and play Red exactly
+as normal, then open START and choose PLAY TCG whenever you want a duel.
+It's flagged `experimental`, so enable it in the mod manager (**F10**)
+before the row appears.
 
-The mod boots straight into a real duel: your Squirtle-and-Friends starter
-deck against the AI's Charmander-and-Friends deck (a fixed matchup for now
--- see Status), with a dynamic turn-by-turn menu built from your actual
-hand and field, not a script. If it fails to start for any reason, it
-falls back to the scripted 7-turn "Sam's practice" duel instead of leaving
-you stuck.
+Selecting PLAY TCG shows one line -- "You pull out your Gameboy and
+play." -- then boots a real duel fresh: your Squirtle-and-Friends starter
+deck against the AI's Charmander-and-Friends deck (a fixed matchup for
+now -- see Status), with a dynamic turn-by-turn menu built from your
+actual hand and field, not a script. Nothing is cached between visits:
+every time you choose PLAY TCG is a fresh boot, the same way turning a
+Game Boy back on is. If it fails to start for any reason, it falls back
+to the scripted 7-turn "Sam's practice" duel instead of leaving you
+stuck. If you haven't supplied the TCG ROM yet, it tells you so instead
+of crashing.
 
 ## What this ships and what it doesn't
 
@@ -52,13 +55,16 @@ you stuck.
   built before this fix. See `DuelSession.lua`'s own header and
   `tests/tcg/test_duel_session_source.py` in the sibling
   `logie-github/Test` repo for the full account.
-- **Not yet validated:** the mod-loader wiring in `main.lua` (`mod.imports`,
-  `mod.content.screens`, `mod.content.field:patch`) hasn't run inside a
-  live LOVE + mod-loader session. It's written directly against this
-  engine's own source (`src/mods/Sandbox.lua`, `docs/modding.md`), not
-  guessed, and `python3 tools/modkit.py lint mods/pokemon_tcg` /
-  `validate` both pass everything checkable without a live ROM import. The
-  remaining gap is a real in-game boot.
+- **Not yet validated:** the mod-loader wiring in `main.lua`
+  (`mod.hooks:wrap`, `mod.content.screens`, `mod.ui.TextBox`/`push`) hasn't
+  run inside a live LOVE + mod-loader session. It's written directly
+  against this engine's own source (`src/ui/StartMenu.lua`'s own header
+  comment about the `ui.start_menu.items` hook, `src/ui/ModUI.lua`, and
+  the shipped `mods/examples/example_dexnav` mod, which this mod's
+  start-menu-row code mirrors almost exactly) and passes
+  `python3 tools/modkit.py lint mods/pokemon_tcg` / `validate` (both check
+  everything checkable without a live ROM import), but the remaining gap
+  is a real in-game boot.
 - **Free-duel v1 scope**, disclosed in `DuelSession.lua`'s header: the
   matchup is fixed (no deck-picker menu yet), and of the Trainer cards in
   those two decks, Computer Search/Item Finder/Poke Ball (each need a
@@ -72,12 +78,16 @@ you stuck.
 
 ## Layout
 
-- `manifest.json` -- identity, the `required_imports` declaration for the
-  TCG ROM, `permissions: ["engine_internals"]` (needed for
+- `manifest.json` -- identity (`profile: "content"`), the
+  `required_imports` declaration for the TCG ROM,
+  `permissions: ["engine_internals"]` (needed for
   `src.import.Rom`/`ImageWriter`).
-- `main.lua` -- entry chunk: reads the imported ROM, runs extraction, boots
-  `DuelSession`/`PracticePlayable` (falling back to `PracticeSession` on
-  any boot failure) as the `PokemonTCG` screen, or shows an import-prompt
+- `main.lua` -- entry chunk: hooks `ui.start_menu.items` to insert the
+  PLAY TCG row (`mod.hooks:wrap`, decorating the vanilla list rather than
+  replacing it, same as `example_dexnav`), registers the `PokemonTCG`
+  screen that reads the imported ROM, runs extraction, and boots
+  `DuelSession`/`PracticePlayable` fresh (falling back to
+  `PracticeSession` on any boot failure), and shows a plain-text prompt
   screen if the ROM hasn't been supplied yet.
 - `src/tcg/` -- the duel engine (memory model, RNG, duel setup/turn flow/
   combat/status/prizes/knockouts, every attack/Power/Trainer effect
@@ -94,9 +104,10 @@ you stuck.
 
 1. `POKEPORT_DEV=1 love .` once, leave it running.
 2. Import a Red ROM as usual, then supply your own Pokemon Trading Card
-   Game ROM when the mod's import prompt asks for it.
+   Game ROM when the launcher's import panel asks for it.
 3. Press **F10**, find "Pokemon Trading Card Game" in the mod manager, and
    enable it (it's `experimental`, so it starts off).
-4. `python3 tools/modkit.py lint mods/pokemon_tcg` and
+4. In game, press START and choose **PLAY TCG**.
+5. `python3 tools/modkit.py lint mods/pokemon_tcg` and
    `python3 tools/modkit.py validate mods/pokemon_tcg` before sharing.
-5. `python3 tools/modkit.py pack mods/pokemon_tcg` to ship.
+6. `python3 tools/modkit.py pack mods/pokemon_tcg` to ship.
